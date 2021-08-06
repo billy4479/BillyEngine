@@ -4,13 +4,10 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL_render.h>
 
-#include <algorithm>
-
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Entity/Component.hpp"
 #include "Entity/Entity.hpp"
-#include "Entity/Label.hpp"
 
 Application::Application(std::string title, i32 width, i32 height)
     : m_Height(height),

@@ -25,8 +25,8 @@ class Entity {
     template <typename T>
     T& GetComponent();
 
+   private:
     std::vector<std::any> Components;
-
     static std::vector<Entity*> Register;
     static u32 NextID;
 };

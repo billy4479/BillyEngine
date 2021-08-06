@@ -2,12 +2,14 @@
 
 #include <any>
 #include <cassert>
+#include <vector>
 
 #include "Component.hpp"
 
 namespace Entity {
 
 u32 Entity::NextID = 0;
+std::vector<Entity*> Entity::Register = {};
 
 Entity::Entity(const std::string& name) {
     id = ++NextID;
@@ -29,7 +31,7 @@ Entity::~Entity() {
 template <typename T, typename... Args>
 void Entity::AddComponent(Args&&... args) {
     assert(!HasComponent<T>());
-    Components.emplace(T(args...));
+    Components.push_back(std::move(T(args...)));
 }
 
 template <typename T>
