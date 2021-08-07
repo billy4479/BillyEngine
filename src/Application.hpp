@@ -7,6 +7,7 @@
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Core/EventHandler.hpp"
+#include "Entity/Entity.hpp"
 #include "Rendering/Renderer.hpp"
 
 class Application {
@@ -17,6 +18,7 @@ class Application {
     void Run();
     Rendering::Renderer *GetRenderer();
     AssetManager *GetAssetManager();
+    Entity::Entity CreateEntity(const std::string &);
 
    private:
     bool isRunning = false;
@@ -32,4 +34,7 @@ class Application {
     AssetManager m_AssetManager;
     Rendering::Renderer m_Renderer;
     EventHandler m_EventHandler;
+    std::vector<Entity::Entity *> m_EntityRegister;
+
+    friend class Entity::Entity;
 };

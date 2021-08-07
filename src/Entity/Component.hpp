@@ -4,6 +4,7 @@
 #include <SDL_ttf.h>
 
 #include <chrono>
+#include <functional>
 #include <string>
 
 #include "../Core/Color.hpp"
@@ -52,6 +53,17 @@ struct TransformComponent {
                        f32 rotation)
         : Position(position), Scale(scale), Rotation(rotation) {}
     TransformComponent() = default;
+};
+
+struct ScriptComponent {
+    const std::function<void()> OnCreate = []() {};
+    const std::function<void(f32)> OnUpdate = [](f32) {};
+
+    ScriptComponent(std::function<void()> onCreate,
+                    std::function<void(f32)> onUpdate)
+        : OnCreate(onCreate), OnUpdate(onUpdate) {
+        onCreate();
+    }
 };
 
 }  // namespace Entity

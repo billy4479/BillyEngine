@@ -6,8 +6,6 @@
 
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
-#include "Entity/Component.hpp"
-#include "Entity/Entity.hpp"
 
 Application::Application(std::string title, i32 width, i32 height)
     : m_Height(height),
@@ -54,7 +52,7 @@ void Application::Run() {
     u16 h = 0;
     auto fg = Color(0, 153, 0);
 
-    Entity::Entity e("test");
+    auto e = CreateEntity("");
     e.AddComponent<Entity::TextComponent>(
         "Test", m_AssetManager.GetFont("JetBrains Mono"));
 
@@ -63,11 +61,7 @@ void Application::Run() {
 
         m_EventHandler.HandleEvents();
 
-        // Logic here
-
-        m_Renderer.Clear(Color::hsl(h++, 0.5, 0.5));
-
-        // End of logic
+        // TODO: Update entities and pass them to the renderer
 
         m_Renderer.Draw();
 
@@ -83,3 +77,10 @@ void Application::AskToStop() { isRunning = false; }
 Rendering::Renderer *Application::GetRenderer() { return &m_Renderer; }
 
 AssetManager *Application::GetAssetManager() { return &m_AssetManager; }
+
+Entity::Entity Application::CreateEntity(const std::string &name) {
+    auto e = Entity::Entity(m_EntityRegister);
+    e.AddComponent<Entity::TagComponent>(name.empty() ? "Entity" : name);
+    e.AddComponent<Entity::TransformComponent>();
+    return e;
+}
