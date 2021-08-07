@@ -2,6 +2,7 @@
 
 #include <SDL_image.h>
 #include <SDL_render.h>
+#include <SDL_surface.h>
 
 #include <cassert>
 #include <fstream>
@@ -55,4 +56,6 @@ void AssetManager::LoadImage(const std::filesystem::path &path,
 
     m_Textures.emplace("name", SDL_CreateTextureFromSurface(
                                    m_App->GetRenderer()->GetSDLRenderer(), s));
+
+    SDL_FreeSurface(s);
 }

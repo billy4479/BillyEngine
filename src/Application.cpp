@@ -17,7 +17,7 @@ Application::Application(std::string title, i32 width, i32 height)
     if (SDL_Init(SDL_INIT_EVERYTHING))
         throw std::runtime_error("SDL failed to initialize.");
     if (TTF_Init()) throw std::runtime_error("SDL_ttf failed to initialize.");
-    if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) != 0)
+    if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0)
         throw std::runtime_error("SDL_image failed to initialize.");
 
     m_Window = SDL_CreateWindow(m_Title.c_str(), SDL_WINDOWPOS_UNDEFINED,
@@ -55,7 +55,8 @@ void Application::Run() {
     auto fg = Color(0, 153, 0);
 
     Entity::Entity e("test");
-    e.AddComponent<Entity::TextComponent>("Test");
+    e.AddComponent<Entity::TextComponent>(
+        "Test", m_AssetManager.GetFont("JetBrains Mono"));
 
     while (isRunning) {
         frameStart = SDL_GetTicks();
