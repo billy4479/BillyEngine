@@ -1,9 +1,5 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL_render.h>
-#include <SDL_surface.h>
-
 #include "../Core/Common.hpp"
 #include "BackBuffer.hpp"
 

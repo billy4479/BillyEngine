@@ -1,13 +1,5 @@
 #pragma once
 
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_ttf.h>
-
-#include <filesystem>
-#include <fstream>
-#include <map>
-#include <string>
-
 #include "Common.hpp"
 
 class Application;

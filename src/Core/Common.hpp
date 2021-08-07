@@ -4,6 +4,22 @@
     #define DEBUG 1
 #endif
 
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+
+#include <any>
+#include <cassert>
+#include <chrono>
+#include <cmath>
+#include <filesystem>
+#include <functional>
+#include <map>
+#include <stdexcept>
+#include <string>
+#include <utility>
+#include <vector>
+
 using u8 = unsigned char;
 using u16 = unsigned short;
 using u32 = unsigned int;

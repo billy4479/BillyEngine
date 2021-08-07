@@ -1,9 +1,5 @@
 #include "BackBuffer.hpp"
 
-#include <SDL_render.h>
-
-#include <utility>
-
 namespace Rendering {
 
 void BackBuffer::Init(i32 width, i32 height, SDL_Renderer *renderer) {

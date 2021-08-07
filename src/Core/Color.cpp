@@ -1,10 +1,5 @@
 #include "Color.hpp"
 
-#include <cassert>
-#include <cmath>
-
-#include "Common.hpp"
-
 Color Color::black(0, 0, 0);
 Color Color::red(255, 0, 0);
 Color Color::green(0, 255, 0);

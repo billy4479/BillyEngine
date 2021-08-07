@@ -1,13 +1,5 @@
 #include "AssetManager.hpp"
 
-#include <SDL_image.h>
-#include <SDL_render.h>
-#include <SDL_surface.h>
-
-#include <cassert>
-#include <fstream>
-#include <stdexcept>
-
 #include "../Application.hpp"
 #include "Common.hpp"
 

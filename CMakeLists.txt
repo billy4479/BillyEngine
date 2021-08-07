@@ -42,5 +42,7 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::Main SDL2::TTF SDL2::Image )
 
+target_precompile_headers(${PROJECT_NAME} PRIVATE src/Core/Common.hpp)
+
 file(GLOB ASSETS "assets/*")
 file(COPY ${ASSETS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets)

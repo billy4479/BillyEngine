@@ -1,9 +1,5 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-
-#include <stdexcept>
-
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Core/EventHandler.hpp"

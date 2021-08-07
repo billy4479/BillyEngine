@@ -1,12 +1,8 @@
 #pragma once
 #include <SDL2/SDL.h>
 
-#include <cassert>
-#include <memory>
-#include <utility>
-#include <vector>
-
 #include "../Core/Color.hpp"
+#include "../Core/Common.hpp"
 
 namespace Rendering {
 

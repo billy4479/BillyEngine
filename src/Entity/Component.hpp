@@ -1,12 +1,5 @@
 #pragma once
 
-#include <SDL_render.h>
-#include <SDL_ttf.h>
-
-#include <chrono>
-#include <functional>
-#include <string>
-
 #include "../Core/Color.hpp"
 #include "../Core/Common.hpp"
 
@@ -57,10 +50,11 @@ struct TransformComponent {
 
 struct ScriptComponent {
     const std::function<void()> OnCreate = []() {};
-    const std::function<void(f32)> OnUpdate = [](f32) {};
+    const std::function<void(std::chrono::milliseconds)> OnUpdate =
+        [](std::chrono::milliseconds) {};
 
     ScriptComponent(std::function<void()> onCreate,
-                    std::function<void(f32)> onUpdate)
+                    std::function<void(std::chrono::milliseconds)> onUpdate)
         : OnCreate(onCreate), OnUpdate(onUpdate) {
         onCreate();
     }
