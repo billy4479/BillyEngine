@@ -5,11 +5,6 @@
 
 namespace Entity {
 
-// struct Component {
-//     virtual void OnCreate() {};
-//     virtual void OnUpdate(std::chrono::milliseconds deltaTime) {};
-// };
-
 struct TagComponent {
     std::string Tag;
 
@@ -31,10 +26,25 @@ struct SpriteComponent {
 struct TextComponent {
     std::string Text;
     TTF_Font* Font = nullptr;
+    SDL_Texture* Texture = nullptr;
+    Color fgColor;
 
-    TextComponent(const std::string& text, TTF_Font* font)
-        : Text(text), Font(font) {}
+    TextComponent(const std::string& text, TTF_Font* font, const Color& color)
+        : Text(text), Font(font), fgColor(color) {}
     TextComponent(const TextComponent&) = default;
+    ~TextComponent() { SDL_DestroyTexture(Texture); }
+
+    void UpdateText(const std::string& text) {
+        Text = text;
+        SDL_DestroyTexture(Texture);
+        Texture = nullptr;
+    }
+
+    void UpdateColor(const Color& color) {
+        fgColor = color;
+        SDL_DestroyTexture(Texture);
+        Texture = nullptr;
+    }
 };
 
 struct TransformComponent {
@@ -50,11 +60,10 @@ struct TransformComponent {
 
 struct ScriptComponent {
     const std::function<void()> OnCreate = []() {};
-    const std::function<void(std::chrono::milliseconds)> OnUpdate =
-        [](std::chrono::milliseconds) {};
+    const std::function<void(f32)> OnUpdate = [](f32) {};
 
     ScriptComponent(std::function<void()> onCreate,
-                    std::function<void(std::chrono::milliseconds)> onUpdate)
+                    std::function<void(f32)> onUpdate)
         : OnCreate(onCreate), OnUpdate(onUpdate) {
         onCreate();
     }

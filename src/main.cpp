@@ -1,7 +1,7 @@
 #define SDL_MAIN_HANDLED
 #include "Application.hpp"
 
-int main(int argc, char *argv[]) {
+int main() {
 #ifdef DEBUG
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 #endif

@@ -30,7 +30,7 @@ class Application {
     AssetManager m_AssetManager;
     Rendering::Renderer m_Renderer;
     EventHandler m_EventHandler;
-    std::vector<Entity::Entity *> m_EntityRegister;
+    std::vector<Entity::Entity> m_EntityRegister;
 
     friend class Entity::Entity;
 };

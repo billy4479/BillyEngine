@@ -6,17 +6,23 @@
 namespace Entity {
 class Entity {
    public:
-    Entity(std::vector<Entity*>& reg) : Register(reg), id(++NextID) {
-        Register.push_back(this);
+    Entity(std::vector<Entity>& reg) : Register(reg), id(++NextID) {
+        Register.push_back(*this);
     }
 
     ~Entity() {
-        for (auto i = 0; i < Register.size(); i++) {
-            if (Register[i]->id == id) {
+        for (size_t i = 0; i < Register.size(); i++) {
+            if (Register[i].id == id) {
                 Register.erase(Register.begin() + i);
                 break;
             }
         }
+    }
+
+    template <typename T>
+    void AddComponent(T&& component) {
+        assert(!HasComponent<T>());
+        Components.push_back(component);
     }
 
     template <typename T, typename... Args>
@@ -28,7 +34,7 @@ class Entity {
     template <typename T>
     void RemoveComponent() {
         assert(HasComponent<T>());
-        for (auto i = 0; i < Components.size(); i++) {
+        for (size_t i = 0; i < Components.size(); i++) {
             assert(Components[i].has_value());
             if (Components[i].type() == typeid(T))
                 Components.erase(Components.begin() + i);
@@ -45,7 +51,7 @@ class Entity {
     }
 
     template <typename T>
-    T& GetComponent() {
+    T* GetComponent() {
         assert(HasComponent<T>());
         for (auto c : Components) {
             assert(c.has_value());
@@ -57,9 +63,11 @@ class Entity {
     u32 GetId() { return id; }
 
    private:
-    std::vector<Entity*>& Register;
+    std::vector<Entity>& Register;
     std::vector<std::any> Components;
     const u32 id;
     static u32 NextID;
+
+    // Entity(const Entity&);
 };
 }  // namespace Entity

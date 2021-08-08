@@ -1,11 +1,8 @@
 #include "Application.hpp"
 
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <SDL_render.h>
-
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
+#include "Entity/Component.hpp"
 
 Application::Application(std::string title, i32 width, i32 height)
     : m_Height(height),
@@ -41,34 +38,60 @@ void Application::Run() {
     assert(!isRunning);
     isRunning = true;
 
-    m_Renderer.Clear(Color(41, 41, 41));
+    auto bg = Color(41, 41, 41);
+    m_Renderer.Clear(bg);
 
     u32 frameStart;
     i32 frameTime;
 
-    i32 count = 0;
-    i32 line = 0;
-
-    u16 h = 0;
-    auto fg = Color(0, 153, 0);
-
     auto e = CreateEntity("");
     e.AddComponent<Entity::TextComponent>(
-        "Test", m_AssetManager.GetFont("JetBrains Mono"));
+        "Test", m_AssetManager.GetFont("JetBrains Mono"), Color::white);
 
+    u32 lastDelta = 0;
     while (isRunning) {
         frameStart = SDL_GetTicks();
 
         m_EventHandler.HandleEvents();
 
-        // TODO: Update entities and pass them to the renderer
+        for (auto &e : m_EntityRegister) {
+            if (e.HasComponent<Entity::ScriptComponent>()) {
+                e.GetComponent<Entity::ScriptComponent>()->OnUpdate(lastDelta);
+            }
 
-        m_Renderer.Draw();
+            auto transform = e.GetComponent<Entity::TransformComponent>();
+
+            if (e.HasComponent<Entity::TextComponent>()) {
+                auto textComponent = e.GetComponent<Entity::TextComponent>();
+                if (textComponent->Texture == nullptr) {
+                    assert(textComponent->Font != nullptr);
+                    textComponent->Texture = m_Renderer.RenderTextToTexture(
+                        textComponent->Text, textComponent->Font,
+                        textComponent->fgColor);
+                }
+                m_Renderer.DrawTexture(textComponent->Texture,
+                                       transform->Position, transform->Scale,
+                                       transform->Rotation);
+            }
+
+            if (e.HasComponent<Entity::SpriteComponent>()) {
+                auto sprite = e.GetComponent<Entity::SpriteComponent>();
+                assert(sprite->Texture != nullptr);
+                m_Renderer.DrawTexture(sprite->Texture, transform->Position,
+                                       transform->Scale, transform->Rotation);
+            }
+        }
+
+        m_Renderer.DrawToScreen();
 
         isRunning = !m_EventHandler.ShouldClose();
 
         frameTime = SDL_GetTicks() - frameStart;
-        if (frameDelay > frameTime) SDL_Delay(frameDelay - frameTime);
+        if (frameDelay > frameTime) {
+            SDL_Delay(frameDelay - frameTime);
+            lastDelta = frameDelay;
+        } else
+            lastDelta = frameTime;
     }
 }
 
