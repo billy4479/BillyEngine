@@ -44,41 +44,44 @@ void Application::Run() {
     u32 frameStart;
     i32 frameTime;
 
-    auto e = CreateEntity("");
-    e.AddComponent<Entity::TextComponent>(
-        "Test", m_AssetManager.GetFont("JetBrains Mono"), Color::white);
-
+    {
+        auto e = CreateEntity("");
+        e.AddComponent<Entity::TextComponent>(
+            "Test", m_AssetManager.GetFont("JetBrains Mono"), Color::white);
+    }
     u32 lastDelta = 0;
     while (isRunning) {
         frameStart = SDL_GetTicks();
 
         m_EventHandler.HandleEvents();
 
-        for (auto &e : m_EntityRegister) {
+        auto reg = m_EntityRegister.GetReg();
+        for (auto p : reg) {
+            auto e = p.first;
             if (e.HasComponent<Entity::ScriptComponent>()) {
-                e.GetComponent<Entity::ScriptComponent>()->OnUpdate(lastDelta);
+                e.GetComponent<Entity::ScriptComponent>().OnUpdate(lastDelta);
             }
 
-            auto transform = e.GetComponent<Entity::TransformComponent>();
+            auto &transform = e.GetComponent<Entity::TransformComponent>();
 
             if (e.HasComponent<Entity::TextComponent>()) {
-                auto textComponent = e.GetComponent<Entity::TextComponent>();
-                if (textComponent->Texture == nullptr) {
-                    assert(textComponent->Font != nullptr);
-                    textComponent->Texture = m_Renderer.RenderTextToTexture(
-                        textComponent->Text, textComponent->Font,
-                        textComponent->fgColor);
+                auto &textComponent = e.GetComponent<Entity::TextComponent>();
+                if (textComponent.Texture == nullptr) {
+                    assert(textComponent.Font != nullptr);
+                    textComponent.Texture = m_Renderer.RenderTextToTexture(
+                        textComponent.Text, textComponent.Font,
+                        textComponent.fgColor);
                 }
-                m_Renderer.DrawTexture(textComponent->Texture,
-                                       transform->Position, transform->Scale,
-                                       transform->Rotation);
+                m_Renderer.DrawTexture(textComponent.Texture,
+                                       transform.Position, transform.Scale,
+                                       transform.Rotation);
             }
 
             if (e.HasComponent<Entity::SpriteComponent>()) {
-                auto sprite = e.GetComponent<Entity::SpriteComponent>();
-                assert(sprite->Texture != nullptr);
-                m_Renderer.DrawTexture(sprite->Texture, transform->Position,
-                                       transform->Scale, transform->Rotation);
+                auto &sprite = e.GetComponent<Entity::SpriteComponent>();
+                assert(sprite.Texture != nullptr);
+                m_Renderer.DrawTexture(sprite.Texture, transform.Position,
+                                       transform.Scale, transform.Rotation);
             }
         }
 
@@ -102,7 +105,7 @@ Rendering::Renderer *Application::GetRenderer() { return &m_Renderer; }
 AssetManager *Application::GetAssetManager() { return &m_AssetManager; }
 
 Entity::Entity Application::CreateEntity(const std::string &name) {
-    auto e = Entity::Entity(m_EntityRegister);
+    auto e = m_EntityRegister.CreateEntity();
     e.AddComponent<Entity::TagComponent>(name.empty() ? "Entity" : name);
     e.AddComponent<Entity::TransformComponent>();
     return e;

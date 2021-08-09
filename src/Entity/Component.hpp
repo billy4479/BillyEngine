@@ -9,7 +9,7 @@ struct TagComponent {
     std::string Tag;
 
     TagComponent() = default;
-    TagComponent(const TagComponent&) = default;
+    TagComponent(const TagComponent&) = delete;
     TagComponent(const std::string& tag) : Tag(tag) {}
 };
 
@@ -18,7 +18,7 @@ struct SpriteComponent {
     Color Tint{0, 0, 0, 0};
 
     SpriteComponent() = default;
-    SpriteComponent(const SpriteComponent&) = default;
+    SpriteComponent(const SpriteComponent&) = delete;
     SpriteComponent(SDL_Texture* texture, const Color& tint = {0, 0, 0, 0})
         : Texture(texture), Tint(tint) {}
 };
@@ -31,7 +31,7 @@ struct TextComponent {
 
     TextComponent(const std::string& text, TTF_Font* font, const Color& color)
         : Text(text), Font(font), fgColor(color) {}
-    TextComponent(const TextComponent&) = default;
+    TextComponent(const TextComponent&) = delete;
     ~TextComponent() { SDL_DestroyTexture(Texture); }
 
     void UpdateText(const std::string& text) {
@@ -56,6 +56,7 @@ struct TransformComponent {
                        f32 rotation)
         : Position(position), Scale(scale), Rotation(rotation) {}
     TransformComponent() = default;
+    TransformComponent(const TransformComponent&) = delete;
 };
 
 struct ScriptComponent {
@@ -67,6 +68,7 @@ struct ScriptComponent {
         : OnCreate(onCreate), OnUpdate(onUpdate) {
         onCreate();
     }
+    ScriptComponent(const ScriptComponent&) = delete;
 };
 
 }  // namespace Entity

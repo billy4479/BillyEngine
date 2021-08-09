@@ -4,6 +4,9 @@
 #include "Core/Common.hpp"
 #include "Core/EventHandler.hpp"
 #include "Entity/Entity.hpp"
+#include "Entity/Entity.inl"
+#include "Entity/Register.hpp"
+#include "Entity/Register.inl"
 #include "Rendering/Renderer.hpp"
 
 class Application {
@@ -30,7 +33,7 @@ class Application {
     AssetManager m_AssetManager;
     Rendering::Renderer m_Renderer;
     EventHandler m_EventHandler;
-    std::vector<Entity::Entity> m_EntityRegister;
+    Entity::Register m_EntityRegister;
 
     friend class Entity::Entity;
 };

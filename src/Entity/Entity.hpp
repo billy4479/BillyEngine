@@ -4,70 +4,38 @@
 #include "Component.hpp"
 
 namespace Entity {
+class Register;
 class Entity {
    public:
-    Entity(std::vector<Entity>& reg) : Register(reg), id(++NextID) {
-        Register.push_back(*this);
-    }
+    ~Entity();
 
-    ~Entity() {
-        for (size_t i = 0; i < Register.size(); i++) {
-            if (Register[i].id == id) {
-                Register.erase(Register.begin() + i);
-                break;
-            }
-        }
-    }
+    explicit inline operator u32() { return id; }
+    inline bool operator==(const Entity& other) { return this->id == other.id; }
+    inline bool operator!=(const Entity& other) { return !(*this == other); }
 
     template <typename T>
-    void AddComponent(T&& component) {
-        assert(!HasComponent<T>());
-        Components.push_back(component);
-    }
+    inline void AddComponent(T&&);
 
     template <typename T, typename... Args>
-    void AddComponent(Args&&... args) {
-        assert(!HasComponent<T>());
-        Components.push_back(std::move(T(args...)));
-    }
+    inline void AddComponent(Args&&...);
 
     template <typename T>
-    void RemoveComponent() {
-        assert(HasComponent<T>());
-        for (size_t i = 0; i < Components.size(); i++) {
-            assert(Components[i].has_value());
-            if (Components[i].type() == typeid(T))
-                Components.erase(Components.begin() + i);
-        }
-    }
+    inline void RemoveComponent();
 
     template <typename T>
-    bool HasComponent() {
-        for (auto c : Components) {
-            assert(c.has_value());
-            if (c.type() == typeid(T)) return true;
-        }
-        return false;
-    }
+    inline bool HasComponent();
 
     template <typename T>
-    T* GetComponent() {
-        assert(HasComponent<T>());
-        for (auto c : Components) {
-            assert(c.has_value());
-            if (c.type() == typeid(T)) return std::any_cast<T>(&c);
-        }
-        return nullptr;
-    }
+    inline T& GetComponent();
 
-    u32 GetId() { return id; }
+    inline u32 GetId() const { return id; }
 
    private:
-    std::vector<Entity>& Register;
-    std::vector<std::any> Components;
     const u32 id;
-    static u32 NextID;
+    Register& m_Reg;
 
-    // Entity(const Entity&);
+    Entity(u32 id, Register& reg) : id(id), m_Reg(reg) {}
+
+    friend class Register;
 };
 }  // namespace Entity
