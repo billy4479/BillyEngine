@@ -1,10 +1,6 @@
 #include "Application.hpp"
 
-#include "Components/ScriptComponent.hpp"
-#include "Components/SpriteComponent.hpp"
-#include "Components/TagComponent.hpp"
-#include "Components/TextComponent.hpp"
-#include "Components/TransformComponent.hpp"
+#include "Components/Components.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Entity/Entity.hpp"
@@ -25,10 +21,12 @@ Application::Application(std::string title, i32 width, i32 height)
     m_Window = SDL_CreateWindow(m_Title.c_str(), SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED, m_Width, m_Height, 0);
 
-    if (m_Window == nullptr)
-        std::runtime_error("SDL failed to create a window.");
+#ifdef DEBUG
+    if (m_Window == nullptr) dbg_print("%s\n", SDL_GetError());
+#endif
+    assert(m_Window != nullptr);
 
-    m_Renderer.Init(m_Window, m_Width, m_Height);
+    m_Renderer.Init(m_Window);
 
     m_AssetManager.LoadFont(
         "JetBrains Mono Regular Nerd Font Complete Mono.ttf", "JetBrains Mono",
@@ -39,14 +37,13 @@ Application::~Application() {
     SDL_DestroyWindow(m_Window);
     m_AssetManager.ReleaseSDLModules();
     TTF_Quit();
+    IMG_Quit();
     SDL_Quit();
 }
 
 void Application::Run() {
     assert(!isRunning);
     isRunning = true;
-
-    m_Renderer.Clear(Color::black);
 
     OnCreate();
 
@@ -56,11 +53,12 @@ void Application::Run() {
     u32 lastDelta = 0;
     while (isRunning) {
         frameStart = SDL_GetTicks();
+        m_Renderer.Clear();
 
         OnUpdate(lastDelta);
+        m_Renderer.RenderToScreen();
 
         isRunning = !m_EventHandler.ShouldClose();
-
         frameTime = SDL_GetTicks() - frameStart;
         if (frameDelay > frameTime) {
             SDL_Delay(frameDelay - frameTime);
@@ -109,8 +107,6 @@ void Application::OnUpdate(f32 delta) {
             m_Renderer.DrawTexture(sprite.Texture, t.Position, t.Scale,
                                    t.Rotation);
         });
-
-    m_Renderer.DrawToScreen();
 }
 
 Renderer *Application::GetRenderer() { return &m_Renderer; }
