@@ -3,6 +3,8 @@
 #include "../Application.hpp"
 #include "Common.hpp"
 
+namespace BillyEngine {
+
 void AssetManager::LoadFont(const std::filesystem::path &path,
                             const std::string &name, u32 size) {
     auto font = TTF_OpenFont((m_AssetsFolder / path).string().c_str(), size);
@@ -51,3 +53,4 @@ void AssetManager::LoadImage(const std::filesystem::path &path,
 
     SDL_FreeSurface(s);
 }
+}  // namespace BillyEngine

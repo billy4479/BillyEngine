@@ -2,6 +2,7 @@
 
 #include "Common.hpp"
 
+namespace BillyEngine {
 class Application;
 
 class AssetManager {
@@ -23,3 +24,4 @@ class AssetManager {
     std::map<const std::string, TTF_Font *> m_Fonts;
     std::map<const std::string, SDL_Texture *> m_Textures;
 };
+}  // namespace BillyEngine

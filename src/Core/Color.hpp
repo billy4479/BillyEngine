@@ -2,6 +2,8 @@
 
 #include "Common.hpp"
 
+namespace BillyEngine {
+
 struct Color {
    public:
     Color(u8 r, u8 g, u8 b, u8 a = 0xff) : r(r), g(g), b(b), a(a) {}
@@ -18,3 +20,4 @@ struct Color {
 
     static Color hsl(u16 h, f32 s, f32 l, u8 a = 0xff);
 };
+}  // namespace BillyEngine

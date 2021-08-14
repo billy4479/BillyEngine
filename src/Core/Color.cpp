@@ -1,5 +1,7 @@
 #include "Color.hpp"
 
+namespace BillyEngine {
+
 Color Color::black(0, 0, 0);
 Color Color::red(255, 0, 0);
 Color Color::green(0, 255, 0);
@@ -45,3 +47,4 @@ Color Color::hsl(u16 h, f32 s, f32 l, u8 a) {
     return Color((u8)((r + m) * 255), (u8)((g + m) * 255), (u8)((b + m) * 255),
                  a);
 }
+}  // namespace BillyEngine

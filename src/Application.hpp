@@ -4,10 +4,9 @@
 #include "Core/Common.hpp"
 #include "Core/EventHandler.hpp"
 #include "Entity/Entity.hpp"
-#include "Entity/Entity.inl"
-#include "Entity/Register.hpp"
-#include "Entity/Register.inl"
 #include "Rendering/Renderer.hpp"
+
+namespace BillyEngine {
 
 class Application {
    public:
@@ -15,13 +14,16 @@ class Application {
     ~Application();
 
     void Run();
-    Rendering::Renderer *GetRenderer();
+    Renderer *GetRenderer();
     AssetManager *GetAssetManager();
-    Entity::Entity CreateEntity(const std::string &);
+    Entity CreateEntity(const std::string &);
+    void DestroyEntity(Entity);
 
    private:
     bool isRunning = false;
     void AskToStop();
+    void OnCreate();
+    void OnUpdate(f32);
 
     static constexpr i32 FPS = 60;
     static constexpr i32 frameDelay = 1000 / FPS;
@@ -31,9 +33,8 @@ class Application {
 
     SDL_Window *m_Window;
     AssetManager m_AssetManager;
-    Rendering::Renderer m_Renderer;
+    Renderer m_Renderer;
     EventHandler m_EventHandler;
-    Entity::Register m_EntityRegister;
-
-    friend class Entity::Entity;
+    entt::registry m_EntityRegister;
 };
+}  // namespace BillyEngine

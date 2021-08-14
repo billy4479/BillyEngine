@@ -4,7 +4,7 @@
 #include "../Core/Color.hpp"
 #include "../Core/Common.hpp"
 
-namespace Rendering {
+namespace BillyEngine {
 
 class BackBuffer {
    public:
@@ -26,4 +26,4 @@ class BackBuffer {
     std::vector<std::pair<SDL_Texture *, SDL_Rect *>> m_Textures;
 };
 
-}  // namespace Rendering
+}  // namespace BillyEngine

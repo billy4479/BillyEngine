@@ -1,6 +1,6 @@
 #include "Renderer.hpp"
 
-namespace Rendering {
+namespace BillyEngine {
 
 void Renderer::Init(SDL_Window* window, i32 w, i32 h) {
     assert(m_Renderer == nullptr);
@@ -29,13 +29,15 @@ SDL_Texture* Renderer::RenderTextToTexture(
 
 void Renderer::DrawTexture(SDL_Texture*, std::pair<f32, f32> position,
                            std::pair<f32, f32> scale, f32 rotation) {
+    // TODO
     (void)position;
     (void)scale;
     (void)rotation;
+    assert(false);
 }
 
 void Renderer::Clear(Color& c) { m_BackBuffer.Clear(c); }
 
 void Renderer::DrawToScreen() { m_BackBuffer.Swap(); }
 
-}  // namespace Rendering
+}  // namespace BillyEngine

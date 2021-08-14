@@ -1,6 +1,6 @@
 #include "BackBuffer.hpp"
 
-namespace Rendering {
+namespace BillyEngine {
 
 void BackBuffer::Init(i32 width, i32 height, SDL_Renderer *renderer) {
     assert(m_BackBuffer == nullptr);
@@ -63,4 +63,4 @@ void BackBuffer::DeleteTexture(SDL_Texture *texture) {
     }
 }
 
-}  // namespace Rendering
+}  // namespace BillyEngine

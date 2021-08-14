@@ -1,41 +1,52 @@
 #pragma once
 
 #include "../Core/Common.hpp"
-#include "Component.hpp"
 
-namespace Entity {
-class Register;
+namespace BillyEngine {
 class Entity {
    public:
-    ~Entity();
+    Entity() = default;
+    Entity(entt::entity handle, entt::registry* registry)
+        : m_Handle(handle), m_Registry(registry) {}
+    Entity(const Entity& other) = default;
 
-    explicit inline operator u32() { return id; }
-    inline bool operator==(const Entity& other) { return this->id == other.id; }
+    ~Entity() = default;
+
+    inline bool operator==(const Entity& other) {
+        return this->m_Handle == other.m_Handle &&
+               this->m_Registry == other.m_Registry;
+    }
     inline bool operator!=(const Entity& other) { return !(*this == other); }
-
-    template <typename T>
-    inline void AddComponent(T&&);
+    inline operator bool() const { return m_Handle != entt::null; }
+    inline operator entt::entity() const { return m_Handle; }
+    inline operator u32() const { return (u32)m_Handle; }
 
     template <typename T, typename... Args>
-    inline void AddComponent(Args&&...);
+    T& AddComponent(Args&&... args) {
+        assert(!HasComponent<T>());
+        T& component =
+            m_Registry->emplace<T>(m_Handle, std::forward<Args>(args)...);
+        return component;
+    }
 
     template <typename T>
-    inline void RemoveComponent();
+    void RemoveComponent() {
+        assert(HasComponent<T>());
+        m_Registry->remove<T>(m_Handle);
+    }
 
     template <typename T>
-    inline bool HasComponent();
+    bool HasComponent() {
+        return m_Registry->try_get<T>(m_Handle) != nullptr;
+    }
 
     template <typename T>
-    inline T& GetComponent();
-
-    inline u32 GetId() const { return id; }
+    T& GetComponent() {
+        return m_Registry->get<T>(m_Handle);
+    }
 
    private:
-    const u32 id;
-    Register& m_Reg;
-
-    Entity(u32 id, Register& reg) : id(id), m_Reg(reg) {}
-
-    friend class Register;
+    entt::entity m_Handle{entt::null};
+    entt::registry* m_Registry = nullptr;
 };
-}  // namespace Entity
+}  // namespace BillyEngine

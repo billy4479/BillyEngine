@@ -1,5 +1,6 @@
 #include "EventHandler.hpp"
 
+namespace BillyEngine {
 void EventHandler::HandleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -13,3 +14,4 @@ void EventHandler::HandleEvents() {
 }
 
 bool EventHandler::ShouldClose() { return m_ShouldClose; }
+}  // namespace BillyEngine

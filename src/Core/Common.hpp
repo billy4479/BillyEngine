@@ -12,9 +12,11 @@
 #include <cassert>
 #include <chrono>
 #include <cmath>
+#include <entt/entt.hpp>
 #include <filesystem>
 #include <functional>
 #include <map>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <utility>

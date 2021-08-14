@@ -5,7 +5,7 @@
 #include "../Core/Common.hpp"
 #include "BackBuffer.hpp"
 
-namespace Rendering {
+namespace BillyEngine {
 
 class Renderer {
    public:
@@ -29,4 +29,4 @@ class Renderer {
     BackBuffer m_BackBuffer;
 };
 
-}  // namespace Rendering
+}  // namespace BillyEngine
