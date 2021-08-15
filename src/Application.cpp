@@ -82,7 +82,7 @@ void Application::OnUpdate(f32 delta) {
                 script.Instantiate(e);
                 script.OnCreate(e);
             }
-            script.OnUpdate(delta, e);
+            script.OnUpdate(e, delta);
         });
 
     m_EntityRegister
@@ -109,26 +109,14 @@ void Application::OnUpdate(f32 delta) {
         });
 }
 
+void Application::AddBasicComponets(Entity &e, const std::string &name) {
+    e.AddComponent<Components::TagComponent>(name);
+    e.AddComponent<Components::TransformComponent>();
+}
+
 Renderer *Application::GetRenderer() { return &m_Renderer; }
 
 AssetManager *Application::GetAssetManager() { return &m_AssetManager; }
-
-Entity Application::CreateEntity(const std::string &name) {
-    Entity e = {m_EntityRegister.create(), &m_EntityRegister};
-
-    std::string n;
-    if (name.empty()) {
-        std::stringstream ss;
-        ss << "Entity [" << (u32)e << "]";
-        ss >> n;
-    } else {
-        n = name;
-    }
-
-    e.AddComponent<Components::TagComponent>(n);
-    e.AddComponent<Components::TransformComponent>();
-    return e;
-}
 
 void Application::DestroyEntity(Entity entity) {
     m_EntityRegister.destroy(entity);

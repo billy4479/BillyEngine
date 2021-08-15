@@ -8,13 +8,14 @@ namespace Components {
 
 struct ScriptComponent {
    public:
-    std::function<void(Entity)> OnCreate = [](Entity) {};
-    std::function<void(f32, Entity)> OnUpdate = [](f32, Entity) {};
-    std::function<void(Entity)> OnDestroy = [](Entity) {};
+    std::function<void(Entity)> OnCreate;
+    std::function<void(Entity, f32)> OnUpdate;
+    std::function<void(Entity)> OnDestroy;
 
-    ScriptComponent(std::function<void(Entity)> onCreate,
-                    std::function<void(f32, Entity)> onUpdate,
-                    std::function<void(Entity)> onDestroy)
+    ScriptComponent(
+        std::function<void(Entity)> onCreate = [](Entity) {},
+        std::function<void(Entity, f32)> onUpdate = [](Entity, f32) {},
+        std::function<void(Entity)> onDestroy = [](Entity) {})
         : OnCreate(onCreate), OnUpdate(onUpdate), OnDestroy(onDestroy) {}
     ScriptComponent(const ScriptComponent&) = delete;
     ScriptComponent(ScriptComponent&& other) noexcept {

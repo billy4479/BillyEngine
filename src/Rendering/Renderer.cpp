@@ -30,7 +30,7 @@ SDL_Texture* Renderer::RenderTextToTexture(
 }
 
 void Renderer::DrawTexture(SDL_Texture* texture, std::pair<i32, i32> position,
-                           std::pair<i32, i32> scale, f32 rotation,
+                           std::pair<f32, f32> scale, f32 rotation,
                            std::pair<i32, i32> center) {
     assert(m_Renderer != nullptr);
 
@@ -38,8 +38,8 @@ void Renderer::DrawTexture(SDL_Texture* texture, std::pair<i32, i32> position,
     SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
     SDL_Rect sRect{0, 0, w, h};
     SDL_Rect dRect{position.first, position.second,
-                   (position.first + w) * abs(scale.first),
-                   (position.second + h) * abs(scale.second)};
+                   static_cast<i32>(abs(scale.first) * w),
+                   static_cast<i32>(abs(scale.second) * h)};
     SDL_Point c{center.first, center.second};
 
     i32 flip = SDL_FLIP_NONE;

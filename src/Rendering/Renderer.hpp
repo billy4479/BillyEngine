@@ -32,7 +32,7 @@ class Renderer {
     SDL_Texture *RenderTextToTexture(const std::string &text, TTF_Font *font,
                                      const Color &fgColor /* TODO: config? */);
     void DrawTexture(SDL_Texture *, std::pair<i32, i32> position,
-                     std::pair<i32, i32> scale, f32 rotation,
+                     std::pair<f32, f32> scale, f32 rotation,
                      std::pair<i32, i32> center = {0, 0});
 
    private:

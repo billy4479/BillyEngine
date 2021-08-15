@@ -6,11 +6,11 @@ namespace BillyEngine {
 namespace Components {
 
 struct TransformComponent {
-    std::pair<f32, f32> Position = {0, 0};
+    std::pair<i32, i32> Position = {0, 0};
     std::pair<f32, f32> Scale = {1, 1};
     f32 Rotation = 0;
 
-    TransformComponent(std::pair<f32, f32> position, std::pair<f32, f32> scale,
+    TransformComponent(std::pair<i32, i32> position, std::pair<f32, f32> scale,
                        f32 rotation)
         : Position(position), Scale(scale), Rotation(rotation) {}
 

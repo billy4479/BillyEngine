@@ -45,6 +45,8 @@ class Entity {
         return m_Registry->get<T>(m_Handle);
     }
 
+    virtual bool IsScriptable() const { return false; }
+
    private:
     entt::entity m_Handle{entt::null};
     entt::registry* m_Registry = nullptr;

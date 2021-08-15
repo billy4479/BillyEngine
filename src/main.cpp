@@ -10,7 +10,7 @@ int main() {
     BillyEngine::Application app("Test", 800, 600);
     auto am = app.GetAssetManager();
 
-    auto e = app.CreateEntity("Test :)");
+    auto e = app.CreateEntity<BillyEngine::Entity>("Test :)");
     e.AddComponent<BillyEngine::Components::TextComponent>(
         "Hey!!", am->GetFont("JetBrains Mono"));
 
