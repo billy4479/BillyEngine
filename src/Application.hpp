@@ -1,47 +1,41 @@
 #pragma once
 
+#define SDL_MAIN_HANDLED
+
+#include "Components/Components.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Core/EventHandler.hpp"
-#include "Entity/Entity.hpp"
-#include "Entity/ScriptableEntity.hpp"
+#include "Entity/Entity.hxx"
 #include "Rendering/Renderer.hpp"
 
 namespace BillyEngine {
 
 class Application {
    public:
-    Application(std::string, i32 width, i32 height);
+    Application(const std::string &, i32 width, i32 height);
     ~Application();
 
     void Run();
     Renderer *GetRenderer();
     AssetManager *GetAssetManager();
-    template <class T>
-    T CreateEntity(const std::string &name) {
-        T e = {m_EntityRegister.create(), &m_EntityRegister};
 
-        std::string n;
-        if (name.empty()) {
-            std::stringstream ss;
-            ss << "Entity [" << (u32)e << "]";
-            ss >> n;
-        } else {
-            n = name;
-        }
+    Entity CreateEntity(const std::string &name);
+    void DestroyEntity(Entity);
 
-        AddBasicComponets(e, name);
+    template <typename T, typename... Args>
+    Entity CreateScriptableEntity(const std::string &name, Args &&...args) {
+        auto e = CreateEntity(name);
+        e.AddComponent<Components::ScriptComponent>().Bind<T, Args...>(
+            e, std::forward<Args>(args)...);
         return e;
     }
-    void DestroyEntity(Entity);
 
    private:
     bool isRunning = false;
     void AskToStop();
     void OnCreate();
     void OnUpdate(f32);
-
-    void AddBasicComponets(Entity &, const std::string &);
 
     static constexpr i32 FPS = 60;
     static constexpr i32 frameDelay = 1000 / FPS;
@@ -54,5 +48,7 @@ class Application {
     Renderer m_Renderer;
     EventHandler m_EventHandler;
     entt::registry m_EntityRegister;
+
+    friend class Entity;
 };
 }  // namespace BillyEngine

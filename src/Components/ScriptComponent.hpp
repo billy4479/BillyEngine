@@ -1,48 +1,56 @@
 #pragma once
 
 #include "../Core/Common.hpp"
-#include "../Entity/Entity.hpp"
+#include "../Entity/ScriptableEntity.hpp"
 
 namespace BillyEngine {
+
 namespace Components {
 
 struct ScriptComponent {
-   public:
-    std::function<void(Entity)> OnCreate;
-    std::function<void(Entity, f32)> OnUpdate;
-    std::function<void(Entity)> OnDestroy;
+    std::function<void()> Instantiate;
+    std::function<void()> DestroyInstance;
 
-    ScriptComponent(
-        std::function<void(Entity)> onCreate = [](Entity) {},
-        std::function<void(Entity, f32)> onUpdate = [](Entity, f32) {},
-        std::function<void(Entity)> onDestroy = [](Entity) {})
-        : OnCreate(onCreate), OnUpdate(onUpdate), OnDestroy(onDestroy) {}
-    ScriptComponent(const ScriptComponent&) = delete;
-    ScriptComponent(ScriptComponent&& other) noexcept {
-        this->OnCreate = other.OnCreate;
-        this->OnDestroy = other.OnDestroy;
-        this->OnUpdate = other.OnUpdate;
-        this->m_Entity = other.m_Entity;
-    }
-    ScriptComponent& operator=(ScriptComponent&& other) noexcept {
-        if (this != &other) {
-            this->OnCreate = other.OnCreate;
-            this->OnDestroy = other.OnDestroy;
-            this->OnUpdate = other.OnUpdate;
-            this->m_Entity = other.m_Entity;
-        }
-        return *this;
+    std::function<void(ScriptableEntity*)> OnCreate;
+    std::function<void(ScriptableEntity*, f32)> OnUpdate;
+    std::function<void(ScriptableEntity*)> OnDestroy;
+
+    ~ScriptComponent() {
+        if (Instance != nullptr) DestroyInstance();
     }
 
-    void Instantiate(Entity e) {
-        assert(!IsInstantiated());
-        m_Entity = e;
+    template <typename T, typename... Args>
+    void Bind(Entity e, Args&&... args) {
+        Instantiate = [&]() {
+            assert(Instance == nullptr);
+            Instance = new T(e, std::forward<Args>(args)...);
+        };
+        DestroyInstance = [&]() {
+            assert(Instance != nullptr);
+
+            OnDestroy(Instance);
+            delete static_cast<T*>(Instance);
+            Instance = nullptr;
+        };
+
+        OnCreate = [&](Entity* instance) {
+            assert(Instance != nullptr);
+
+            static_cast<T*>(instance)->OnCreate();
+        };
+        OnUpdate = [&](Entity* instance, f32 delta) {
+            assert(Instance != nullptr);
+
+            static_cast<T*>(instance)->OnUpdate(delta);
+        };
+        OnDestroy = [&](Entity* instance) {
+            assert(Instance != nullptr);
+
+            static_cast<T*>(instance)->OnDestroy();
+        };
     }
 
-    bool IsInstantiated() { return (entt::entity)m_Entity == entt::null; }
-
-   private:
-    Entity m_Entity{entt::null, nullptr};
+    ScriptableEntity* Instance = nullptr;
 };
 }  // namespace Components
 }  // namespace BillyEngine

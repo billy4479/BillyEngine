@@ -22,6 +22,13 @@
 #include <utility>
 #include <vector>
 
+#ifdef _WIN32
+    #include <windows.h>  //GetModuleFileNameW
+#else
+    #include <limits.h>
+    #include <unistd.h>  //readlink
+#endif
+
 using u8 = unsigned char;
 using u16 = unsigned short;
 using u32 = unsigned int;
@@ -39,7 +46,7 @@ using size_t = __SIZE_TYPE__;
 
 #ifdef DEBUG
     #include <cstdio>
-    #define dbg_print(...) fprintf(stderr, ##__VA_ARGS__)
+    #define dbg_print(...) fprintf(stderr, __VA_ARGS__)
 #else
     #define dbg_print(...) 0
 #endif

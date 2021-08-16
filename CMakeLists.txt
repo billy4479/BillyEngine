@@ -15,6 +15,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
+option(COMPILE_DEMO "Compile the demo program" ON)
 option(CROSS_COMPILE_WINDOWS "Cross compile for windows" OFF)
 # option(STATIC "Build a static executable" OFF)
 
@@ -22,6 +23,7 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_image REQUIRED)
 
+message(STATUS "Downloading EnTT...")
 FetchContent_Declare(EnTT
     GIT_REPOSITORY "https://github.com/skypjack/entt"
     GIT_TAG "0754f108c99ed2adce12b8d1bdf370169d103614"
@@ -32,7 +34,7 @@ aux_source_directory( src SOURCES)
 aux_source_directory( src/Core CORE)
 aux_source_directory( src/Rendering RENDERING)
 
-add_executable( ${PROJECT_NAME} ${SOURCES} ${CORE} ${RENDERING})
+add_library( ${PROJECT_NAME} SHARED ${SOURCES} ${CORE} ${RENDERING})
 
 if(STATIC)
 target_link_libraries(${PROJECT_NAME} PRIVATE -static)
@@ -52,9 +54,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mwindows")
 target_link_libraries(${PROJECT_NAME} PRIVATE mingw32 SDL2main)
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::Main SDL2::TTF SDL2::Image EnTT )
+target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::Main SDL2::TTF SDL2::Image EnTT )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/Core/Common.hpp)
 
-file(GLOB ASSETS "assets/*")
-file(COPY ${ASSETS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets)
+target_include_directories(${PROJECT_NAME} PUBLIC src/include)
+
+if(COMPILE_DEMO)
+    add_subdirectory(Demo)
+endif()
+

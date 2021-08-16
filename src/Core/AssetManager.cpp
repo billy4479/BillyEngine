@@ -10,15 +10,33 @@ void AssetManager::LoadFont(const std::filesystem::path &path,
     auto font = TTF_OpenFont((m_AssetsFolder / path).string().c_str(), size);
     assert(font != nullptr);
     m_Fonts.emplace(name, font);
+
+    PrintInfo();
 }
 
 TTF_Font *AssetManager::GetFont(const std::string &name) {
+#ifdef DEBUG
+    try {
+        m_Fonts.at(name);
+    } catch (std::out_of_range &e) {
+        assert(false);
+    }
+#endif
     auto font = m_Fonts[name];
     assert(font != nullptr);
     return font;
 }
 
 AssetManager::~AssetManager() { ReleaseSDLModules(); }
+
+void AssetManager::SetAssetFolder(const std::filesystem::path &path) {
+    if (path.is_relative())
+        m_AssetsFolder = m_BasePath / path;
+    else
+        m_AssetsFolder = path;
+}
+
+std::filesystem::path AssetManager::GetAssetFolder() { return m_AssetsFolder; }
 
 void AssetManager::ReleaseSDLModules() {
     if (!m_Fonts.empty()) {
@@ -40,6 +58,20 @@ void AssetManager::ReleaseSDLModules() {
 
         m_Textures.clear();
     }
+}
+
+std::filesystem::path AssetManager::GetBasePath() {
+    // TODO: Check if works on windows
+#ifdef _WIN32
+    wchar_t path[MAX_PATH] = {0};
+    GetModuleFileNameW(NULL, path, MAX_PATH);
+    return std::filesystem::path(path).parent_path();
+#else
+    char result[PATH_MAX];
+    ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
+    auto p = std::string(result, (count > 0) ? count : 0);
+    return std::filesystem::path(p).parent_path();
+#endif
 }
 
 void AssetManager::LoadImage(const std::filesystem::path &path,

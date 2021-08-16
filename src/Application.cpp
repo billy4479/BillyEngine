@@ -4,14 +4,19 @@
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Entity/Entity.hpp"
+#include "Entity/ScriptableEntity.hpp"
 
 namespace BillyEngine {
 
-Application::Application(std::string title, i32 width, i32 height)
+Application::Application(const std::string &title, i32 width, i32 height)
     : m_Height(height),
       m_Width(width),
       m_Title(std::move(title)),
       m_AssetManager(this) {
+#ifdef DEBUG
+    SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
+#endif
+
     if (SDL_Init(SDL_INIT_EVERYTHING))
         throw std::runtime_error("SDL failed to initialize.");
     if (TTF_Init()) throw std::runtime_error("SDL_ttf failed to initialize.");
@@ -27,10 +32,6 @@ Application::Application(std::string title, i32 width, i32 height)
     assert(m_Window != nullptr);
 
     m_Renderer.Init(m_Window);
-
-    m_AssetManager.LoadFont(
-        "JetBrains Mono Regular Nerd Font Complete Mono.ttf", "JetBrains Mono",
-        32);
 }
 
 Application::~Application() {
@@ -77,12 +78,13 @@ void Application::OnUpdate(f32 delta) {
 
     m_EntityRegister.view<Components::ScriptComponent>().each(
         [&](auto entity, auto &script) {
-            auto e = Entity(entity, &m_EntityRegister);
-            if (!script.IsInstantiated()) {
-                script.Instantiate(e);
-                script.OnCreate(e);
+            (void)entity;
+            // auto e = Entity(entity, this);
+            if (script.Instance == nullptr) {
+                script.Instantiate();
+                script.OnCreate(script.Instance);
             }
-            script.OnUpdate(e, delta);
+            script.OnUpdate(script.Instance, delta);
         });
 
     m_EntityRegister
@@ -109,14 +111,30 @@ void Application::OnUpdate(f32 delta) {
         });
 }
 
-void Application::AddBasicComponets(Entity &e, const std::string &name) {
+Entity Application::CreateEntity(const std::string &name) {
+    Entity e = {m_EntityRegister.create(), this};
+
+    std::string n;
+    if (name.empty()) {
+        std::stringstream ss;
+        ss << "Entity [" << (u32)e << "]";
+        ss >> n;
+    } else {
+        n = name;
+    }
+
     e.AddComponent<Components::TagComponent>(name);
     e.AddComponent<Components::TransformComponent>();
+
+    return e;
 }
 
 Renderer *Application::GetRenderer() { return &m_Renderer; }
 
-AssetManager *Application::GetAssetManager() { return &m_AssetManager; }
+AssetManager *Application::GetAssetManager() {
+    m_AssetManager.PrintInfo();
+    return &m_AssetManager;
+}
 
 void Application::DestroyEntity(Entity entity) {
     m_EntityRegister.destroy(entity);
