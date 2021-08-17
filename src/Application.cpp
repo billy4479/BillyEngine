@@ -131,10 +131,7 @@ Entity Application::CreateEntity(const std::string &name) {
 
 Renderer *Application::GetRenderer() { return &m_Renderer; }
 
-AssetManager *Application::GetAssetManager() {
-    m_AssetManager.PrintInfo();
-    return &m_AssetManager;
-}
+AssetManager *Application::GetAssetManager() { return &m_AssetManager; }
 
 void Application::DestroyEntity(Entity entity) {
     m_EntityRegister.destroy(entity);

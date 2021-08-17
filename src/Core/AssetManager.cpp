@@ -10,8 +10,6 @@ void AssetManager::LoadFont(const std::filesystem::path &path,
     auto font = TTF_OpenFont((m_AssetsFolder / path).string().c_str(), size);
     assert(font != nullptr);
     m_Fonts.emplace(name, font);
-
-    PrintInfo();
 }
 
 TTF_Font *AssetManager::GetFont(const std::string &name) {

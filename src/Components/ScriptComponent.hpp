@@ -21,7 +21,7 @@ struct ScriptComponent {
 
     template <typename T, typename... Args>
     void Bind(Entity e, Args&&... args) {
-        Instantiate = [&]() {
+        Instantiate = [&, e]() {
             assert(Instance == nullptr);
             Instance = new T(e, std::forward<Args>(args)...);
         };

@@ -8,7 +8,6 @@ namespace BillyEngine {
 
 Entity::Entity(entt::entity handle, Application* application)
     : m_Handle(handle), m_Application(application) {
-    dbg_print("Creating Entity [%d]\n", handle);
     application->GetAssetManager();
 }
 

@@ -23,7 +23,7 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_image REQUIRED)
 
-message(STATUS "Downloading EnTT...")
+message(STATUS "Getting EnTT ready...")
 FetchContent_Declare(EnTT
     GIT_REPOSITORY "https://github.com/skypjack/entt"
     GIT_TAG "0754f108c99ed2adce12b8d1bdf370169d103614"
