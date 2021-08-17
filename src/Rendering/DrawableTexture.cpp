@@ -25,20 +25,20 @@ namespace BillyEngine {
 
 #define TO_PIXEL_COORDS(x, y) y*(pitch / sizeof(u32)) + x
 
-void DrawableTexture::PutPixel(u32 x, u32 y, const Color& c) {
-    DO_WITH_PIXELS(pixels[TO_PIXEL_COORDS(x, y)] = c;)
+void DrawableTexture::PutPixel(glm::ivec2 position, const Color& c) {
+    DO_WITH_PIXELS(pixels[TO_PIXEL_COORDS(position.x, position.y)] = c;)
 }
 
 void DrawableTexture::Clear(const Color& c) {
     DO_WITH_PIXELS(
-        for (i32 y = 0; y < m_Height; y++) for (i32 x = 0; x < m_Width; x++)
-            pixels[y * m_Width + x] = c;)
+        for (i32 y = 0; y < m_Size.y; y++) for (i32 x = 0; x < m_Size.x; x++)
+            pixels[y * m_Size.x + x] = c;)
 }
 
-DrawableTexture::DrawableTexture(SDL_Renderer* renderer, i32 width, i32 height)
-    : m_Width(width), m_Height(height) {
+DrawableTexture::DrawableTexture(SDL_Renderer* renderer, glm::ivec2 size)
+    : m_Size(size) {
     m_Texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_BGRA32,
-                                  SDL_TEXTUREACCESS_STREAMING, width, height);
+                                  SDL_TEXTUREACCESS_STREAMING, size.x, size.y);
     assert(m_Texture != nullptr);
 }
 

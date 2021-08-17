@@ -13,7 +13,7 @@ class TestEntity : public BillyEngine::ScriptableEntity {
     }
     void OnUpdate(f32) override {
         GetComponent<BillyEngine::Components::TransformComponent>()
-            .Position.second += 1;
+            .Position.y += 1;
         // auto& t =
         // GetComponent<BillyEngine::Components::TransformComponent>();
         // t.Position = {t.Position.first + 1, t.Position.second};

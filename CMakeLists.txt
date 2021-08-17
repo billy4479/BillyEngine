@@ -24,9 +24,17 @@ find_package(SDL2_image REQUIRED)
 message(STATUS "Getting EnTT ready...")
 FetchContent_Declare(EnTT
     GIT_REPOSITORY "https://github.com/skypjack/entt"
-    GIT_TAG "0754f108c99ed2adce12b8d1bdf370169d103614"
+    GIT_TAG "v3.8.1"
 )
 FetchContent_MakeAvailable(EnTT)
+
+message(STATUS "Getting glm ready...")
+FetchContent_Declare(glm
+    GIT_REPOSITORY "https://github.com/g-truc/glm"
+    GIT_TAG "0.9.9.8"
+)
+FetchContent_MakeAvailable(glm)
+
 
 aux_source_directory( src SOURCES)
 aux_source_directory( src/Core CORE)
@@ -34,7 +42,9 @@ aux_source_directory( src/Rendering RENDERING)
 
 add_library( ${PROJECT_NAME} SHARED ${SOURCES} ${CORE} ${RENDERING})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC SDL2::Main SDL2::TTF SDL2::Image EnTT )
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC SDL2::Main SDL2::TTF SDL2::Image EnTT glm
+)
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/Core/Common.hpp)
 

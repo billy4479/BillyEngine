@@ -9,7 +9,7 @@ struct TextComponent {
     std::string Text;
     TTF_Font* Font = nullptr;
     SDL_Texture* Texture = nullptr;
-    Color fgColor = Color::white;
+    Color fgColor;
 
     TextComponent(const std::string& text, TTF_Font* font,
                   const Color& color = Color::white)

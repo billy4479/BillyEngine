@@ -51,6 +51,32 @@ struct ScriptComponent {
     }
 
     ScriptableEntity* Instance = nullptr;
+
+    ScriptComponent(const ScriptComponent& other) = delete;
+    ScriptComponent(ScriptComponent&& other) {
+        this->Instance = other.Instance;
+        this->Instantiate = other.Instantiate;
+        this->DestroyInstance = other.DestroyInstance;
+        this->OnCreate = other.OnCreate;
+        this->OnUpdate = other.OnUpdate;
+        this->OnDestroy = other.OnDestroy;
+
+        other.Instance = nullptr;
+    }
+    ScriptComponent& operator=(ScriptComponent&& other) {
+        if (this != &other) {
+            this->Instance = other.Instance;
+            this->Instantiate = other.Instantiate;
+            this->DestroyInstance = other.DestroyInstance;
+            this->OnCreate = other.OnCreate;
+            this->OnUpdate = other.OnUpdate;
+            this->OnDestroy = other.OnDestroy;
+
+            other.Instance = nullptr;
+        }
+        return *this;
+    }
+    ScriptComponent() = default;
 };
 }  // namespace Components
 }  // namespace BillyEngine

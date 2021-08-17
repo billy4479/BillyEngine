@@ -8,11 +8,8 @@
 
 namespace BillyEngine {
 
-Application::Application(const std::string &title, i32 width, i32 height)
-    : m_Height(height),
-      m_Width(width),
-      m_Title(std::move(title)),
-      m_AssetManager(this) {
+Application::Application(const std::string &title, glm::ivec2 size)
+    : m_Size(size), m_Title(std::move(title)), m_AssetManager(this) {
 #ifdef DEBUG
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 #endif
@@ -24,7 +21,7 @@ Application::Application(const std::string &title, i32 width, i32 height)
         throw std::runtime_error("SDL_image failed to initialize.");
 
     m_Window = SDL_CreateWindow(m_Title.c_str(), SDL_WINDOWPOS_UNDEFINED,
-                                SDL_WINDOWPOS_UNDEFINED, m_Width, m_Height, 0);
+                                SDL_WINDOWPOS_UNDEFINED, m_Size.x, m_Size.y, 0);
 
 #ifdef DEBUG
     if (m_Window == nullptr) dbg_print("%s\n", SDL_GetError());
@@ -97,7 +94,7 @@ void Application::OnUpdate(f32 delta) {
                     label.Text, label.Font, label.fgColor);
             }
             m_Renderer.DrawTexture(label.Texture, t.Position, t.Scale,
-                                   t.Rotation);
+                                   t.Rotation, t.Center);
         });
 
     m_EntityRegister

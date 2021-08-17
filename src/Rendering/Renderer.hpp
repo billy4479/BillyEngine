@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Core/CenterPoint.hpp"
 #include "../Core/Common.hpp"
 #include "DrawableTexture.hpp"
 
@@ -28,12 +29,11 @@ class Renderer {
     void Clear();
     void RenderToScreen();
 
-    DrawableTexture CreateDrawableTexture(i32 width, i32 height);
+    DrawableTexture CreateDrawableTexture(glm::ivec2 size);
     SDL_Texture *RenderTextToTexture(const std::string &text, TTF_Font *font,
                                      const Color &fgColor /* TODO: config? */);
-    void DrawTexture(SDL_Texture *, std::pair<i32, i32> position,
-                     std::pair<f32, f32> scale, f32 rotation,
-                     std::pair<i32, i32> center = {0, 0});
+    void DrawTexture(SDL_Texture *, glm::ivec2 position, glm::vec2 scale,
+                     f32 rotation, CenterPoint center = CenterPoint::TOP_LEFT);
 
    private:
     SDL_Renderer *m_Renderer = nullptr;

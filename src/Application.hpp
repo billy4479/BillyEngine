@@ -13,12 +13,15 @@ namespace BillyEngine {
 
 class Application {
    public:
-    Application(const std::string &, i32 width, i32 height);
+    Application(const std::string &name, i32 width, i32 height)
+        : Application(name, {width, height}) {}
+    Application(const std::string &name, glm::ivec2 size);
     ~Application();
 
     void Run();
     Renderer *GetRenderer();
     AssetManager *GetAssetManager();
+    const glm::ivec2 GetSize() const { return m_Size; }
 
     Entity CreateEntity(const std::string &name);
     void DestroyEntity(Entity);
@@ -40,7 +43,7 @@ class Application {
     static constexpr i32 FPS = 60;
     static constexpr i32 frameDelay = 1000 / FPS;
 
-    i32 m_Height, m_Width;
+    glm::ivec2 m_Size;
     std::string m_Title;
 
     SDL_Window *m_Window;
