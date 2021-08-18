@@ -36,8 +36,6 @@ class DrawableTexture {
      *
      * Set all the pixel of the texture to `c`
      *
-     * It cannot be called after `Finalize`
-     *
      * @param c The color
      */
     void Clear(const Color& c);
@@ -45,15 +43,16 @@ class DrawableTexture {
     /**
      * @brief Write pixel data to the GPU
      *
-     * This will lock this class and other methods like `PutPixel`
-     * won't be callable anymore, but `GetTexture` will be callable.
+     * This will generate a SDL_Texture out of the pixel data.
+     * If it has been already called it will update the texture
+     * with the new data.
      */
     void Finalize();
 
     /**
      * @brief Check if `Finalize` has been called
      *
-     * Checks if the pixel data has already been moved to the GPU.
+     * Checks if the pixel data has already been copied to the GPU.
      *
      * @return true if `Finalize` has been called
      * @return false if `Finalize` has not been called

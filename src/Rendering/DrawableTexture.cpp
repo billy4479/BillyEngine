@@ -35,10 +35,12 @@ void DrawableTexture::Clear(const Color& c) {
 }
 
 void DrawableTexture::Finalize() {
+    if (m_Texture != nullptr) {
+        SDL_DestroyTexture(m_Texture);
+        m_Texture = nullptr;
+    }
     m_Texture = SDL_CreateTextureFromSurface(m_Renderer, m_Surface);
     assert(m_Texture != nullptr);
-    SDL_FreeSurface(m_Surface);
-    m_Surface = nullptr;
     m_IsFinalized = true;
 }
 
@@ -53,10 +55,9 @@ DrawableTexture::~DrawableTexture() {
     if (IsFinalized()) {
         SDL_DestroyTexture(m_Texture);
         m_Texture = nullptr;
-    } else {
-        SDL_FreeSurface(m_Surface);
-        m_Surface = nullptr;
     }
+    SDL_FreeSurface(m_Surface);
+    m_Surface = nullptr;
 }
 
 }  // namespace BillyEngine
