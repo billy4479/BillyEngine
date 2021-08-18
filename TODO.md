@@ -1,5 +1,7 @@
 # TODO
 
+- [ ] Documentation :)
+
 ## Input class
 
 - [ ] Actually create it
@@ -8,7 +10,7 @@
 
 ## Rendering
 
-- [ ] Use `SDL_Surface`s when needed and choose where to use those and where `SDL_Texture`s
+- [x] Use `SDL_Surface`s when needed and choose where to use those and where `SDL_Texture`s
 - [ ] Draw shapes and primitives
   - [ ] Rectangle
   - [ ] Triangle
