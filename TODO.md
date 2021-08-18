@@ -30,3 +30,14 @@
 ## Entity
 
 - [ ] Parent-children entities
+
+## Scene (?)
+
+This has a question mark because it adds a notable complexity layer and might not be the right thing for such a small project.
+
+- [ ] Create the scene class
+- [ ] Be able to load in different scenes with different entities inside
+- [ ] Scene serialization
+  - [ ] Text based for development (JSON/YML)
+  - [ ] Optimized loading for runtime ("compile" all text files at launch?)
+- [ ] Project file (?)
