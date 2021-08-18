@@ -10,6 +10,8 @@ So for now it requires SDL2 and SDL2_ttf to be installed globally.
 
 I've developed it in Linux for Linux but _should_ work on other platforms as well.
 
+There's still a lot of work to do, check out [TODO.md](TODO.md)
+
 ## How to use
 
 Just bring it in using git submodules or CMake's `FetchContent` and `#include <BillyEngine.hpp>`.
