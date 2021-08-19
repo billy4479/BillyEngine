@@ -101,11 +101,15 @@ void Application::OnUpdate(f32 delta) {
         .view<Components::SpriteComponent, Components::TransformComponent>()
         .each([&](auto entity, auto &sprite, auto &t) {
             (void)entity;
+#ifdef DEBUG
             if (sprite.GetTexture() != nullptr)
+#endif
                 m_Renderer.DrawTexture(sprite.GetTexture(), t.Position, t.Scale,
                                        t.Rotation);
+#ifdef DEBUG
             else
                 dbg_print("Not drawing since the texture is null\n");
+#endif
         });
 }
 
