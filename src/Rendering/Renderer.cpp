@@ -32,9 +32,15 @@ SDL_Texture* Renderer::RenderTextToTexture(
 void Renderer::DrawTexture(SDL_Texture* texture, glm::ivec2 position,
                            glm::vec2 scale, f32 rotation, CenterPoint center) {
     assert(m_Renderer != nullptr);
+    assert(texture != nullptr);
 
     i32 w, h;
-    SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+    auto result = SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+#ifdef DEBUG
+    if (result != 0) dbg_print("%s\n", SDL_GetError());
+#endif
+    assert(result == 0);
+
     SDL_Rect sRect{0, 0, w, h};
     SDL_Rect dRect{position.x, position.y, static_cast<i32>(abs(scale.x) * w),
                    static_cast<i32>(abs(scale.y) * h)};
@@ -77,8 +83,8 @@ void Renderer::DrawTexture(SDL_Texture* texture, glm::ivec2 position,
     if (scale.x < 0) flip |= SDL_FLIP_HORIZONTAL;
     if (scale.y < 0) flip |= SDL_FLIP_VERTICAL;
 
-    auto result = SDL_RenderCopyEx(m_Renderer, texture, &sRect, &dRect,
-                                   rotation, &c, (SDL_RendererFlip)flip);
+    result = SDL_RenderCopyEx(m_Renderer, texture, &sRect, &dRect, rotation, &c,
+                              (SDL_RendererFlip)flip);
 
 #ifdef DEBUG
     if (result != 0) dbg_print("%s\n", SDL_GetError());

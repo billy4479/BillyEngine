@@ -69,10 +69,7 @@ class DrawableTexture {
      *
      * @return SDL_Texture* of the drawn pixel data
      */
-    SDL_Texture* GetTexture() {
-        assert(IsFinalized());
-        return m_Texture;
-    }
+    inline SDL_Texture** GetTexture() { return &m_Texture; }
 
     /**
      * @brief Finalize and get the just generated `SDL_Texture`
@@ -82,9 +79,9 @@ class DrawableTexture {
      *
      * @return SDL_Texture* of the drawn pixel data
      */
-    SDL_Texture* FinalizeAndGetTexture() {
-        if (!IsFinalized()) Finalize();
-        return m_Texture;
+    inline SDL_Texture** FinalizeAndGetTexture() {
+        Finalize();
+        return &m_Texture;
     }
 
    public:
@@ -95,6 +92,7 @@ class DrawableTexture {
      * @param size The size of the texture
      */
     DrawableTexture(SDL_Renderer* renderer, glm::ivec2 size);
+    DrawableTexture() = default;
     /**
      * @brief Create a new `DrawableTexture` from an existing `SDL_Surface`
      *
@@ -104,12 +102,22 @@ class DrawableTexture {
     DrawableTexture(DrawableTexture& other) = delete;
     DrawableTexture(DrawableTexture&& other) {
         this->m_Texture = other.m_Texture;
+        this->m_Surface = other.m_Surface;
+        this->m_IsFinalized = other.m_IsFinalized;
+        this->m_Renderer = other.m_Renderer;
+        this->m_Size = other.m_Size;
         other.m_Texture = nullptr;
+        other.m_Surface = nullptr;
     }
     DrawableTexture& operator=(DrawableTexture&& other) {
         if (this != &other) {
             this->m_Texture = other.m_Texture;
+            this->m_Surface = other.m_Surface;
+            this->m_IsFinalized = other.m_IsFinalized;
+            this->m_Renderer = other.m_Renderer;
+            this->m_Size = other.m_Size;
             other.m_Texture = nullptr;
+            other.m_Surface = nullptr;
         }
         return *this;
     }
@@ -119,7 +127,7 @@ class DrawableTexture {
     SDL_Renderer* m_Renderer = nullptr;
     SDL_Surface* m_Surface = nullptr;
     SDL_Texture* m_Texture = nullptr;
-    glm::ivec2 m_Size;
+    glm::ivec2 m_Size{0, 0};
     bool m_IsFinalized = false;
 };
 }  // namespace BillyEngine

@@ -6,13 +6,13 @@
 namespace BillyEngine {
 namespace Components {
 struct SpriteComponent {
-    SDL_Texture* Texture = nullptr;
-    Color Tint{0, 0, 0, 0};
-
     SpriteComponent() = default;
     SpriteComponent(const SpriteComponent&) = delete;
-    SpriteComponent(SDL_Texture* texture, const Color& tint = {0, 0, 0, 0})
+    SpriteComponent(SDL_Texture* texture, const Color& tint = Color::white)
         : Texture(texture), Tint(tint) {}
+
+    SpriteComponent(SDL_Texture** texture, const Color& tint = Color::white)
+        : Texture(*texture), TexturePtr(texture), Tint(tint) {}
 
     SpriteComponent(SpriteComponent&& other) noexcept {
         this->Texture = other.Texture;
@@ -29,6 +29,17 @@ struct SpriteComponent {
         }
         return *this;
     }
+
+    inline SDL_Texture* GetTexture() const {
+        return TexturePtr ? *TexturePtr : Texture;
+    }
+
+   private:
+    SDL_Texture* Texture = nullptr;
+
+   public:
+    SDL_Texture** TexturePtr = nullptr;
+    Color Tint{0, 0, 0, 0};
 };
 
 }  // namespace Components

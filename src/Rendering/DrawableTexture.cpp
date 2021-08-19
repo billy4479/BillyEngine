@@ -25,12 +25,10 @@ namespace BillyEngine {
 #define TO_PIXEL_COORDS(x, y) y*(m_Surface->pitch / sizeof(u32)) + x
 
 void DrawableTexture::PutPixel(glm::ivec2 position, const Color& c) {
-    assert(!IsFinalized());
     DO_WITH_PIXELS(pixels[TO_PIXEL_COORDS(position.x, position.y)] = c;)
 }
 
 void DrawableTexture::Clear(const Color& c) {
-    assert(!IsFinalized());
     SDL_FillRect(m_Surface, nullptr, c);
 }
 
@@ -40,7 +38,6 @@ void DrawableTexture::Finalize() {
         m_Texture = nullptr;
     }
     m_Texture = SDL_CreateTextureFromSurface(m_Renderer, m_Surface);
-    assert(m_Texture != nullptr);
     m_IsFinalized = true;
 }
 
@@ -52,10 +49,8 @@ DrawableTexture::DrawableTexture(SDL_Renderer* renderer, glm::ivec2 size)
 }
 
 DrawableTexture::~DrawableTexture() {
-    if (IsFinalized()) {
-        SDL_DestroyTexture(m_Texture);
-        m_Texture = nullptr;
-    }
+    SDL_DestroyTexture(m_Texture);
+    m_Texture = nullptr;
     SDL_FreeSurface(m_Surface);
     m_Surface = nullptr;
 }
