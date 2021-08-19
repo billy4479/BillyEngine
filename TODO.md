@@ -11,6 +11,7 @@
 ## Rendering
 
 - [x] Use `SDL_Surface`s when needed and choose where to use those and where `SDL_Texture`s
+- [ ] Resizable window
 - [ ] Draw shapes and primitives
   - [ ] Rectangle
   - [ ] Triangle
