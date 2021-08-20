@@ -3,7 +3,7 @@
 #include "TestEntity.hpp"
 
 int main() {
-    BillyEngine::Application app("Test", 800, 600);
+    BillyEngine::Application app("Test", 1280, 720);
     auto am = app.GetAssetManager();
     am->SetAssetFolder("assets");
     am->LoadFont("OpenSans-Regular.ttf", "OpenSans", 28);
@@ -17,7 +17,7 @@ int main() {
         "Fixed Position", am->GetFont("JetBrainsMono"));
     auto& t = e.GetComponent<BillyEngine::Components::TransformComponent>();
     t.Position = app.GetSize() / 2;
-    t.Center = BillyEngine::CenterPoint::CENTER_CENTER;
+    t.Anchor = BillyEngine::CenterPoint::CENTER_CENTER;
 
     app.Run();
 

@@ -30,7 +30,8 @@ SDL_Texture* Renderer::RenderTextToTexture(
 }
 
 void Renderer::DrawTexture(SDL_Texture* texture, glm::ivec2 position,
-                           glm::vec2 scale, f32 rotation, CenterPoint center) {
+                           glm::vec2 scale, f32 rotation, CenterPoint anchor,
+                           CenterPoint rotationCenter) {
     assert(m_Renderer != nullptr);
     assert(texture != nullptr);
 
@@ -45,46 +46,21 @@ void Renderer::DrawTexture(SDL_Texture* texture, glm::ivec2 position,
     SDL_Rect dRect{position.x, position.y, static_cast<i32>(abs(scale.x) * w),
                    static_cast<i32>(abs(scale.y) * h)};
 
-    SDL_Point c;
-    switch (center) {
-        case CenterPoint::TOP_LEFT:
-            c = {0, 0};
-            break;
-        case CenterPoint::TOP_CENTER:
-            c = {dRect.w / 2, 0};
-            break;
-        case CenterPoint::TOP_RIGHT:
-            c = {dRect.w, 0};
-            break;
-        case CenterPoint::CENTER_LEFT:
-            c = {0, dRect.h / 2};
-            break;
-        case CenterPoint::CENTER_CENTER:
-            c = {dRect.w / 2, dRect.h / 2};
-            break;
-        case CenterPoint::CENTER_RIGHT:
-            c = {dRect.w, dRect.h / 2};
-            break;
-        case CenterPoint::BOTTOM_LEFT:
-            c = {0, dRect.h};
-            break;
-        case CenterPoint::BOTTOM_CENTER:
-            c = {dRect.w / 2, dRect.h};
-            break;
-        case CenterPoint::BOTTOM_RIGHT:
-            c = {dRect.w, dRect.h};
-            break;
-    }
+    auto anchorPoint = CenterPointToCoords(anchor, dRect);
+    auto rotationCenterPoint = CenterPointToCoords(rotationCenter, dRect);
 
-    dRect.x -= c.x;
-    dRect.y -= c.y;
+    dRect.x -= anchorPoint.x;
+    dRect.y -= anchorPoint.y;
 
     i32 flip = SDL_FLIP_NONE;
     if (scale.x < 0) flip |= SDL_FLIP_HORIZONTAL;
     if (scale.y < 0) flip |= SDL_FLIP_VERTICAL;
 
-    result = SDL_RenderCopyEx(m_Renderer, texture, &sRect, &dRect, rotation, &c,
-                              (SDL_RendererFlip)flip);
+    SDL_Point rotationCenterPointSDL = {rotationCenterPoint.x,
+                                        rotationCenterPoint.y};
+
+    result = SDL_RenderCopyEx(m_Renderer, texture, &sRect, &dRect, rotation,
+                              &rotationCenterPointSDL, (SDL_RendererFlip)flip);
 
 #ifdef DEBUG
     if (result != 0) dbg_print("%s\n", SDL_GetError());

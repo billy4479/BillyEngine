@@ -94,7 +94,7 @@ void Application::OnUpdate(f32 delta) {
                     label.Text, label.Font, label.fgColor);
             }
             m_Renderer.DrawTexture(label.Texture, t.Position, t.Scale,
-                                   t.Rotation, t.Center);
+                                   t.Rotation, t.Anchor, t.RotationCenter);
         });
 
     m_EntityRegister
@@ -105,7 +105,7 @@ void Application::OnUpdate(f32 delta) {
             if (sprite.GetTexture() != nullptr)
 #endif
                 m_Renderer.DrawTexture(sprite.GetTexture(), t.Position, t.Scale,
-                                       t.Rotation);
+                                       t.Rotation, t.Anchor, t.RotationCenter);
 #ifdef DEBUG
             else
                 dbg_print("Not drawing since the texture is null\n");

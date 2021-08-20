@@ -33,7 +33,8 @@ class Renderer {
     SDL_Texture *RenderTextToTexture(const std::string &text, TTF_Font *font,
                                      const Color &fgColor /* TODO: config? */);
     void DrawTexture(SDL_Texture *, glm::ivec2 position, glm::vec2 scale,
-                     f32 rotation, CenterPoint center = CenterPoint::TOP_LEFT);
+                     f32 rotation, CenterPoint anchor,
+                     CenterPoint rotationCenter);
 
    private:
     SDL_Renderer *m_Renderer = nullptr;

@@ -10,15 +10,18 @@ struct TransformComponent {
     glm::ivec2 Position;
     glm::vec2 Scale;
     f32 Rotation;
-    CenterPoint Center;
+    CenterPoint RotationCenter;
+    CenterPoint Anchor;
 
     TransformComponent(glm::ivec2 position = {0, 0}, glm::vec2 scale = {1, 1},
                        f32 rotation = 0,
-                       CenterPoint center = CenterPoint::TOP_LEFT)
+                       CenterPoint rotationCenter = CenterPoint::CENTER_CENTER,
+                       CenterPoint anchor = CenterPoint::TOP_LEFT)
         : Position(position),
           Scale(scale),
           Rotation(rotation),
-          Center(center) {}
+          RotationCenter(rotationCenter),
+          Anchor(anchor) {}
 
     TransformComponent(const TransformComponent&) = delete;
 
@@ -26,7 +29,8 @@ struct TransformComponent {
         this->Position = other.Position;
         this->Rotation = other.Rotation;
         this->Scale = other.Scale;
-        this->Center = other.Center;
+        this->RotationCenter = other.RotationCenter;
+        this->Anchor = other.Anchor;
     }
 
     TransformComponent& operator=(TransformComponent&& other) noexcept {
@@ -34,7 +38,8 @@ struct TransformComponent {
             this->Position = other.Position;
             this->Rotation = other.Rotation;
             this->Scale = other.Scale;
-            this->Center = other.Center;
+            this->RotationCenter = other.RotationCenter;
+            this->Anchor = other.Anchor;
         }
 
         return *this;
