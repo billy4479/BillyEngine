@@ -14,7 +14,7 @@ Entity::Entity(entt::entity handle, Application* application)
 template <typename T, typename... Args>
 T& Entity::AddComponent(Args&&... args) {
     assert(!HasComponent<T>());
-    T& component = m_Application->m_EntityRegister.emplace<T>(
+    T& component = m_Application->GetEntityManager()->m_Registry.emplace<T>(
         m_Handle, std::forward<Args>(args)...);
     return component;
 }
@@ -22,17 +22,18 @@ T& Entity::AddComponent(Args&&... args) {
 template <typename T>
 void Entity::RemoveComponent() {
     assert(HasComponent<T>());
-    m_Application->m_EntityRegister.remove<T>(m_Handle);
+    m_Application->GetEntityManager()->m_Registry.remove<T>(m_Handle);
 }
 
 template <typename T>
 bool Entity::HasComponent() {
-    return m_Application->m_EntityRegister.try_get<T>(m_Handle) != nullptr;
+    return m_Application->GetEntityManager()->m_Registry.try_get<T>(m_Handle) !=
+           nullptr;
 }
 
 template <typename T>
 T& Entity::GetComponent() {
-    return m_Application->m_EntityRegister.get<T>(m_Handle);
+    return m_Application->GetEntityManager()->m_Registry.get<T>(m_Handle);
 }
 
 }  // namespace BillyEngine

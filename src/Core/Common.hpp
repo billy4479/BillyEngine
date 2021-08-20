@@ -8,9 +8,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include <any>
 #include <cassert>
-#include <chrono>
 #include <cmath>
 #include <cstdint>
 #include <entt/entt.hpp>
@@ -23,7 +21,6 @@
 #include <stdexcept>
 #include <string>
 #include <utility>
-#include <vector>
 
 #ifdef _WIN32
     #include <windows.h>  //GetModuleFileNameW

@@ -10,8 +10,7 @@ class TestEntity : public BillyEngine::ScriptableEntity {
     u16 hue = 0;
 
     void OnCreate() override {
-        texture =
-            m_Application->GetRenderer()->CreateDrawableTexture({100, 100});
+        texture = m_Application->CreateDrawableTexture({100, 100});
         texture.Clear(BillyEngine::Color::hsl(hue, 0.5, 0.5));
 
         AddComponent<BillyEngine::Components::Sprite>(

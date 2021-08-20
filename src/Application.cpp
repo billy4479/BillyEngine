@@ -3,13 +3,16 @@
 #include "Components/Components.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
-#include "Entity/Entity.hpp"
+#include "Entity/Entity.hxx"
 #include "Entity/ScriptableEntity.hpp"
 
 namespace BillyEngine {
 
 Application::Application(const std::string &title, glm::ivec2 size)
-    : m_Size(size), m_Title(std::move(title)), m_AssetManager(this) {
+    : m_Size(size),
+      m_Title(title),
+      m_AssetManager(this),
+      m_EntityManager(this) {
 #ifdef DEBUG
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
 #endif
@@ -43,8 +46,6 @@ void Application::Run() {
     assert(!isRunning);
     isRunning = true;
 
-    OnCreate();
-
     u32 frameStart = 0;
     i32 frameTime = 0;
 
@@ -54,7 +55,6 @@ void Application::Run() {
         m_Renderer.Clear();
 
         OnUpdate(lastDelta);
-        m_Renderer.RenderToScreen();
 
         isRunning = !m_EventHandler.ShouldClose();
         frameTime = SDL_GetTicks() - frameStart;
@@ -68,73 +68,22 @@ void Application::Run() {
 
 void Application::AskToStop() { isRunning = false; }
 
-void Application::OnCreate() {}
-
 void Application::OnUpdate(f32 delta) {
     m_EventHandler.HandleEvents();
 
-    m_EntityRegister.view<Components::Script>().each(
-        [&](auto entity, auto &script) {
-            (void)entity;
-            // auto e = Entity(entity, this);
-            if (script.Instance == nullptr) {
-                script.Instantiate();
-                script.OnCreate(script.Instance);
-            }
-            script.OnUpdate(script.Instance, delta);
-        });
+    m_EntityManager.Update(delta);
 
-    m_EntityRegister.view<Components::Text, Components::Transform>().each(
-        [&](auto entity, auto &label, auto &t) {
-            (void)entity;
-            if (label.Texture == nullptr) {
-                assert(label.Font != nullptr);
-                label.Texture = m_Renderer.RenderTextToTexture(
-                    label.Content, label.Font, label.fgColor);
-            }
-            m_Renderer.DrawTexture(label.Texture, t.Position, t.Scale,
-                                   t.Rotation, t.Anchor, t.RotationCenter);
-        });
-
-    m_EntityRegister.view<Components::Sprite, Components::Transform>().each(
-        [&](auto entity, auto &sprite, auto &t) {
-            (void)entity;
-#ifdef DEBUG
-            if (sprite.GetTexture() != nullptr)
-#endif
-                m_Renderer.DrawTexture(sprite.GetTexture(), t.Position, t.Scale,
-                                       t.Rotation, t.Anchor, t.RotationCenter);
-#ifdef DEBUG
-            else
-                dbg_print("Not drawing since the texture is null\n");
-#endif
-        });
-}
-
-Entity Application::CreateEntity(const std::string &name) {
-    Entity e = {m_EntityRegister.create(), this};
-
-    std::string n;
-    if (name.empty()) {
-        std::stringstream ss;
-        ss << "Entity [" << (u32)e << "]";
-        ss >> n;
-    } else {
-        n = name;
-    }
-
-    e.AddComponent<Components::Tag>(name);
-    e.AddComponent<Components::Transform>();
-
-    return e;
+    m_Renderer.RenderToScreen();
 }
 
 Renderer *Application::GetRenderer() { return &m_Renderer; }
 
 AssetManager *Application::GetAssetManager() { return &m_AssetManager; }
 
-void Application::DestroyEntity(Entity entity) {
-    m_EntityRegister.destroy(entity);
+EntityManager *Application::GetEntityManager() { return &m_EntityManager; }
+
+DrawableTexture Application::CreateDrawableTexture(glm::ivec2 size) {
+    return m_Renderer.CreateDrawableTexture(size);
 }
 
 }  // namespace BillyEngine

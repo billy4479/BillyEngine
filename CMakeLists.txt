@@ -38,9 +38,10 @@ FetchContent_MakeAvailable(glm)
 
 aux_source_directory( src SOURCES)
 aux_source_directory( src/Core CORE)
+aux_source_directory( src/Entity ENTITY)
 aux_source_directory( src/Rendering RENDERING)
 
-add_library( ${PROJECT_NAME} SHARED ${SOURCES} ${CORE} ${RENDERING})
+add_library( ${PROJECT_NAME} SHARED ${SOURCES} ${CORE} ${RENDERING} ${ENTITY})
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC SDL2::Main SDL2::TTF SDL2::Image EnTT glm
