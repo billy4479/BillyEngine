@@ -13,9 +13,9 @@ int main() {
     app.CreateScriptableEntity<TestEntity>("");
 
     auto e = app.CreateEntity("");
-    e.AddComponent<BillyEngine::Components::TextComponent>(
-        "Fixed Position", am->GetFont("JetBrainsMono"));
-    auto& t = e.GetComponent<BillyEngine::Components::TransformComponent>();
+    e.AddComponent<BillyEngine::Components::Text>("Fixed Position",
+                                                  am->GetFont("JetBrainsMono"));
+    auto& t = e.GetComponent<BillyEngine::Components::Transform>();
     t.Position = app.GetSize() / 2;
     t.Anchor = BillyEngine::CenterPoint::CENTER_CENTER;
 

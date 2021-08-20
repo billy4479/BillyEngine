@@ -73,7 +73,7 @@ void Application::OnCreate() {}
 void Application::OnUpdate(f32 delta) {
     m_EventHandler.HandleEvents();
 
-    m_EntityRegister.view<Components::ScriptComponent>().each(
+    m_EntityRegister.view<Components::Script>().each(
         [&](auto entity, auto &script) {
             (void)entity;
             // auto e = Entity(entity, this);
@@ -84,22 +84,20 @@ void Application::OnUpdate(f32 delta) {
             script.OnUpdate(script.Instance, delta);
         });
 
-    m_EntityRegister
-        .view<Components::TextComponent, Components::TransformComponent>()
-        .each([&](auto entity, auto &label, auto &t) {
+    m_EntityRegister.view<Components::Text, Components::Transform>().each(
+        [&](auto entity, auto &label, auto &t) {
             (void)entity;
             if (label.Texture == nullptr) {
                 assert(label.Font != nullptr);
                 label.Texture = m_Renderer.RenderTextToTexture(
-                    label.Text, label.Font, label.fgColor);
+                    label.Content, label.Font, label.fgColor);
             }
             m_Renderer.DrawTexture(label.Texture, t.Position, t.Scale,
                                    t.Rotation, t.Anchor, t.RotationCenter);
         });
 
-    m_EntityRegister
-        .view<Components::SpriteComponent, Components::TransformComponent>()
-        .each([&](auto entity, auto &sprite, auto &t) {
+    m_EntityRegister.view<Components::Sprite, Components::Transform>().each(
+        [&](auto entity, auto &sprite, auto &t) {
             (void)entity;
 #ifdef DEBUG
             if (sprite.GetTexture() != nullptr)
@@ -125,8 +123,8 @@ Entity Application::CreateEntity(const std::string &name) {
         n = name;
     }
 
-    e.AddComponent<Components::TagComponent>(name);
-    e.AddComponent<Components::TransformComponent>();
+    e.AddComponent<Components::Tag>(name);
+    e.AddComponent<Components::Transform>();
 
     return e;
 }

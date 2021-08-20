@@ -4,19 +4,17 @@
 
 namespace BillyEngine {
 namespace Components {
-struct TagComponent {
-    std::string Tag;
+struct Tag {
+    std::string Name;
 
-    TagComponent() = default;
-    TagComponent(const TagComponent&) = delete;
-    TagComponent(const std::string& tag) : Tag(tag) {}
+    Tag() = default;
+    Tag(const Tag&) = delete;
+    Tag(const std::string& tag) : Name(tag) {}
 
-    TagComponent(TagComponent&& other) noexcept {
-        this->Tag = std::move(other.Tag);
-    }
-    TagComponent& operator=(TagComponent&& other) noexcept {
+    Tag(Tag&& other) noexcept { this->Name = std::move(other.Name); }
+    Tag& operator=(Tag&& other) noexcept {
         if (this != &other) {
-            this->Tag = std::move(other.Tag);
+            this->Name = std::move(other.Name);
         }
         return *this;
     }

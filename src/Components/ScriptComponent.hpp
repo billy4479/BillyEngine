@@ -7,7 +7,7 @@ namespace BillyEngine {
 
 namespace Components {
 
-struct ScriptComponent {
+struct Script {
     std::function<void()> Instantiate;
     std::function<void()> DestroyInstance;
 
@@ -15,7 +15,7 @@ struct ScriptComponent {
     std::function<void(ScriptableEntity*, f32)> OnUpdate;
     std::function<void(ScriptableEntity*)> OnDestroy;
 
-    ~ScriptComponent() {
+    ~Script() {
         if (Instance != nullptr) DestroyInstance();
     }
 
@@ -52,8 +52,8 @@ struct ScriptComponent {
 
     ScriptableEntity* Instance = nullptr;
 
-    ScriptComponent(const ScriptComponent& other) = delete;
-    ScriptComponent(ScriptComponent&& other) {
+    Script(const Script& other) = delete;
+    Script(Script&& other) {
         this->Instance = other.Instance;
         this->Instantiate = other.Instantiate;
         this->DestroyInstance = other.DestroyInstance;
@@ -63,7 +63,7 @@ struct ScriptComponent {
 
         other.Instance = nullptr;
     }
-    ScriptComponent& operator=(ScriptComponent&& other) {
+    Script& operator=(Script&& other) {
         if (this != &other) {
             this->Instance = other.Instance;
             this->Instantiate = other.Instantiate;
@@ -76,7 +76,7 @@ struct ScriptComponent {
         }
         return *this;
     }
-    ScriptComponent() = default;
+    Script() = default;
 };
 }  // namespace Components
 }  // namespace BillyEngine

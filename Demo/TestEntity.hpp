@@ -14,14 +14,13 @@ class TestEntity : public BillyEngine::ScriptableEntity {
             m_Application->GetRenderer()->CreateDrawableTexture({100, 100});
         texture.Clear(BillyEngine::Color::hsl(hue, 0.5, 0.5));
 
-        AddComponent<BillyEngine::Components::SpriteComponent>(
+        AddComponent<BillyEngine::Components::Sprite>(
             texture.FinalizeAndGetTexture());
-        GetComponent<BillyEngine::Components::TransformComponent>().Position = {
-            100, 100};
+        GetComponent<BillyEngine::Components::Transform>().Position = {100,
+                                                                       100};
     }
     void OnUpdate(f32) override {
-        GetComponent<BillyEngine::Components::TransformComponent>().Rotation +=
-            1;
+        GetComponent<BillyEngine::Components::Transform>().Rotation += 1;
         texture.Clear(BillyEngine::Color::hsl(++hue, 0.5, 0.5));
         texture.Finalize();
     }

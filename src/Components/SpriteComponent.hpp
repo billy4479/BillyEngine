@@ -5,22 +5,22 @@
 
 namespace BillyEngine {
 namespace Components {
-struct SpriteComponent {
-    SpriteComponent() = default;
-    SpriteComponent(const SpriteComponent&) = delete;
-    SpriteComponent(SDL_Texture* texture, const Color& tint = Color::white)
+struct Sprite {
+    Sprite() = default;
+    Sprite(const Sprite&) = delete;
+    Sprite(SDL_Texture* texture, const Color& tint = Color::white)
         : Texture(texture), Tint(tint) {}
 
-    SpriteComponent(SDL_Texture** texture, const Color& tint = Color::white)
+    Sprite(SDL_Texture** texture, const Color& tint = Color::white)
         : Texture(*texture), TexturePtr(texture), Tint(tint) {}
 
-    SpriteComponent(SpriteComponent&& other) noexcept {
+    Sprite(Sprite&& other) noexcept {
         this->Texture = other.Texture;
         other.Texture = nullptr;
 
         this->Tint = other.Tint;
     }
-    SpriteComponent& operator=(SpriteComponent&& other) noexcept {
+    Sprite& operator=(Sprite&& other) noexcept {
         if (this != &other) {
             this->Texture = other.Texture;
             other.Texture = nullptr;

@@ -29,7 +29,7 @@ class Application {
     template <typename T, typename... Args>
     Entity CreateScriptableEntity(const std::string &name, Args &&...args) {
         auto e = CreateEntity(name);
-        e.AddComponent<Components::ScriptComponent>().Bind<T, Args...>(
+        e.AddComponent<Components::Script>().Bind<T, Args...>(
             e, std::forward<Args>(args)...);
         return e;
     }
