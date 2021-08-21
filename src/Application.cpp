@@ -80,8 +80,6 @@ Renderer *Application::GetRenderer() { return &m_Renderer; }
 
 AssetManager *Application::GetAssetManager() { return &m_AssetManager; }
 
-EntityManager *Application::GetEntityManager() { return &m_EntityManager; }
-
 DrawableTexture Application::CreateDrawableTexture(glm::ivec2 size) {
     return m_Renderer.CreateDrawableTexture(size);
 }

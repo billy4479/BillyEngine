@@ -10,8 +10,6 @@ ScriptableEntity::ScriptableEntity(entt::entity handle,
 
 ScriptableEntity::ScriptableEntity(Entity e) : Entity(e) {}
 
-void ScriptableEntity::Destroy() {
-    m_Application->GetEntityManager()->DestroyEntity(*this);
-}
+void ScriptableEntity::Destroy() { m_Application->DestroyEntity(*this); }
 
 }  // namespace BillyEngine
