@@ -9,7 +9,7 @@ namespace BillyEngine {
 class Application;
 class EntityManager {
    public:
-    EntityManager(Application *application);
+    explicit EntityManager(Application *application);
     ~EntityManager();
 
     void Update(f32 delta);

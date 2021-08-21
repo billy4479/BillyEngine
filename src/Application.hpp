@@ -12,9 +12,11 @@ namespace BillyEngine {
 class DrawableTexture;
 class Application {
    public:
-    Application(const std::string &name, i32 width, i32 height)
-        : Application(name, {width, height}) {}
-    Application(const std::string &name, glm::ivec2 size);
+    Application(const std::string &name, i32 width, i32 height,
+                const std::filesystem::path &assetsPath = "")
+        : Application(name, {width, height}, assetsPath) {}
+    Application(const std::string &name, glm::ivec2 size,
+                const std::filesystem::path &assetsPath = "");
     ~Application();
 
     void Run();
@@ -62,8 +64,82 @@ class Application {
         m_EntityManager.DestroyEntity(entity);
     }
 
-    // TODO: remove those / make them private
-    AssetManager *GetAssetManager();
+    /*** AssetManager proxy ***/
+
+    /**
+     * @brief Set the assets folder
+     *
+     * When a call to functions which load assets is done (e.g.: `LoadFont` or
+     * `LoadImage`) this will be used as base path.
+     *
+     * @note The path is relative to the executable location
+     *
+     * @param path The path to the folder (can be relative or absolute)
+     */
+    inline void SetAssetFolder(const std::filesystem::path &path) {
+        m_AssetManager.SetAssetFolder(path);
+    }
+
+    /**
+     * @brief Get the asset folder path
+     *
+     * This returns the current base path used when calling functions which load
+     * assets (e.g.: `LoadFont` or `LoadImage`).
+     *
+     * @return std::filesystem::path The current assets path
+     */
+    inline std::filesystem::path GetAssetFolder() {
+        return m_AssetManager.GetAssetFolder();
+    }
+
+    /**
+     * @brief Load a TTF font
+     *
+     * @note path is relative to the assets folder
+     *
+     * @param path Relative path of the ttf file
+     * @param name The name this font will have
+     * @param size The size in pt
+     * @return TTF_Font* The loaded font
+     */
+    inline TTF_Font *LoadFont(const std::filesystem::path &path,
+                              const std::string &name, u32 size) {
+        return m_AssetManager.LoadFont(path, name, size);
+    }
+
+    /**
+     * @brief Get a font loaded previously using `LoadFont`
+     *
+     * @param name The name used when the font was loaded
+     * @return TTF_Font* The font
+     */
+    inline TTF_Font *GetFont(const std::string &name) {
+        return m_AssetManager.GetFont(name);
+    }
+
+    // TODO: maybe return a DrawableTexture?
+
+    /**
+     * @brief Load an image file (png or jpg)
+     *
+     * @param path Relative path to the image file
+     * @param name The name this image will have
+     * @return SDL_Surface* A surface containing the loaded image data
+     */
+    inline SDL_Surface *LoadImage(const std::filesystem::path &path,
+                                  const std::string name) {
+        return m_AssetManager.LoadImage(path, name);
+    }
+
+    /**
+     * @brief Get a previously loaded image using `LoadImage`
+     *
+     * @param name The name used when the image was loaded
+     * @return SDL_Surface* The image surface
+     */
+    inline SDL_Surface *GetImage(const std::string &name) {
+        return m_AssetManager.GetImage(name);
+    }
 
    private:
     bool isRunning = false;

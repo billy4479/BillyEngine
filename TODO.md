@@ -1,6 +1,8 @@
 # TODO
 
 - [ ] Documentation :)
+- [ ] Use the Application class more as a proxy to other classes which implement the actual functionality
+- [ ] Create a Window class to manage all the window related stuff abstracted away from SDL
 
 ## Input class
 
@@ -12,6 +14,8 @@
 
 - [x] Use `SDL_Surface`s when needed and choose where to use those and where `SDL_Texture`s
 - [ ] Resizable window
+- [ ] Differentiate between DrawableTexture that can be refinalized and those which don't
+- [ ] Implement rendering tinted textures
 - [ ] Draw shapes and primitives
   - [ ] Rectangle
   - [ ] Triangle

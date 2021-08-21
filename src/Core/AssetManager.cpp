@@ -5,21 +5,22 @@
 
 namespace BillyEngine {
 
-void AssetManager::LoadFont(const std::filesystem::path &path,
-                            const std::string &name, u32 size) {
+AssetManager::AssetManager(std::filesystem::path assetFolder) {
+    SetAssetFolder(assetFolder);
+}
+
+TTF_Font *AssetManager::LoadFont(const std::filesystem::path &path,
+                                 const std::string &name, u32 size) {
     auto font = TTF_OpenFont((m_AssetsFolder / path).string().c_str(), size);
     assert(font != nullptr);
-    m_Fonts.emplace(name, font);
+
+    auto result = m_Fonts.emplace(name, font);
+    assert(result.second);
+
+    return font;
 }
 
 TTF_Font *AssetManager::GetFont(const std::string &name) {
-#ifdef DEBUG
-    try {
-        m_Fonts.at(name);
-    } catch (std::out_of_range &e) {
-        assert(false);
-    }
-#endif
     auto font = m_Fonts[name];
     assert(font != nullptr);
     return font;
@@ -48,13 +49,13 @@ void AssetManager::ReleaseSDLModules() {
         m_Fonts.clear();
     }
 
-    if (!m_Textures.empty()) {
-        for (auto texture : m_Textures) {
-            SDL_DestroyTexture(texture.second);
-            texture.second = nullptr;
+    if (!m_Surfaces.empty()) {
+        for (auto surface : m_Surfaces) {
+            SDL_FreeSurface(surface.second);
+            surface.second = nullptr;
         }
 
-        m_Textures.clear();
+        m_Surfaces.clear();
     }
 }
 
@@ -72,15 +73,20 @@ std::filesystem::path AssetManager::GetBasePath() {
 #endif
 }
 
-void AssetManager::LoadImage(const std::filesystem::path &path,
-                             const std::string name) {
-    assert(m_Textures.find(name) == m_Textures.end());
+SDL_Surface *AssetManager::LoadImage(const std::filesystem::path &path,
+                                     const std::string name) {
     auto s = IMG_Load(path.c_str());
     assert(s != nullptr);
 
-    m_Textures.emplace("name", SDL_CreateTextureFromSurface(
-                                   m_App->GetRenderer()->GetSDLRenderer(), s));
+    auto result = m_Surfaces.emplace(name, s);
+    assert(result.second);
 
-    SDL_FreeSurface(s);
+    return s;
+}
+
+SDL_Surface *AssetManager::GetImage(const std::string &name) {
+    auto surface = m_Surfaces[name];
+    assert(surface != nullptr);
+    return surface;
 }
 }  // namespace BillyEngine

@@ -7,9 +7,7 @@
 namespace BillyEngine {
 
 Entity::Entity(entt::entity handle, Application* application)
-    : m_Handle(handle), m_Application(application) {
-    application->GetAssetManager();
-}
+    : m_Handle(handle), m_Application(application) {}
 
 template <typename T, typename... Args>
 T& Entity::AddComponent(Args&&... args) {

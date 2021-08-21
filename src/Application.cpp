@@ -8,10 +8,11 @@
 
 namespace BillyEngine {
 
-Application::Application(const std::string &title, glm::ivec2 size)
+Application::Application(const std::string &title, glm::ivec2 size,
+                         const std::filesystem::path &assetsPath)
     : m_Size(size),
       m_Title(title),
-      m_AssetManager(this),
+      m_AssetManager(assetsPath),
       m_EntityManager(this) {
 #ifdef DEBUG
     SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
@@ -77,8 +78,6 @@ void Application::OnUpdate(f32 delta) {
 }
 
 Renderer *Application::GetRenderer() { return &m_Renderer; }
-
-AssetManager *Application::GetAssetManager() { return &m_AssetManager; }
 
 DrawableTexture Application::CreateDrawableTexture(glm::ivec2 size) {
     return m_Renderer.CreateDrawableTexture(size);
