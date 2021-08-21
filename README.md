@@ -5,8 +5,9 @@ I wanted a simple entity framework to display some graphics in my C++ applicatio
 It is not meant to be like Unreal / Unity / Godot,
 the most similar thing I could find is [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine).
 
-For now the rendering is done through SDL2 but in the future I'll probably switch to OpenGL.
-So for now it requires SDL2 and SDL2_ttf to be installed globally.
+I don't really care about rendering so for now it is done through SDL2 
+but maybe in the future I'll switch to OpenGL.
+So for now it requires SDL2, SDL2_ttf and SDL2_img to be installed globally.
 
 I've developed it in Linux for Linux but _should_ work on other platforms as well.
 
