@@ -13,7 +13,7 @@ class ScriptableEntity : public Entity {
 
    protected:
     virtual void OnCreate() = 0;
-    virtual void OnUpdate(f32) = 0;
+    virtual void OnUpdate(f64) = 0;
     virtual void OnDestroy() = 0;
 
     void Destroy();

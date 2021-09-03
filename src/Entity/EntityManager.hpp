@@ -12,7 +12,7 @@ class EntityManager {
     explicit EntityManager(Application *application);
     ~EntityManager();
 
-    void Update(f32 delta);
+    void Update(f64 delta);
     Entity CreateEntity(const std::string &name);
     void DestroyEntity(Entity entity);
 

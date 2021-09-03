@@ -12,7 +12,7 @@ EntityManager::EntityManager(Application *application)
 
 EntityManager::~EntityManager() = default;
 
-void EntityManager::Update(f32 delta) {
+void EntityManager::Update(f64 delta) {
     m_Registry.view<Components::Script>().each([&](auto entity, auto &script) {
         (void)entity;
         // auto e = Entity(entity, this);

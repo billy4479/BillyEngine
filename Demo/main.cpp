@@ -1,6 +1,7 @@
 #include <BillyEngine.hpp>
 
 #include "TestEntity.hpp"
+#include "TestEntity2.hpp"
 
 int main() {
     BillyEngine::Application app("Test", {1280, 720}, "assets");
@@ -9,6 +10,7 @@ int main() {
                  "JetBrainsMono", 34);
 
     app.CreateScriptableEntity<TestEntity>("");
+    app.CreateScriptableEntity<TestEntity2>("");
 
     auto e = app.CreateEntity("");
     e.AddComponent<BillyEngine::Components::Text>("Fixed Position",

@@ -1,5 +1,7 @@
 #include "Color.hpp"
 
+#include "Common.hpp"
+
 namespace BillyEngine {
 
 Color Color::black(0, 0, 0);

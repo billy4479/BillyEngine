@@ -12,7 +12,7 @@ struct Script {
     std::function<void()> DestroyInstance;
 
     std::function<void(ScriptableEntity*)> OnCreate;
-    std::function<void(ScriptableEntity*, f32)> OnUpdate;
+    std::function<void(ScriptableEntity*, f64)> OnUpdate;
     std::function<void(ScriptableEntity*)> OnDestroy;
 
     ~Script() {
@@ -38,7 +38,7 @@ struct Script {
 
             static_cast<T*>(instance)->OnCreate();
         };
-        OnUpdate = [&](Entity* instance, f32 delta) {
+        OnUpdate = [&](Entity* instance, f64 delta) {
             assert(Instance != nullptr);
 
             static_cast<T*>(instance)->OnUpdate(delta);

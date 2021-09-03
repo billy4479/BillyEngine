@@ -9,6 +9,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <cstdint>
 #include <entt/entt.hpp>
@@ -17,6 +18,7 @@
 #include <glm/ext/vector_int2.hpp>
 #include <glm/vec2.hpp>
 #include <map>
+#include <ratio>
 #include <sstream>
 #include <stdexcept>
 #include <string>

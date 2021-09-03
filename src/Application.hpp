@@ -7,22 +7,26 @@
 #include "Core/EventHandler.hpp"
 #include "Entity/EntityManager.hpp"
 #include "Rendering/Renderer.hpp"
+#include "Window/Window.hpp"
 
 namespace BillyEngine {
 class DrawableTexture;
 class Application {
    public:
-    Application(const std::string &name, i32 width, i32 height,
+    Application(std::string_view title, i32 width, i32 height,
                 const std::filesystem::path &assetsPath = "")
-        : Application(name, {width, height}, assetsPath) {}
-    Application(const std::string &name, glm::ivec2 size,
+        : Application(title, {width, height}, assetsPath) {}
+    Application(std::string_view title, glm::ivec2 size,
                 const std::filesystem::path &assetsPath = "");
     ~Application();
 
+   public:
     void Run();
-    const glm::ivec2 GetSize() const { return m_Size; }
+    inline f32 GetFPS() const { return m_ActualFps; };
     DrawableTexture CreateDrawableTexture(glm::ivec2 size);
+    void AskToStop();
 
+   public:
     /*** EntityManager proxy ***/
 
     /**
@@ -64,6 +68,7 @@ class Application {
         m_EntityManager.DestroyEntity(entity);
     }
 
+   public:
     /*** AssetManager proxy ***/
 
     /**
@@ -141,23 +146,41 @@ class Application {
         return m_AssetManager.GetImage(name);
     }
 
+   public:
+    /*** Window proxy ***/
+
+    /**
+     * @brief Get the window size
+     *
+     * @return const glm::ivec2 The window size
+     */
+    inline const glm::ivec2 GetSize() const { return m_Window.GetSize(); }
+
+    /**
+     * @brief Set the window title
+     *
+     * @param title The new title
+     */
+    inline void SetTitle(std::string_view title) { m_Window.SetTitle(title); }
+
    private:
     bool isRunning = false;
-    void AskToStop();
-    void OnUpdate(f32);
+    void OnUpdate(f64);
     Renderer *GetRenderer();
 
-    static constexpr i32 FPS = 60;
-    static constexpr i32 frameDelay = 1000 / FPS;
+   private:
+    static constexpr f32 FPS = 60;
+    static constexpr auto frameDelay =
+        std::chrono::microseconds((u64)(1000000.0 / FPS));
 
-    glm::ivec2 m_Size;
-    std::string m_Title;
+    f64 m_ActualFps = 0;
 
-    SDL_Window *m_Window;
+   private:
     AssetManager m_AssetManager;
     Renderer m_Renderer;
     EventHandler m_EventHandler;
     EntityManager m_EntityManager;
+    Window m_Window;
 
     friend class Entity;
     friend class EntityManager;

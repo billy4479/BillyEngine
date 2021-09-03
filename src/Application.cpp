@@ -1,5 +1,7 @@
 #include "Application.hpp"
 
+#include <chrono>
+
 #include "Components/Components.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
@@ -8,68 +10,49 @@
 
 namespace BillyEngine {
 
-Application::Application(const std::string &title, glm::ivec2 size,
+Application::Application(std::string_view title, glm::ivec2 size,
                          const std::filesystem::path &assetsPath)
-    : m_Size(size),
-      m_Title(title),
-      m_AssetManager(assetsPath),
-      m_EntityManager(this) {
-#ifdef DEBUG
-    SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
-#endif
-
-    if (SDL_Init(SDL_INIT_EVERYTHING))
-        throw std::runtime_error("SDL failed to initialize.");
-    if (TTF_Init()) throw std::runtime_error("SDL_ttf failed to initialize.");
-    if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0)
-        throw std::runtime_error("SDL_image failed to initialize.");
-
-    m_Window = SDL_CreateWindow(m_Title.c_str(), SDL_WINDOWPOS_UNDEFINED,
-                                SDL_WINDOWPOS_UNDEFINED, m_Size.x, m_Size.y, 0);
-
-#ifdef DEBUG
-    if (m_Window == nullptr) dbg_print("%s\n", SDL_GetError());
-#endif
-    assert(m_Window != nullptr);
-
-    m_Renderer.Init(m_Window);
+    : m_AssetManager(assetsPath), m_EntityManager(this), m_Window(title, size) {
+    m_Window.m_DestructionCallback = [&]() {
+        m_AssetManager.ReleaseSDLModules();
+    };
+    m_Renderer.Init(m_Window.m_Window);
 }
 
-Application::~Application() {
-    SDL_DestroyWindow(m_Window);
-    m_AssetManager.ReleaseSDLModules();
-    TTF_Quit();
-    IMG_Quit();
-    SDL_Quit();
-}
+Application::~Application() = default;
 
 void Application::Run() {
     assert(!isRunning);
     isRunning = true;
 
-    u32 frameStart = 0;
-    i32 frameTime = 0;
-
-    u32 lastDelta = 0;
+    std::chrono::microseconds lastDelta;
     while (isRunning) {
-        frameStart = SDL_GetTicks();
+        auto start = std::chrono::high_resolution_clock::now();
         m_Renderer.Clear();
 
-        OnUpdate(lastDelta);
+        OnUpdate((f64)lastDelta.count() / 1000000.0);
 
         isRunning = !m_EventHandler.ShouldClose();
-        frameTime = SDL_GetTicks() - frameStart;
-        if (frameDelay > frameTime) {
-            SDL_Delay(frameDelay - frameTime);
+
+        auto end = std::chrono::high_resolution_clock::now();
+        lastDelta =
+            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+        if (frameDelay > lastDelta) {
+            SDL_Delay(std::chrono::duration_cast<std::chrono::milliseconds>(
+                          frameDelay - lastDelta)
+                          .count());
             lastDelta = frameDelay;
-        } else
-            lastDelta = frameTime;
+        }
+        // dbg_print("FrameTime: %fs\n", (f64)lastDelta.count() / 1000000.0);
+
+        m_ActualFps = 1000000.0 / lastDelta.count();
     }
 }
 
 void Application::AskToStop() { isRunning = false; }
 
-void Application::OnUpdate(f32 delta) {
+void Application::OnUpdate(f64 delta) {
     m_EventHandler.HandleEvents();
 
     m_EntityManager.Update(delta);
