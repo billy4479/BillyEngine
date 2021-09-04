@@ -6,8 +6,9 @@ namespace BillyEngine {
 class Window {
    public:
     Window(std::string_view title, glm::ivec2 size);
-    Window(const Window& other) = delete;
     ~Window();
+
+    BE_NON_COPY_CONSTRUTIBLE(Window)
 
     void SetTitle(std::string_view title);
     const glm::ivec2 GetSize() const;

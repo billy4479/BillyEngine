@@ -1,6 +1,8 @@
 #include "AssetManager.hpp"
 
 #include "../Application.hpp"
+#include "../Wrappers/Font.hpp"
+#include "../Wrappers/Surface.hpp"
 #include "Common.hpp"
 
 namespace BillyEngine {
@@ -9,10 +11,9 @@ AssetManager::AssetManager(std::filesystem::path assetFolder) {
     SetAssetFolder(assetFolder);
 }
 
-TTF_Font *AssetManager::LoadFont(const std::filesystem::path &path,
+Ref<Font> AssetManager::LoadFont(const std::filesystem::path &path,
                                  const std::string &name, u32 size) {
-    auto font = TTF_OpenFont((m_AssetsFolder / path).string().c_str(), size);
-    assert(font != nullptr);
+    auto font = CreateRef<Font>((m_AssetsFolder / path), size);
 
     auto result = m_Fonts.emplace(name, font);
     assert(result.second);
@@ -20,7 +21,7 @@ TTF_Font *AssetManager::LoadFont(const std::filesystem::path &path,
     return font;
 }
 
-TTF_Font *AssetManager::GetFont(const std::string &name) {
+Ref<Font> AssetManager::GetFont(const std::string &name) {
     auto font = m_Fonts[name];
     assert(font != nullptr);
     return font;
@@ -38,25 +39,11 @@ void AssetManager::SetAssetFolder(const std::filesystem::path &path) {
 std::filesystem::path AssetManager::GetAssetFolder() { return m_AssetsFolder; }
 
 void AssetManager::ReleaseSDLModules() {
-    if (!m_Fonts.empty()) {
-        for (auto font : m_Fonts) {
-            if (font.second != nullptr) {
-                TTF_CloseFont(font.second);
-                font.second = nullptr;
-            }
-        }
+    for (auto font : m_Fonts) assert(font.second.use_count() == 1);
+    m_Fonts.clear();
 
-        m_Fonts.clear();
-    }
-
-    if (!m_Surfaces.empty()) {
-        for (auto surface : m_Surfaces) {
-            SDL_FreeSurface(surface.second);
-            surface.second = nullptr;
-        }
-
-        m_Surfaces.clear();
-    }
+    for (auto surface : m_Surfaces) assert(surface.second.use_count() == 1);
+    m_Surfaces.clear();
 }
 
 std::filesystem::path AssetManager::GetBasePath() {
@@ -73,10 +60,9 @@ std::filesystem::path AssetManager::GetBasePath() {
 #endif
 }
 
-SDL_Surface *AssetManager::LoadImage(const std::filesystem::path &path,
+Ref<Surface> AssetManager::LoadImage(const std::filesystem::path &path,
                                      const std::string name) {
-    auto s = IMG_Load(path.c_str());
-    assert(s != nullptr);
+    auto s = CreateRef<Surface>(IMG_Load(path.c_str()));
 
     auto result = m_Surfaces.emplace(name, s);
     assert(result.second);
@@ -84,7 +70,7 @@ SDL_Surface *AssetManager::LoadImage(const std::filesystem::path &path,
     return s;
 }
 
-SDL_Surface *AssetManager::GetImage(const std::string &name) {
+Ref<Surface> AssetManager::GetImage(const std::string &name) {
     auto surface = m_Surfaces[name];
     assert(surface != nullptr);
     return surface;

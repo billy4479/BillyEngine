@@ -7,6 +7,8 @@
 
 #include "../Core/Color.hpp"
 #include "../Core/Common.hpp"
+#include "../Wrappers/Surface.hpp"
+#include "../Wrappers/Texture.hpp"
 
 namespace BillyEngine {
 
@@ -57,77 +59,59 @@ class DrawableTexture {
      * @return true if `Finalize` has been called
      * @return false if `Finalize` has not been called
      */
-    inline bool IsFinalized() const { return m_IsFinalized; }
+    inline bool HasTexture() const { return m_HasTexture; }
 
     /**
-     * @brief Get `SDL_Texture` if has been generated
+     * @brief Get `Ref<Texture>` if has been generated
      *
-     * Return the `SDL_Texture` that was generated
+     * Return the `Ref<Texture>` that was generated
      * in `Finalize`.
      *
      * It will fail if the texture wasn't finalized.
      *
-     * @return SDL_Texture* of the drawn pixel data
+     * @return Ref<Texture> of the drawn pixel data
      */
-    inline SDL_Texture** GetTexture() { return &m_Texture; }
+    inline Ref<Texture> GetTexture() {
+        assert(m_HasTexture);
+        return m_Texture;
+    }
 
     /**
-     * @brief Finalize and get the just generated `SDL_Texture`
+     * @brief Finalize and get the just generated `Ref<Texture>`
      *
-     * If hasn't been finalized yet `Finalize` gets called
+     * `Finalize` gets called
      * and the generated texture is returned.
      *
-     * @return SDL_Texture* of the drawn pixel data
+     * @return Ref<Texture> of the drawn pixel data
      */
-    inline SDL_Texture** FinalizeAndGetTexture() {
+    inline Ref<Texture> FinalizeAndGetTexture() {
         Finalize();
-        return &m_Texture;
+        return m_Texture;
     }
 
    public:
     /**
      * @brief Create a new `DrawableTexture` object
      *
-     * @param renderer A pointer to the current renderer
+     * @param renderer The current renderer
      * @param size The size of the texture
      */
-    DrawableTexture(SDL_Renderer* renderer, glm::ivec2 size);
+    DrawableTexture(Ref<Renderer> renderer, glm::ivec2 size);
     DrawableTexture() = default;
     /**
-     * @brief Create a new `DrawableTexture` from an existing `SDL_Surface`
+     * @brief Create a new `DrawableTexture` from an existing `Surface`
      *
-     * @param surface The base texture. Will be freed in the destructor
+     * @param surface The base texture
      */
-    explicit DrawableTexture(SDL_Surface* surface) : m_Surface(surface) {}
-    DrawableTexture(DrawableTexture& other) = delete;
-    DrawableTexture(DrawableTexture&& other) {
-        this->m_Texture = other.m_Texture;
-        this->m_Surface = other.m_Surface;
-        this->m_IsFinalized = other.m_IsFinalized;
-        this->m_Renderer = other.m_Renderer;
-        this->m_Size = other.m_Size;
-        other.m_Texture = nullptr;
-        other.m_Surface = nullptr;
-    }
-    DrawableTexture& operator=(DrawableTexture&& other) {
-        if (this != &other) {
-            this->m_Texture = other.m_Texture;
-            this->m_Surface = other.m_Surface;
-            this->m_IsFinalized = other.m_IsFinalized;
-            this->m_Renderer = other.m_Renderer;
-            this->m_Size = other.m_Size;
-            other.m_Texture = nullptr;
-            other.m_Surface = nullptr;
-        }
-        return *this;
-    }
-    ~DrawableTexture();
+    explicit DrawableTexture(Ref<Surface> surface) : m_Surface(surface) {}
+
+    ~DrawableTexture() = default;
 
    private:
-    SDL_Renderer* m_Renderer = nullptr;
-    SDL_Surface* m_Surface = nullptr;
-    SDL_Texture* m_Texture = nullptr;
+    Ref<Renderer> m_Renderer = nullptr;
+    Ref<Surface> m_Surface = nullptr;
+    Ref<Texture> m_Texture = nullptr;
     glm::ivec2 m_Size{0, 0};
-    bool m_IsFinalized = false;
+    bool m_HasTexture = false;
 };
 }  // namespace BillyEngine

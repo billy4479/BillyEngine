@@ -6,6 +6,8 @@
 namespace BillyEngine {
 class ScriptableEntity : public Entity {
    public:
+    BE_NON_COPY_CONSTRUTIBLE(ScriptableEntity)
+
     ScriptableEntity(entt::entity handle, Application *application);
     ScriptableEntity(Entity e);
 

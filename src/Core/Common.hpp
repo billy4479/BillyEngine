@@ -4,32 +4,7 @@
     #define DEBUG 1
 #endif
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-
-#include <cassert>
-#include <chrono>
-#include <cmath>
-#include <cstdint>
-#include <entt/entt.hpp>
-#include <filesystem>
-#include <functional>
-#include <glm/ext/vector_int2.hpp>
-#include <glm/vec2.hpp>
-#include <map>
-#include <ratio>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <utility>
-
-#ifdef _WIN32
-    #include <windows.h>  //GetModuleFileNameW
-#else
-    #include <limits.h>
-    #include <unistd.h>  //readlink
-#endif
+#include "STDInclude.hpp"
 
 using u8 = std::uint8_t;
 using u16 = std::uint16_t;
@@ -52,3 +27,21 @@ using size_t = __SIZE_TYPE__;
 #else
     #define dbg_print(...) 0
 #endif
+
+#define BE_NON_COPY_CONSTRUTIBLE(className)     \
+    className(const className& other) = delete; \
+    className& operator=(const className&) = delete;
+
+template <typename T>
+using Scope = std::unique_ptr<T>;
+template <typename T, typename... Args>
+constexpr Scope<T> CreateScope(Args&&... args) {
+    return std::make_unique<T>(std::forward<Args>(args)...);
+}
+
+template <typename T>
+using Ref = std::shared_ptr<T>;
+template <typename T, typename... Args>
+constexpr Ref<T> CreateRef(Args&&... args) {
+    return std::make_shared<T>(std::forward<Args>(args)...);
+}

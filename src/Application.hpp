@@ -8,6 +8,7 @@
 #include "Entity/EntityManager.hpp"
 #include "Rendering/Renderer.hpp"
 #include "Window/Window.hpp"
+#include "Wrappers/Fwd.hpp"
 
 namespace BillyEngine {
 class DrawableTexture;
@@ -107,7 +108,7 @@ class Application {
      * @param size The size in pt
      * @return TTF_Font* The loaded font
      */
-    inline TTF_Font *LoadFont(const std::filesystem::path &path,
+    inline Ref<Font> LoadFont(const std::filesystem::path &path,
                               const std::string &name, u32 size) {
         return m_AssetManager.LoadFont(path, name, size);
     }
@@ -118,7 +119,7 @@ class Application {
      * @param name The name used when the font was loaded
      * @return TTF_Font* The font
      */
-    inline TTF_Font *GetFont(const std::string &name) {
+    inline Ref<Font> GetFont(const std::string &name) {
         return m_AssetManager.GetFont(name);
     }
 
@@ -131,7 +132,7 @@ class Application {
      * @param name The name this image will have
      * @return SDL_Surface* A surface containing the loaded image data
      */
-    inline SDL_Surface *LoadImage(const std::filesystem::path &path,
+    inline Ref<Surface> LoadImage(const std::filesystem::path &path,
                                   const std::string name) {
         return m_AssetManager.LoadImage(path, name);
     }
@@ -142,7 +143,7 @@ class Application {
      * @param name The name used when the image was loaded
      * @return SDL_Surface* The image surface
      */
-    inline SDL_Surface *GetImage(const std::string &name) {
+    inline Ref<Surface> GetImage(const std::string &name) {
         return m_AssetManager.GetImage(name);
     }
 
@@ -166,7 +167,7 @@ class Application {
    private:
     bool isRunning = false;
     void OnUpdate(f64);
-    Renderer *GetRenderer();
+    Ref<Renderer> GetRenderer();
 
    private:
     static constexpr f32 FPS = 60;
@@ -177,7 +178,7 @@ class Application {
 
    private:
     AssetManager m_AssetManager;
-    Renderer m_Renderer;
+    Ref<Renderer> m_Renderer = nullptr;
     EventHandler m_EventHandler;
     EntityManager m_EntityManager;
     Window m_Window;

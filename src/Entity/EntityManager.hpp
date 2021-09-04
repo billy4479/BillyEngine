@@ -12,6 +12,8 @@ class EntityManager {
     explicit EntityManager(Application *application);
     ~EntityManager();
 
+    BE_NON_COPY_CONSTRUTIBLE(EntityManager)
+
     void Update(f64 delta);
     Entity CreateEntity(const std::string &name);
     void DestroyEntity(Entity entity);
@@ -27,7 +29,7 @@ class EntityManager {
    private:
     entt::registry m_Registry;
     Application *m_Application = nullptr;
-    Renderer *m_Renderer = nullptr;
+    Ref<Renderer> m_Renderer = nullptr;
 
     friend class Application;
     friend class Entity;

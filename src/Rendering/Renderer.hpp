@@ -1,15 +1,18 @@
 #pragma once
 
 #include "../Core/CenterPoint.hpp"
+#include "../Core/Color.hpp"
 #include "../Core/Common.hpp"
-#include "DrawableTexture.hpp"
 
 namespace BillyEngine {
 
-class Renderer {
+class DrawableTexture;
+struct Texture;
+struct Font;
+class Renderer : public std::enable_shared_from_this<Renderer> {
    public:
-    Renderer() = default;
-    Renderer(Renderer &other) = delete;
+    Renderer(SDL_Window *);
+    BE_NON_COPY_CONSTRUTIBLE(Renderer)
     Renderer(Renderer &&other) {
         this->m_Renderer = other.m_Renderer;
         other.m_Renderer = nullptr;
@@ -23,16 +26,15 @@ class Renderer {
     }
     ~Renderer();
 
-    SDL_Renderer *GetSDLRenderer() { return m_Renderer; }
+    inline SDL_Renderer *GetSDLRenderer() { return m_Renderer; }
 
-    void Init(SDL_Window *);
     void Clear();
     void RenderToScreen();
 
     DrawableTexture CreateDrawableTexture(glm::ivec2 size);
-    SDL_Texture *RenderTextToTexture(const std::string &text, TTF_Font *font,
+    Ref<Texture> RenderTextToTexture(const std::string &text, Ref<Font> font,
                                      const Color &fgColor /* TODO: config? */);
-    void DrawTexture(SDL_Texture *, glm::ivec2 position, glm::vec2 scale,
+    void DrawTexture(Ref<Texture> texture, glm::ivec2 position, glm::vec2 scale,
                      f32 rotation, CenterPoint anchor,
                      CenterPoint rotationCenter);
 

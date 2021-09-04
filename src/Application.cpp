@@ -1,12 +1,11 @@
 #include "Application.hpp"
 
-#include <chrono>
-
 #include "Components/Components.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Entity/Entity.hxx"
 #include "Entity/ScriptableEntity.hpp"
+#include "Rendering/DrawableTexture.hpp"
 
 namespace BillyEngine {
 
@@ -16,7 +15,8 @@ Application::Application(std::string_view title, glm::ivec2 size,
     m_Window.m_DestructionCallback = [&]() {
         m_AssetManager.ReleaseSDLModules();
     };
-    m_Renderer.Init(m_Window.m_Window);
+
+    m_Renderer = CreateRef<Renderer>(m_Window.m_Window);
 }
 
 Application::~Application() = default;
@@ -28,7 +28,7 @@ void Application::Run() {
     std::chrono::microseconds lastDelta;
     while (isRunning) {
         auto start = std::chrono::high_resolution_clock::now();
-        m_Renderer.Clear();
+        m_Renderer->Clear();
 
         OnUpdate((f64)lastDelta.count() / 1000000.0);
 
@@ -57,13 +57,13 @@ void Application::OnUpdate(f64 delta) {
 
     m_EntityManager.Update(delta);
 
-    m_Renderer.RenderToScreen();
+    m_Renderer->RenderToScreen();
 }
 
-Renderer *Application::GetRenderer() { return &m_Renderer; }
+Ref<Renderer> Application::GetRenderer() { return m_Renderer; }
 
 DrawableTexture Application::CreateDrawableTexture(glm::ivec2 size) {
-    return m_Renderer.CreateDrawableTexture(size);
+    return m_Renderer->CreateDrawableTexture(size);
 }
 
 }  // namespace BillyEngine

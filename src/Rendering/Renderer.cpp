@@ -1,12 +1,13 @@
 #include "Renderer.hpp"
 
+#include "../Wrappers/Font.hpp"
+#include "../Wrappers/Texture.hpp"
+#include "DrawableTexture.hpp"
+
 namespace BillyEngine {
 
-void Renderer::Init(SDL_Window* window) {
-    assert(m_Renderer == nullptr);
-    m_Renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    assert(m_Renderer != nullptr);
-}
+Renderer::Renderer(SDL_Window* window)
+    : m_Renderer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) {}
 
 Renderer::~Renderer() {
     if (m_Renderer == nullptr) return;
@@ -18,25 +19,26 @@ void Renderer::Clear() {
     SDL_RenderClear(m_Renderer);
 }
 
-SDL_Texture* Renderer::RenderTextToTexture(
-    const std::string& text, TTF_Font* font,
+Ref<Texture> Renderer::RenderTextToTexture(
+    const std::string& text, Ref<Font> font,
     const Color& fgColor /* TODO: config? */) {
     assert(m_Renderer != nullptr);
 
-    auto tmpSurf = TTF_RenderText_Blended(font, text.c_str(), fgColor);
-    auto texture = SDL_CreateTextureFromSurface(m_Renderer, tmpSurf);
-    SDL_FreeSurface(tmpSurf);
+    auto tmpSurf = CreateRef<Surface>(
+        TTF_RenderText_Blended(font->AsSDLFont(), text.c_str(), fgColor));
+    auto texture = CreateRef<Texture>(tmpSurf, shared_from_this());
     return texture;
 }
 
-void Renderer::DrawTexture(SDL_Texture* texture, glm::ivec2 position,
+void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
                            glm::vec2 scale, f32 rotation, CenterPoint anchor,
                            CenterPoint rotationCenter) {
     assert(m_Renderer != nullptr);
     assert(texture != nullptr);
 
     i32 w, h;
-    auto result = SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+    auto result =
+        SDL_QueryTexture(texture->AsSDLTexture(), nullptr, nullptr, &w, &h);
 #ifdef DEBUG
     if (result != 0) dbg_print("%s\n", SDL_GetError());
 #endif
@@ -59,8 +61,9 @@ void Renderer::DrawTexture(SDL_Texture* texture, glm::ivec2 position,
     SDL_Point rotationCenterPointSDL = {rotationCenterPoint.x,
                                         rotationCenterPoint.y};
 
-    result = SDL_RenderCopyEx(m_Renderer, texture, &sRect, &dRect, rotation,
-                              &rotationCenterPointSDL, (SDL_RendererFlip)flip);
+    result = SDL_RenderCopyEx(m_Renderer, texture->AsSDLTexture(), &sRect,
+                              &dRect, rotation, &rotationCenterPointSDL,
+                              (SDL_RendererFlip)flip);
 
 #ifdef DEBUG
     if (result != 0) dbg_print("%s\n", SDL_GetError());
@@ -71,7 +74,7 @@ void Renderer::DrawTexture(SDL_Texture* texture, glm::ivec2 position,
 DrawableTexture Renderer::CreateDrawableTexture(glm::ivec2 size) {
     assert(m_Renderer != nullptr);
 
-    return DrawableTexture(m_Renderer, size);
+    return DrawableTexture(shared_from_this(), size);
 }
 
 void Renderer::RenderToScreen() {

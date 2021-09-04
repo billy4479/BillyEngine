@@ -26,12 +26,12 @@ void EntityManager::Update(f64 delta) {
     m_Registry.view<Components::Text, Components::Transform>().each(
         [&](auto entity, auto &label, auto &t) {
             (void)entity;
-            if (label.Texture == nullptr) {
-                assert(label.Font != nullptr);
-                label.Texture = m_Renderer->RenderTextToTexture(
-                    label.Content, label.Font, label.fgColor);
+            if (label.m_Texture == nullptr) {
+                assert(label.m_Font != nullptr);
+                label.m_Texture = m_Renderer->RenderTextToTexture(
+                    label.m_Content, label.m_Font, label.fgColor);
             }
-            m_Renderer->DrawTexture(label.Texture, t.Position, t.Scale,
+            m_Renderer->DrawTexture(label.m_Texture, t.Position, t.Scale,
                                     t.Rotation, t.Anchor, t.RotationCenter);
         });
 
@@ -39,11 +39,10 @@ void EntityManager::Update(f64 delta) {
         [&](auto entity, auto &sprite, auto &t) {
             (void)entity;
 #ifdef DEBUG
-            if (sprite.GetTexture() != nullptr)
+            if (sprite.m_Texture != nullptr)
 #endif
-                m_Renderer->DrawTexture(sprite.GetTexture(), t.Position,
-                                        t.Scale, t.Rotation, t.Anchor,
-                                        t.RotationCenter);
+                m_Renderer->DrawTexture(sprite.m_Texture, t.Position, t.Scale,
+                                        t.Rotation, t.Anchor, t.RotationCenter);
 #ifdef DEBUG
             else
                 dbg_print("Not drawing since the texture is null\n");

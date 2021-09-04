@@ -6,6 +6,7 @@
 #include "../Entity/Entity.hpp"
 #include "../Entity/EntityManager.hpp"
 #include "../Entity/ScriptableEntity.hpp"
+#include "../Rendering/DrawableTexture.hpp"
 
 #define SCRIPTABLE_ENTITY(className)                                       \
    public:                                                                 \
