@@ -4,6 +4,7 @@
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Entity/Entity.hxx"
+// #include "Entity/Entity.inl"
 #include "Entity/ScriptableEntity.hpp"
 #include "Rendering/DrawableTexture.hpp"
 
@@ -11,7 +12,7 @@ namespace BillyEngine {
 
 Application::Application(std::string_view title, glm::ivec2 size,
                          const std::filesystem::path &assetsPath)
-    : m_AssetManager(assetsPath), m_EntityManager(this), m_Window(title, size) {
+    : m_Window(title, size), m_AssetManager(assetsPath), m_EntityManager(this) {
     m_Window.m_DestructionCallback = [&]() {
         m_AssetManager.ReleaseSDLModules();
     };

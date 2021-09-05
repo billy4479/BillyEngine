@@ -29,7 +29,6 @@ class EntityManager {
    private:
     entt::registry m_Registry;
     Application *m_Application = nullptr;
-    Ref<Renderer> m_Renderer = nullptr;
 
     friend class Application;
     friend class Entity;

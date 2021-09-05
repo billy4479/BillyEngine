@@ -15,7 +15,7 @@ Ref<Font> AssetManager::LoadFont(const std::filesystem::path &path,
                                  const std::string &name, u32 size) {
     auto font = CreateRef<Font>((m_AssetsFolder / path), size);
 
-    auto result = m_Fonts.emplace(name, font);
+    [[maybe_unused]] auto result = m_Fonts.emplace(name, font);
     BE_ASSERT(result.second);
 
     return font;
@@ -39,15 +39,20 @@ void AssetManager::SetAssetFolder(const std::filesystem::path &path) {
 std::filesystem::path AssetManager::GetAssetFolder() { return m_AssetsFolder; }
 
 void AssetManager::ReleaseSDLModules() {
-    for (auto font : m_Fonts) BE_ASSERT(font.second.use_count() == 1);
-    m_Fonts.clear();
+    // The first one is for the vector, the second is for `font` created in
+    // the for loop
 
-    for (auto surface : m_Surfaces) BE_ASSERT(surface.second.use_count() == 1);
+#ifdef DEBUG
+    for (auto font : m_Fonts) BE_ASSERT(font.second.use_count() == 2);
+    for (auto surface : m_Surfaces) BE_ASSERT(surface.second.use_count() == 2);
+#endif
+
+    m_Fonts.clear();
     m_Surfaces.clear();
 }
 
 std::filesystem::path AssetManager::GetBasePath() {
-    // TODO: Check if works on windows
+// TODO: Check if works on windows
 #ifdef BE_PLATFORM_WINDOWS
     wchar_t path[MAX_PATH] = {0};
     GetModuleFileNameW(NULL, path, MAX_PATH);
@@ -64,7 +69,7 @@ Ref<Surface> AssetManager::LoadImage(const std::filesystem::path &path,
                                      const std::string name) {
     auto s = CreateRef<Surface>(IMG_Load(path.c_str()));
 
-    auto result = m_Surfaces.emplace(name, s);
+    [[maybe_unused]] auto result = m_Surfaces.emplace(name, s);
     BE_ASSERT(result.second);
 
     return s;

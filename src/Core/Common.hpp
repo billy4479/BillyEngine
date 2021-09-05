@@ -26,7 +26,7 @@ using size_t = __SIZE_TYPE__;
     #include <cstdio>
     #define dbg_print(...) fprintf(stderr, __VA_ARGS__)
 #else
-    #define dbg_print(...) 0
+    #define dbg_print(...)
 #endif
 
 #define BE_NON_COPY_CONSTRUTIBLE(className)     \

@@ -34,8 +34,8 @@ class Entity {
 
    private:
     entt::entity m_Handle{entt::null};
-
-   protected:
     Application* m_Application = nullptr;
+
+    friend class ScriptableEntity;
 };
 }  // namespace BillyEngine

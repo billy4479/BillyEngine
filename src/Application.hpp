@@ -177,11 +177,11 @@ class Application {
     f64 m_ActualFps = 0;
 
    private:
+    Window m_Window;
     AssetManager m_AssetManager;
-    Ref<Renderer> m_Renderer = nullptr;
     EventHandler m_EventHandler;
     EntityManager m_EntityManager;
-    Window m_Window;
+    Ref<Renderer> m_Renderer = nullptr;
 
     friend class Entity;
     friend class EntityManager;

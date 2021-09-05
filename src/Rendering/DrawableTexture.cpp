@@ -6,12 +6,12 @@ namespace BillyEngine {
         if (lockR != 0) dbg_print("%s\n", SDL_GetError()); \
         BE_ASSERT(lockR == 0);
 #else
-    #define CHECK_ERR() 0
+    #define CHECK_ERR()
 #endif
 
-#define LOCK_AND_GET_PIXELS()                                \
-    auto lockR = SDL_LockSurface(m_Surface->AsSDLSurface()); \
-    CHECK_ERR();                                             \
+#define LOCK_AND_GET_PIXELS()                                                 \
+    [[maybe_unused]] auto lockR = SDL_LockSurface(m_Surface->AsSDLSurface()); \
+    CHECK_ERR();                                                              \
     u32* pixels = (u32*)m_Surface->AsSDLSurface()->pixels
 
 #define UNLOCK() SDL_UnlockSurface(m_Surface->AsSDLSurface());

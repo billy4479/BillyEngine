@@ -2,15 +2,12 @@
 
 #include "../Application.hpp"
 #include "../Components/Components.hpp"
-#include "../Entity/Entity.inl"
 
 namespace BillyEngine {
 EntityManager::EntityManager(Application *application)
-    : m_Application(application) {
-    m_Renderer = m_Application->GetRenderer();
-}
+    : m_Application(application) {}
 
-EntityManager::~EntityManager() = default;
+EntityManager::~EntityManager() { m_Registry.clear(); }
 
 void EntityManager::Update(f64 delta) {
     m_Registry.view<Components::Script>().each([&](auto entity, auto &script) {
@@ -28,11 +25,13 @@ void EntityManager::Update(f64 delta) {
             (void)entity;
             if (label.m_Texture == nullptr) {
                 BE_ASSERT(label.m_Font != nullptr);
-                label.m_Texture = m_Renderer->RenderTextToTexture(
-                    label.m_Content, label.m_Font, label.fgColor);
+                label.m_Texture =
+                    m_Application->GetRenderer()->RenderTextToTexture(
+                        label.m_Content, label.m_Font, label.fgColor);
             }
-            m_Renderer->DrawTexture(label.m_Texture, t.Position, t.Scale,
-                                    t.Rotation, t.Anchor, t.RotationCenter);
+            m_Application->GetRenderer()->DrawTexture(
+                label.m_Texture, t.Position, t.Scale, t.Rotation, t.Anchor,
+                t.RotationCenter);
         });
 
     m_Registry.view<Components::Sprite, Components::Transform>().each(
@@ -41,8 +40,9 @@ void EntityManager::Update(f64 delta) {
 #ifdef DEBUG
             if (sprite.m_Texture != nullptr)
 #endif
-                m_Renderer->DrawTexture(sprite.m_Texture, t.Position, t.Scale,
-                                        t.Rotation, t.Anchor, t.RotationCenter);
+                m_Application->GetRenderer()->DrawTexture(
+                    sprite.m_Texture, t.Position, t.Scale, t.Rotation, t.Anchor,
+                    t.RotationCenter);
 #ifdef DEBUG
             else
                 dbg_print("Not drawing since the texture is null\n");
@@ -71,3 +71,5 @@ Entity EntityManager::CreateEntity(const std::string &name) {
 void EntityManager::DestroyEntity(Entity entity) { m_Registry.destroy(entity); }
 
 }  // namespace BillyEngine
+
+#include "../Entity/Entity.inl"

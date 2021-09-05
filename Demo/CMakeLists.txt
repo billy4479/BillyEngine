@@ -12,7 +12,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp TestEntity.cpp TestEntity2.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE BillyEngine)
 
 file(GLOB ASSETS "assets/*")

@@ -37,7 +37,7 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
     BE_ASSERT(texture != nullptr);
 
     i32 w, h;
-    auto result =
+    [[maybe_unused]] auto result =
         SDL_QueryTexture(texture->AsSDLTexture(), nullptr, nullptr, &w, &h);
 #ifdef DEBUG
     if (result != 0) dbg_print("%s\n", SDL_GetError());

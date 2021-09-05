@@ -33,20 +33,20 @@ struct Script {
             Instance = nullptr;
         };
 
-        OnCreate = [&](Entity* instance) {
+        OnCreate = [&](ScriptableEntity* instance) {
             BE_ASSERT(Instance != nullptr);
 
-            static_cast<T*>(instance)->OnCreate();
+            dynamic_cast<T*>(instance)->OnCreate();
         };
-        OnUpdate = [&](Entity* instance, f64 delta) {
+        OnUpdate = [&](ScriptableEntity* instance, f64 delta) {
             BE_ASSERT(Instance != nullptr);
 
-            static_cast<T*>(instance)->OnUpdate(delta);
+            dynamic_cast<T*>(instance)->OnUpdate(delta);
         };
-        OnDestroy = [&](Entity* instance) {
+        OnDestroy = [&](ScriptableEntity* instance) {
             BE_ASSERT(Instance != nullptr);
 
-            static_cast<T*>(instance)->OnDestroy();
+            dynamic_cast<T*>(instance)->OnDestroy();
         };
     }
 

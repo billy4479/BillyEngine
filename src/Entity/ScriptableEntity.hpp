@@ -4,11 +4,11 @@
 #include "Entity.hxx"
 
 namespace BillyEngine {
-class ScriptableEntity : public Entity {
+class ScriptableEntity {
    public:
     BE_NON_COPY_CONSTRUTIBLE(ScriptableEntity)
 
-    ScriptableEntity(entt::entity handle, Application *application);
+    ScriptableEntity(entt::entity handle, Application* application);
     ScriptableEntity(Entity e);
 
     virtual ~ScriptableEntity() = default;
@@ -19,6 +19,33 @@ class ScriptableEntity : public Entity {
     virtual void OnDestroy() = 0;
 
     void Destroy();
+
+    inline operator u32() const { return (u32)m_Entity; }
+
+    template <typename T, typename... Args>
+    inline T& AddComponent(Args&&... args) {
+        return m_Entity.AddComponent<T>(std::forward<Args>(args)...);
+    }
+
+    template <typename T>
+    inline void RemoveComponent() {
+        m_Entity.RemoveComponent<T>();
+    }
+
+    template <typename T>
+    inline bool HasComponent() {
+        return m_Entity.HasComponent<T>();
+    }
+
+    template <typename T>
+    inline T& GetComponent() {
+        return m_Entity.GetComponent<T>();
+    }
+
+    inline Application* GetApplication() { return m_Entity.m_Application; }
+
+   private:
+    Entity m_Entity;
 };
 
 }  // namespace BillyEngine
