@@ -22,11 +22,11 @@ struct Script {
     template <typename T, typename... Args>
     void Bind(Entity e, Args&&... args) {
         Instantiate = [&, e]() {
-            assert(Instance == nullptr);
+            BE_ASSERT(Instance == nullptr);
             Instance = new T(e, std::forward<Args>(args)...);
         };
         DestroyInstance = [&]() {
-            assert(Instance != nullptr);
+            BE_ASSERT(Instance != nullptr);
 
             OnDestroy(Instance);
             delete static_cast<T*>(Instance);
@@ -34,17 +34,17 @@ struct Script {
         };
 
         OnCreate = [&](Entity* instance) {
-            assert(Instance != nullptr);
+            BE_ASSERT(Instance != nullptr);
 
             static_cast<T*>(instance)->OnCreate();
         };
         OnUpdate = [&](Entity* instance, f64 delta) {
-            assert(Instance != nullptr);
+            BE_ASSERT(Instance != nullptr);
 
             static_cast<T*>(instance)->OnUpdate(delta);
         };
         OnDestroy = [&](Entity* instance) {
-            assert(Instance != nullptr);
+            BE_ASSERT(Instance != nullptr);
 
             static_cast<T*>(instance)->OnDestroy();
         };

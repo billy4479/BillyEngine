@@ -16,14 +16,14 @@ Ref<Font> AssetManager::LoadFont(const std::filesystem::path &path,
     auto font = CreateRef<Font>((m_AssetsFolder / path), size);
 
     auto result = m_Fonts.emplace(name, font);
-    assert(result.second);
+    BE_ASSERT(result.second);
 
     return font;
 }
 
 Ref<Font> AssetManager::GetFont(const std::string &name) {
     auto font = m_Fonts[name];
-    assert(font != nullptr);
+    BE_ASSERT(font != nullptr);
     return font;
 }
 
@@ -39,16 +39,16 @@ void AssetManager::SetAssetFolder(const std::filesystem::path &path) {
 std::filesystem::path AssetManager::GetAssetFolder() { return m_AssetsFolder; }
 
 void AssetManager::ReleaseSDLModules() {
-    for (auto font : m_Fonts) assert(font.second.use_count() == 1);
+    for (auto font : m_Fonts) BE_ASSERT(font.second.use_count() == 1);
     m_Fonts.clear();
 
-    for (auto surface : m_Surfaces) assert(surface.second.use_count() == 1);
+    for (auto surface : m_Surfaces) BE_ASSERT(surface.second.use_count() == 1);
     m_Surfaces.clear();
 }
 
 std::filesystem::path AssetManager::GetBasePath() {
     // TODO: Check if works on windows
-#ifdef _WIN32
+#ifdef BE_PLATFORM_WINDOWS
     wchar_t path[MAX_PATH] = {0};
     GetModuleFileNameW(NULL, path, MAX_PATH);
     return std::filesystem::path(path).parent_path();
@@ -65,14 +65,14 @@ Ref<Surface> AssetManager::LoadImage(const std::filesystem::path &path,
     auto s = CreateRef<Surface>(IMG_Load(path.c_str()));
 
     auto result = m_Surfaces.emplace(name, s);
-    assert(result.second);
+    BE_ASSERT(result.second);
 
     return s;
 }
 
 Ref<Surface> AssetManager::GetImage(const std::string &name) {
     auto surface = m_Surfaces[name];
-    assert(surface != nullptr);
+    BE_ASSERT(surface != nullptr);
     return surface;
 }
 }  // namespace BillyEngine

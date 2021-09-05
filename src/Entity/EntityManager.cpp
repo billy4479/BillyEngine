@@ -27,7 +27,7 @@ void EntityManager::Update(f64 delta) {
         [&](auto entity, auto &label, auto &t) {
             (void)entity;
             if (label.m_Texture == nullptr) {
-                assert(label.m_Font != nullptr);
+                BE_ASSERT(label.m_Font != nullptr);
                 label.m_Texture = m_Renderer->RenderTextToTexture(
                     label.m_Content, label.m_Font, label.fgColor);
             }

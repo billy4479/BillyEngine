@@ -72,7 +72,7 @@ class DrawableTexture {
      * @return Ref<Texture> of the drawn pixel data
      */
     inline Ref<Texture> GetTexture() {
-        assert(m_HasTexture);
+        BE_ASSERT(m_HasTexture);
         return m_Texture;
     }
 

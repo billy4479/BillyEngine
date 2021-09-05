@@ -12,8 +12,8 @@ Color Color::white(255, 255, 255);
 
 Color Color::hsl(u16 h, f32 s, f32 l, u8 a) {
     h = h % 360;
-    assert(s <= 1);
-    assert(l <= 1);
+    BE_ASSERT(s <= 1);
+    BE_ASSERT(l <= 1);
     auto c = (1 - abs(2 * l - 1)) * s;
     auto x = c * (1 - abs(fmod(((f32)h / 60), 2) - 1));
     auto m = l - c / 2;
@@ -41,7 +41,7 @@ Color Color::hsl(u16 h, f32 s, f32 l, u8 a) {
         r = c;
         b = x;
     } else {
-        assert(false);
+        BE_ASSERT(false);
     }
 
     // dbg_print("R': %f, G': %f, B': %f\n", r, g, b);

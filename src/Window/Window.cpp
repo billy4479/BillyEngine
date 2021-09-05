@@ -18,7 +18,7 @@ Window::Window(std::string_view title, glm::ivec2 size) : m_Size(size) {
 #ifdef DEBUG
     if (m_Window == nullptr) dbg_print("%s\n", SDL_GetError());
 #endif
-    assert(m_Window != nullptr);
+    BE_ASSERT(m_Window != nullptr);
 }
 
 Window::~Window() {

@@ -7,9 +7,11 @@ namespace BillyEngine {
 struct Font {
     Font(std::filesystem::path path, i32 size) {
         m_Font = TTF_OpenFont(path.c_str(), size);
-        assert(m_Font != nullptr);
+        BE_ASSERT(m_Font != nullptr);
     }
-    explicit Font(TTF_Font* font) : m_Font(font) { assert(m_Font != nullptr); }
+    explicit Font(TTF_Font* font) : m_Font(font) {
+        BE_ASSERT(m_Font != nullptr);
+    }
 
     BE_NON_COPY_CONSTRUTIBLE(Font)
     Font(Font&& other) {

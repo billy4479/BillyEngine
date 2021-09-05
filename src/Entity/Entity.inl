@@ -11,7 +11,7 @@ Entity::Entity(entt::entity handle, Application* application)
 
 template <typename T, typename... Args>
 T& Entity::AddComponent(Args&&... args) {
-    assert(!HasComponent<T>());
+    BE_ASSERT(!HasComponent<T>());
     T& component = m_Application->m_EntityManager.m_Registry.emplace<T>(
         m_Handle, std::forward<Args>(args)...);
     return component;
@@ -19,7 +19,7 @@ T& Entity::AddComponent(Args&&... args) {
 
 template <typename T>
 void Entity::RemoveComponent() {
-    assert(HasComponent<T>());
+    BE_ASSERT(HasComponent<T>());
     m_Application->m_EntityManager.m_Registry.remove<T>(m_Handle);
 }
 

@@ -15,14 +15,14 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Clear() {
-    assert(m_Renderer != nullptr);
+    BE_ASSERT(m_Renderer != nullptr);
     SDL_RenderClear(m_Renderer);
 }
 
 Ref<Texture> Renderer::RenderTextToTexture(
     const std::string& text, Ref<Font> font,
     const Color& fgColor /* TODO: config? */) {
-    assert(m_Renderer != nullptr);
+    BE_ASSERT(m_Renderer != nullptr);
 
     auto tmpSurf = CreateRef<Surface>(
         TTF_RenderText_Blended(font->AsSDLFont(), text.c_str(), fgColor));
@@ -33,8 +33,8 @@ Ref<Texture> Renderer::RenderTextToTexture(
 void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
                            glm::vec2 scale, f32 rotation, CenterPoint anchor,
                            CenterPoint rotationCenter) {
-    assert(m_Renderer != nullptr);
-    assert(texture != nullptr);
+    BE_ASSERT(m_Renderer != nullptr);
+    BE_ASSERT(texture != nullptr);
 
     i32 w, h;
     auto result =
@@ -42,7 +42,7 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
 #ifdef DEBUG
     if (result != 0) dbg_print("%s\n", SDL_GetError());
 #endif
-    assert(result == 0);
+    BE_ASSERT(result == 0);
 
     SDL_Rect sRect{0, 0, w, h};
     SDL_Rect dRect{position.x, position.y, static_cast<i32>(abs(scale.x) * w),
@@ -68,17 +68,17 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
 #ifdef DEBUG
     if (result != 0) dbg_print("%s\n", SDL_GetError());
 #endif
-    assert(result == 0);
+    BE_ASSERT(result == 0);
 }
 
 DrawableTexture Renderer::CreateDrawableTexture(glm::ivec2 size) {
-    assert(m_Renderer != nullptr);
+    BE_ASSERT(m_Renderer != nullptr);
 
     return DrawableTexture(shared_from_this(), size);
 }
 
 void Renderer::RenderToScreen() {
-    assert(m_Renderer != nullptr);
+    BE_ASSERT(m_Renderer != nullptr);
     SDL_RenderPresent(m_Renderer);
 }
 

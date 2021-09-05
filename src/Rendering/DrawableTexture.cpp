@@ -4,7 +4,7 @@ namespace BillyEngine {
 #ifdef DEBUG
     #define CHECK_ERR()                                    \
         if (lockR != 0) dbg_print("%s\n", SDL_GetError()); \
-        assert(lockR == 0);
+        BE_ASSERT(lockR == 0);
 #else
     #define CHECK_ERR() 0
 #endif
@@ -40,7 +40,7 @@ void DrawableTexture::Finalize() {
 DrawableTexture::DrawableTexture(Ref<Renderer> renderer, glm::ivec2 size)
     : m_Renderer(renderer), m_Size(size) {
     m_Surface = CreateRef<Surface>(size);
-    assert(m_Surface != nullptr);
+    BE_ASSERT(m_Surface != nullptr);
 }
 
 }  // namespace BillyEngine

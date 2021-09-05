@@ -22,7 +22,7 @@ Application::Application(std::string_view title, glm::ivec2 size,
 Application::~Application() = default;
 
 void Application::Run() {
-    assert(!isRunning);
+    BE_ASSERT(!isRunning);
     isRunning = true;
 
     std::chrono::microseconds lastDelta;

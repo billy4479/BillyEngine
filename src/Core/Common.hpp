@@ -4,6 +4,7 @@
     #define DEBUG 1
 #endif
 
+#include "Assert.hpp"
 #include "STDInclude.hpp"
 
 using u8 = std::uint8_t;

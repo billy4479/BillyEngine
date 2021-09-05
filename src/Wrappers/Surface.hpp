@@ -11,7 +11,7 @@ struct Surface {
             0, size.x, size.y, sizeof(Color), Color::PixelFormat);
     }
     explicit Surface(SDL_Surface* surface) : m_Surface(surface) {
-        assert(surface != nullptr);
+        BE_ASSERT(surface != nullptr);
     }
 
     BE_NON_COPY_CONSTRUTIBLE(Surface)
