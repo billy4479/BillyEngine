@@ -29,6 +29,8 @@ using size_t = __SIZE_TYPE__;
     #define dbg_print(...)
 #endif
 
+#define BE_STRINGIFY(x) #x
+
 #define BE_NON_COPY_CONSTRUTIBLE(className)     \
     className(const className& other) = delete; \
     className& operator=(const className&) = delete;

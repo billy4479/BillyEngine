@@ -7,8 +7,8 @@ namespace BillyEngine {
 
 struct Surface {
     Surface(glm::ivec2 size) {
-        m_Surface = SDL_CreateRGBSurfaceWithFormat(
-            0, size.x, size.y, sizeof(Color), Color::PixelFormat);
+        m_Surface = SDL_CreateRGBSurfaceWithFormat(0, size.x, size.y, 32,
+                                                   Color::PixelFormat);
     }
     explicit Surface(SDL_Surface* surface) : m_Surface(surface) {
         BE_ASSERT(surface != nullptr);

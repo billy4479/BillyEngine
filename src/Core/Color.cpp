@@ -12,8 +12,11 @@ Color Color::white(255, 255, 255);
 
 Color Color::hsl(u16 h, f32 s, f32 l, u8 a) {
     h = h % 360;
-    BE_ASSERT(s <= 1);
-    BE_ASSERT(l <= 1);
+    BE_ASSERT(s <= 1 && s > 0);
+    BE_ASSERT(l <= 1 && l > 0);
+
+    // dbg_print("h: %u, s: %f, l: %f\n", h, s, l);
+
     auto c = (1 - abs(2 * l - 1)) * s;
     auto x = c * (1 - abs(fmod(((f32)h / 60), 2) - 1));
     auto m = l - c / 2;
@@ -44,9 +47,12 @@ Color Color::hsl(u16 h, f32 s, f32 l, u8 a) {
         BE_ASSERT(false);
     }
 
-    // dbg_print("R': %f, G': %f, B': %f\n", r, g, b);
+    u8 R = (u8)((r + m) * 255);
+    u8 G = (u8)((g + m) * 255);
+    u8 B = (u8)((b + m) * 255);
 
-    return Color((u8)((r + m) * 255), (u8)((g + m) * 255), (u8)((b + m) * 255),
-                 a);
+    // dbg_print("R: %u, G: %u, B: %u\n", R, G, B);
+
+    return Color(R, G, B, a);
 }
 }  // namespace BillyEngine

@@ -12,8 +12,8 @@ class Entity {
     ~Entity() = default;
 
     inline bool operator==(const Entity& other) {
-        // TODO: check for the same register
-        return this->m_Handle == other.m_Handle;
+        return this->m_Handle == other.m_Handle &&
+               this->m_EntityManager == other.m_EntityManager;
     }
     inline bool operator!=(const Entity& other) { return !(*this == other); }
     inline operator bool() const { return m_Handle != entt::null; }
@@ -41,6 +41,7 @@ class Entity {
 
     template <typename T>
     T& GetComponent() {
+        BE_ASSERT(HasComponent<T>());
         return m_EntityManager->m_Registry.get<T>(m_Handle);
     }
 

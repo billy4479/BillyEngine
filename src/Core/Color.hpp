@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <SDL_pixels.h>
+
 #include "Common.hpp"
 
 namespace BillyEngine {
@@ -26,11 +28,15 @@ struct Color {
      */
     Color(u8 r, u8 g, u8 b, u8 a = 0xff) : r(r), g(g), b(b), a(a) {}
     /**
-     * @brief Convert to BGRA32
+     * @brief Convert to RGBA32
      *
      * @return The result unsigned int
      */
-    inline operator u32() const { return (b << 24) | (g << 16) | (r << 8) | a; }
+    inline operator u32() const {
+        auto res = (r << 24) | (g << 16) | (b << 8) | a;
+        // dbg_print("#%X\n", res);
+        return res;
+    }
     inline operator SDL_Color() const { return SDL_Color{r, g, b, a}; }
 
     u8 r = 0, g = 0, b = 0, a = 0xff;
@@ -41,7 +47,7 @@ struct Color {
      * If changed also the `u32()` operator has to be adapted.
      *
      */
-    static constexpr u32 PixelFormat = SDL_PIXELFORMAT_BGRA32;
+    static constexpr u32 PixelFormat = SDL_PIXELFORMAT_RGBA8888;
 
     static Color red;
     static Color blue;

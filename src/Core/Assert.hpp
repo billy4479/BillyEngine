@@ -31,12 +31,15 @@
                     BE_TRAP;                                      \
                 }                                                 \
             }
-    // #else
-    //     #include <cassert>
-    //     #define BE_ASSERT(...) assert(__VA_ARGS__);
+    #else
+        #include <cassert>
+        #define BE_ASSERT(...) assert(__VA_ARGS__);
     #endif
+
+    #define BE_ABORT BE_TRAP
 
 #else
     #define BE_ASSERT(...)
     #define BE_TRAP
+    #define BE_ABORT abort();
 #endif

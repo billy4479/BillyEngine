@@ -8,6 +8,7 @@
 #include "Entity/Entity.hpp"
 #include "Entity/ScriptableEntity.hpp"
 #include "Rendering/DrawableTexture.hpp"
+#include "Rendering/Renderer.hpp"
 
 namespace BillyEngine {
 
@@ -44,7 +45,6 @@ void Application::Run() {
             SDL_Delay(frameDelay - lastDelta);
             lastDelta = frameDelay;
         }
-        // dbg_print("FrameTime: %fs\n", (f64)lastDelta.count() / 1000000.0);
 
         m_ActualFps = 1000.0 / lastDelta;
     }
@@ -62,8 +62,8 @@ void Application::OnUpdate(f32 delta) {
 
 Ref<Renderer> Application::GetRenderer() { return m_Renderer; }
 
-DrawableTexture Application::CreateDrawableTexture(glm::ivec2 size) {
-    return m_Renderer->CreateDrawableTexture(size);
+Ref<DrawableTexture> Application::CreateDrawableTexture(glm::ivec2 size) {
+    return CreateRef<DrawableTexture>(m_Renderer->CreateDrawableTexture(size));
 }
 
 }  // namespace BillyEngine

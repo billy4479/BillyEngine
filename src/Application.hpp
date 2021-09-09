@@ -26,7 +26,7 @@ class Application {
    public:
     void Run();
     inline f32 GetFPS() const { return m_ActualFps; };
-    DrawableTexture CreateDrawableTexture(glm::ivec2 size);
+    Ref<DrawableTexture> CreateDrawableTexture(glm::ivec2 size);
     void AskToStop();
 
    public:
@@ -48,8 +48,10 @@ class Application {
     template <typename T, typename... Args>
     Entity CreateScriptableEntity(const std::string &name, Args &&...args) {
         auto e = CreateEntity(name);
-        e.AddComponent<Components::Script>().Bind<T, Args...>(
-            e, std::forward<Args>(args)...);
+        auto &sc = e.AddComponent<Components::Script>();
+        sc.Bind<T, Args...>(e, std::forward<Args>(args)...);
+        sc.Instantiate();
+        // sc.OnCreate(sc.Instance);
         return e;
     }
 
