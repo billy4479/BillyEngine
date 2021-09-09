@@ -1,14 +1,14 @@
 #pragma once
 
 #include "../Core/Common.hpp"
-#include "Entity.hxx"
+#include "Entity.hpp"
 
 namespace BillyEngine {
 class ScriptableEntity {
    public:
     BE_NON_COPY_CONSTRUTIBLE(ScriptableEntity)
 
-    ScriptableEntity(entt::entity handle, Application* application);
+    ScriptableEntity(entt::entity handle, EntityManager* application);
     ScriptableEntity(Entity e);
 
     virtual ~ScriptableEntity() = default;
@@ -42,7 +42,9 @@ class ScriptableEntity {
         return m_Entity.GetComponent<T>();
     }
 
-    inline Application* GetApplication() { return m_Entity.m_Application; }
+    inline Application* GetApplication() {
+        return m_Entity.m_EntityManager->m_Application;
+    }
 
    private:
     Entity m_Entity;

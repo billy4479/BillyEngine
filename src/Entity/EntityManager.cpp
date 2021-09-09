@@ -51,7 +51,7 @@ void EntityManager::Update(f64 delta) {
 }
 
 Entity EntityManager::CreateEntity(const std::string &name) {
-    Entity e = {m_Registry.create(), m_Application};
+    Entity e = {m_Registry.create(), this};
 
     std::string n;
     if (name.empty()) {
@@ -71,5 +71,3 @@ Entity EntityManager::CreateEntity(const std::string &name) {
 void EntityManager::DestroyEntity(Entity entity) { m_Registry.destroy(entity); }
 
 }  // namespace BillyEngine
-
-#include "../Entity/Entity.inl"

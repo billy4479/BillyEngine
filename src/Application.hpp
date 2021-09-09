@@ -2,9 +2,11 @@
 
 #define SDL_MAIN_HANDLED
 
+#include "Components/ScriptComponent.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Core/EventHandler.hpp"
+#include "Entity/Entity.hpp"
 #include "Entity/EntityManager.hpp"
 #include "Rendering/Renderer.hpp"
 #include "Window/Window.hpp"
@@ -44,10 +46,11 @@ class Application {
      * @return The created Entity
      */
     template <typename T, typename... Args>
-    inline Entity CreateScriptableEntity(const std::string &name,
-                                         Args &&...args) {
-        return m_EntityManager.CreateScriptableEntity<T>(
-            name, std::forward<Args>(args)...);
+    Entity CreateScriptableEntity(const std::string &name, Args &&...args) {
+        auto e = CreateEntity(name);
+        e.AddComponent<Components::Script>().Bind<T, Args...>(
+            e, std::forward<Args>(args)...);
+        return e;
     }
 
     /**

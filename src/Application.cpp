@@ -3,8 +3,7 @@
 #include "Components/Components.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
-#include "Entity/Entity.hxx"
-// #include "Entity/Entity.inl"
+#include "Entity/Entity.hpp"
 #include "Entity/ScriptableEntity.hpp"
 #include "Rendering/DrawableTexture.hpp"
 
