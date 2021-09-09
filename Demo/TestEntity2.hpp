@@ -7,6 +7,6 @@ class TestEntity2 : public BillyEngine::ScriptableEntity {
 
    public:
     void OnCreate() override;
-    void OnUpdate(f64) override;
+    void OnUpdate(f32) override;
     void OnDestroy() override {}
 };

@@ -1,5 +1,7 @@
 #include "Application.hpp"
 
+#include <SDL_timer.h>
+
 #include "Components/Components.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
@@ -25,34 +27,32 @@ void Application::Run() {
     BE_ASSERT(!isRunning);
     isRunning = true;
 
-    std::chrono::microseconds lastDelta;
+    u32 lastDelta;
     while (isRunning) {
-        auto start = std::chrono::high_resolution_clock::now();
+        auto start = SDL_GetTicks();
+
         m_Renderer->Clear();
 
-        OnUpdate((f64)lastDelta.count() / 1000000.0);
+        OnUpdate((f32)lastDelta / 1000.0f);
 
         isRunning = !m_EventHandler.ShouldClose();
 
-        auto end = std::chrono::high_resolution_clock::now();
-        lastDelta =
-            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        auto end = SDL_GetTicks();
+        lastDelta = end - start;
 
         if (frameDelay > lastDelta) {
-            SDL_Delay(std::chrono::duration_cast<std::chrono::milliseconds>(
-                          frameDelay - lastDelta)
-                          .count());
+            SDL_Delay(frameDelay - lastDelta);
             lastDelta = frameDelay;
         }
         // dbg_print("FrameTime: %fs\n", (f64)lastDelta.count() / 1000000.0);
 
-        m_ActualFps = 1000000.0 / lastDelta.count();
+        m_ActualFps = 1000.0 / lastDelta;
     }
 }
 
 void Application::AskToStop() { isRunning = false; }
 
-void Application::OnUpdate(f64 delta) {
+void Application::OnUpdate(f32 delta) {
     m_EventHandler.HandleEvents();
 
     m_EntityManager.Update(delta);

@@ -2,18 +2,17 @@
 
 void TestEntity::OnCreate() {
     // dbg_print("%u\n", (u32) * this);
-    texture = CreateScope<BillyEngine::DrawableTexture>(
+    texture = CreateRef<BillyEngine::DrawableTexture>(
         GetApplication()->CreateDrawableTexture({100, 100}));
     texture->Clear(BillyEngine::Color::hsl(hue, 0.5, 0.5));
 
-    AddComponent<BillyEngine::Components::Sprite>(
-        texture->FinalizeAndGetTexture());
+    AddComponent<BillyEngine::Components::Sprite>(texture);
     auto &t = GetComponent<BillyEngine::Components::Transform>();
     t.Position = {100, 100};
     t.Rotation = 0;
 }
 
-void TestEntity::OnUpdate(f64 delta) {
+void TestEntity::OnUpdate(f32 delta) {
     auto &t = GetComponent<BillyEngine::Components::Transform>();
     t.Rotation += speed * delta;
     texture->Clear(BillyEngine::Color::hsl(hue, 0.5, 0.5));

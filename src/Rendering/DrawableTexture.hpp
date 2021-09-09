@@ -76,6 +76,8 @@ class DrawableTexture {
         return m_Texture;
     }
 
+    inline Ref<Texture> GetTextureOrNull() { return m_Texture; }
+
     /**
      * @brief Finalize and get the just generated `Ref<Texture>`
      *
@@ -97,7 +99,7 @@ class DrawableTexture {
      * @param size The size of the texture
      */
     DrawableTexture(Ref<Renderer> renderer, glm::ivec2 size);
-    DrawableTexture() = default;
+    // DrawableTexture() = default;
     /**
      * @brief Create a new `DrawableTexture` from an existing `Surface`
      *

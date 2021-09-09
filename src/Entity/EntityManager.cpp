@@ -9,7 +9,7 @@ EntityManager::EntityManager(Application *application)
 
 EntityManager::~EntityManager() { m_Registry.clear(); }
 
-void EntityManager::Update(f64 delta) {
+void EntityManager::Update(f32 delta) {
     m_Registry.view<Components::Script>().each([&](auto entity, auto &script) {
         (void)entity;
         // auto e = Entity(entity, this);
@@ -38,11 +38,11 @@ void EntityManager::Update(f64 delta) {
         [&](auto entity, auto &sprite, auto &t) {
             (void)entity;
 #ifdef DEBUG
-            if (sprite.m_Texture != nullptr)
+            if (sprite.GetTexture() != nullptr)
 #endif
                 m_Application->GetRenderer()->DrawTexture(
-                    sprite.m_Texture, t.Position, t.Scale, t.Rotation, t.Anchor,
-                    t.RotationCenter);
+                    sprite.GetTexture(), t.Position, t.Scale, t.Rotation,
+                    t.Anchor, t.RotationCenter);
 #ifdef DEBUG
             else
                 dbg_print("Not drawing since the texture is null\n");

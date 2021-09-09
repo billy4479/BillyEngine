@@ -8,7 +8,7 @@ void TestEntity2::OnCreate() {
     t.Anchor = BillyEngine::CenterPoint::TOP_RIGHT;
 }
 
-void TestEntity2::OnUpdate(f64) {
+void TestEntity2::OnUpdate(f32) {
     std::stringstream ss;
     ss << "FPS: " << GetApplication()->GetFPS();
 

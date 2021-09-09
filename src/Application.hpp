@@ -169,15 +169,15 @@ class Application {
 
    private:
     bool isRunning = false;
-    void OnUpdate(f64);
+    void OnUpdate(f32);
     Ref<Renderer> GetRenderer();
 
    private:
     static constexpr f32 FPS = 60;
-    static constexpr auto frameDelay =
-        std::chrono::microseconds((u64)(1000000.0 / FPS));
+    // Min frame time in milliseconds
+    static constexpr u32 frameDelay = 1000.0 / FPS;
 
-    f64 m_ActualFps = 0;
+    f32 m_ActualFps = 0;
 
    private:
     Window m_Window;
