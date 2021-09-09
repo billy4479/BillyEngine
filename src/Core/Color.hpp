@@ -5,8 +5,6 @@
  */
 #pragma once
 
-#include <SDL_pixels.h>
-
 #include "Common.hpp"
 
 namespace BillyEngine {

@@ -21,7 +21,7 @@ struct Sprite {
     Ref<DrawableTexture> m_DrawableTexture = nullptr;
 
    public:
-    Color Tint{0, 0, 0, 0};
+    Color Tint = Color::white;
     Ref<Texture> GetTexture() {
         if (m_DrawableTexture != nullptr)
             m_Texture = m_DrawableTexture->GetTextureOrNull();

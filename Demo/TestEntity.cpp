@@ -3,7 +3,8 @@
 void TestEntity::OnCreate() {
     // dbg_print("%u\n", (u32) * this);
     texture = GetApplication()->CreateDrawableTexture({100, 100});
-    texture->Clear(BillyEngine::Color::hsl(hue, 0.5, 0.5));
+    texture->Clear(BillyEngine::Color::white);
+    texture->Finalize();
 
     AddComponent<BillyEngine::Components::Sprite>(texture);
     auto &t = GetComponent<BillyEngine::Components::Transform>();
@@ -14,8 +15,8 @@ void TestEntity::OnCreate() {
 void TestEntity::OnUpdate(f32 delta) {
     auto &t = GetComponent<BillyEngine::Components::Transform>();
     t.Rotation += speed * delta;
-    texture->Clear(BillyEngine::Color::hsl(hue, 1, 0.5));
-    texture->Finalize();
+    GetComponent<BillyEngine::Components::Sprite>().Tint =
+        BillyEngine::Color::hsl(hue, 1, 0.5);
 
     hue += u16(speed * delta);
     if (down)

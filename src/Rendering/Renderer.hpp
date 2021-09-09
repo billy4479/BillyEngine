@@ -36,7 +36,7 @@ class Renderer : public std::enable_shared_from_this<Renderer> {
                                      const Color &fgColor /* TODO: config? */);
     void DrawTexture(Ref<Texture> texture, glm::ivec2 position, glm::vec2 scale,
                      f32 rotation, CenterPoint anchor,
-                     CenterPoint rotationCenter);
+                     CenterPoint rotationCenter, Color tint = Color::white);
 
    private:
     SDL_Renderer *m_Renderer = nullptr;

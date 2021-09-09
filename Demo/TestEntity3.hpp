@@ -9,10 +9,9 @@ class TestEntity3 : public BillyEngine::ScriptableEntity {
 
     void OnCreate() override {
         auto dt = GetApplication()->CreateDrawableTexture({100, 100});
-        dt->Clear(color);
-        dbg_print("#%X\n", (u32)color);
+        dt->Clear(BillyEngine::Color::white);
         dt->Finalize();
-        AddComponent<BillyEngine::Components::Sprite>(dt);
+        AddComponent<BillyEngine::Components::Sprite>(dt, color);
     }
 
     void OnUpdate(f32) override {}

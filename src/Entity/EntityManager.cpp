@@ -10,17 +10,18 @@ EntityManager::EntityManager(Application *application)
 EntityManager::~EntityManager() { m_Registry.clear(); }
 
 void EntityManager::Update(f32 delta) {
-    m_Registry.view<Components::Script>().each([&](auto entity, auto &script) {
-        (void)entity;
-        // auto e = Entity(entity, this);
-        if (script.Instance == nullptr) script.Instantiate();
-        if (!script.WasOnCreateCalled) script.OnCreate(script.Instance);
+    m_Registry.view<Components::Script>().each(
+        [&](auto entity, Components::Script &script) {
+            (void)entity;
+            // auto e = Entity(entity, this);
+            if (script.Instance == nullptr) script.Instantiate();
+            if (!script.WasOnCreateCalled) script.OnCreate(script.Instance);
 
-        script.OnUpdate(script.Instance, delta);
-    });
+            script.OnUpdate(script.Instance, delta);
+        });
 
     m_Registry.view<Components::Text, Components::Transform>().each(
-        [&](auto entity, auto &label, auto &t) {
+        [&](auto entity, Components::Text &label, Components::Transform &t) {
             (void)entity;
             if (label.m_Texture == nullptr) {
                 BE_ASSERT(label.m_Font != nullptr);
@@ -34,14 +35,14 @@ void EntityManager::Update(f32 delta) {
         });
 
     m_Registry.view<Components::Sprite, Components::Transform>().each(
-        [&](auto entity, auto &sprite, auto &t) {
+        [&](auto entity, Components::Sprite &sprite, Components::Transform &t) {
             (void)entity;
 #ifdef DEBUG
             if (sprite.GetTexture() != nullptr)
 #endif
                 m_Application->GetRenderer()->DrawTexture(
                     sprite.GetTexture(), t.Position, t.Scale, t.Rotation,
-                    t.Anchor, t.RotationCenter);
+                    t.Anchor, t.RotationCenter, sprite.Tint);
 #ifdef DEBUG
             else
                 dbg_print("Not drawing since the texture is null\n");

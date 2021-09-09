@@ -32,7 +32,7 @@ Ref<Texture> Renderer::RenderTextToTexture(
 
 void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
                            glm::vec2 scale, f32 rotation, CenterPoint anchor,
-                           CenterPoint rotationCenter) {
+                           CenterPoint rotationCenter, Color tint) {
     BE_ASSERT(m_Renderer != nullptr);
     BE_ASSERT(texture != nullptr);
 
@@ -61,6 +61,8 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
     SDL_Point rotationCenterPointSDL = {rotationCenterPoint.x,
                                         rotationCenterPoint.y};
 
+    SDL_SetTextureColorMod(texture->AsSDLTexture(), tint.r, tint.g, tint.b);
+    SDL_SetTextureAlphaMod(texture->AsSDLTexture(), tint.a);
     result = SDL_RenderCopyEx(m_Renderer, texture->AsSDLTexture(), &sRect,
                               &dRect, rotation, &rotationCenterPointSDL,
                               (SDL_RendererFlip)flip);
