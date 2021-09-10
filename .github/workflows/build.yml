@@ -50,30 +50,32 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
-    - run: mkdir build
+    - run: mkdir SDL2
 
     - name: Download SDL2
     
       uses: albin-johansson/download-sdl2@v2
       with:
         sources_destination: .
-        binaries_destination: build
+        binaries_destination: SDL2
         
     - name: Download SDL2_ttf
       uses: albin-johansson/download-sdl2-ttf@v1
       with:
         sources_destination: .
-        binaries_destination: build
+        binaries_destination: SDL2
         
     - name: Download SDL2_img
       uses: albin-johansson/download-sdl2-image@v2
       with:
         sources_destination: .
-        binaries_destination: build
+        binaries_destination: SDL2
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      env:
+        SDL2DIR: SDL2
       run: cmake -B ${{github.workspace}}/build -S ${{github.workspace}} -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
