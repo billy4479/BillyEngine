@@ -23,7 +23,8 @@ jobs:
     
     - name: Download SDL2
       run: |
-           sudo apt-add-repository devel
+           sudo add-apt-repository universe -y
+           sudo add-apt-repository multiverse -y
            sudo apt update
            sudo apt install libsdl2-dev libsdl2-2.0-0 libjpeg-dev libwebp-dev libtiff5-dev libsdl2-image-dev libfreetype6-dev libsdl2-ttf-dev libsdl2-ttf-2.0-0 -y
            
