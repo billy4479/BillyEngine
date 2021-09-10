@@ -3,11 +3,11 @@
 Some kind of 2D game engine, written in C++17 using SDL2 and EnTT to be used in future projects.
 I wanted a simple entity framework to display some graphics in my C++ applications and here it is.
 It is not meant to be like Unreal / Unity / Godot,
-the most similar thing I could find is [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine).
+the most similar thing I could find is [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine). Thanks also to [TheCherno](https://www.youtube.com/c/TheChernoProject) for [Hazel](https://github.com/TheCherno/Hazel) from which I took a lot of inspiration.
 
-I don't really care about rendering so for now it is done through SDL2 
+I don't really care about rendering so for now it is done through SDL2
 but maybe in the future I'll switch to OpenGL.
-So for now it requires SDL2, SDL2_ttf and SDL2_img to be installed globally.
+It requires SDL2, SDL2_ttf and SDL2_img to be installed globally.
 
 I've developed it in Linux for Linux but _should_ work on other platforms as well.
 
@@ -24,8 +24,8 @@ It takes care of the entity management and can give pointers to the `AssetManage
 The `Entity` class is just an ID and a pointer so it's safe to copy it around.
 It provide methots to add, get, check and remove components which are just `struct`s.
 
-`ScriptableEntities` are entities with a custom behavior. 
-The class, in turns, derives from `Entity` and has three methods to be overridden: `OnCreate`, `OnUpdate` and `OnDestroy`.
+`ScriptableEntities` are entities with a custom behavior.
+The class is a wrapper around `Entity` and has three methods to be overridden: `OnCreate`, `OnUpdate` and `OnDestroy`.
 The constructor of this class has to be defined using the `SCRIPTABLE_ENTITY(ClassName)` macro.
 Other constructors won't be called but you can use `OnCreate` for that.
 Once you define you own class derived from it you can instantiate it using `CreateScriptableEntity<T>` on the application.

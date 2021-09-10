@@ -35,7 +35,6 @@ FetchContent_Declare(glm
 )
 FetchContent_MakeAvailable(glm)
 
-
 aux_source_directory( src SOURCES)
 aux_source_directory( src/Core CORE)
 aux_source_directory( src/Entity ENTITY)
