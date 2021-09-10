@@ -7,94 +7,124 @@ namespace BillyEngine {
 
 namespace Components {
 
+#ifdef BE_HAS_CPP20
+template <typename T>
+concept EntityScriptClass = requires {
+    { std::declval<T>().OnCreate() } -> std::same_as<void>;
+    { std::declval<T>().OnUpdate(std::declval<f32>()) } -> std::same_as<void>;
+    { std::declval<T>().OnDestroy() } -> std::same_as<void>;
+};
+#else
+    #define EntityScriptClass typename
+#endif
+
 struct Script {
-    std::function<void()> Instantiate;
+    // std::function<void()> Instantiate;
     std::function<void()> DestroyInstance;
 
-    std::function<void(ScriptableEntity*)> OnCreate;
-    std::function<void(ScriptableEntity*, f32)> OnUpdate;
-    std::function<void(ScriptableEntity*)> OnDestroy;
+    std::function<void()> OnCreate;
+    std::function<void(f32)> OnUpdate;
+    std::function<void()> OnDestroy;
+
+    std::function<void*()> GetInstanceAsVoidPtr = []() { return nullptr; };
 
     bool WasOnCreateCalled = false;
+    ~Script() { DestroyInstance(); }
 
-    ~Script() {
-        if (Instance != nullptr) DestroyInstance();
-    }
-
-    template <typename T>
+    template <EntityScriptClass T>
     inline T* GetInstanceOrFail() {
-        if (Instance == nullptr) {
-            BE_ASSERT(Instance != nullptr);
-            // TODO: Runtime fail even in prod
+        if (GetInstanceAsVoidPtr() == nullptr) {
+            BE_ABORT
         }
-        auto r = dynamic_cast<T*>(Instance);
+        auto r = static_cast<T*>(GetInstanceAsVoidPtr());
         BE_ASSERT(r != nullptr);
         return r;
     }
 
-    template <typename T>
+    template <EntityScriptClass T>
     inline T* GetInstanceOrNull() {
-        auto r = dynamic_cast<T*>(Instance);
+        auto r = static_cast<T*>(GetInstanceAsVoidPtr());
         BE_ASSERT(r != nullptr);
         return r;
     }
 
-    template <typename T, typename... Args>
+    template <EntityScriptClass T, typename... Args>
     void Bind(Entity e, Args&&... args) {
-        Instantiate = [&, e]() {
-            BE_ASSERT(Instance == nullptr);
-            Instance = new T(e, std::forward<Args>(args)...);
-            BE_ASSERT(Instance != nullptr);
+        T* instance = nullptr;
+
+        // Instantiate = [&, e]() {
+        // BE_ASSERT(instance == nullptr);
+        instance = new T(e, std::forward<Args>(args)...);
+        BE_ASSERT(instance != nullptr);
+
+        DestroyInstance = [&, instance]() {
+            BE_ASSERT(instance != nullptr);
+
+            OnDestroy();
+            delete instance;
+            // instance = nullptr;
         };
-        DestroyInstance = [&]() {
-            BE_ASSERT(Instance != nullptr);
 
-            OnDestroy(Instance);
-            delete static_cast<T*>(Instance);
-            Instance = nullptr;
-        };
+        OnCreate = [&, instance]() {
+            BE_ASSERT(instance != nullptr);
 
-        OnCreate = [&](ScriptableEntity* instance) {
-            BE_ASSERT(Instance != nullptr);
-
-            dynamic_cast<T*>(instance)->OnCreate();
+            instance->OnCreate();
             WasOnCreateCalled = true;
         };
-        OnUpdate = [&](ScriptableEntity* instance, f32 delta) {
-            BE_ASSERT(Instance != nullptr);
+        OnUpdate = [&, instance](f32 delta) {
+            BE_ASSERT(instance != nullptr);
 
-            dynamic_cast<T*>(instance)->OnUpdate(delta);
+            instance->OnUpdate(delta);
         };
-        OnDestroy = [&](ScriptableEntity* instance) {
-            BE_ASSERT(Instance != nullptr);
+        OnDestroy = [&, instance]() {
+            BE_ASSERT(instance != nullptr);
 
-            dynamic_cast<T*>(instance)->OnDestroy();
+            instance->OnDestroy();
         };
+
+        GetInstanceAsVoidPtr = [&, instance]() { return instance; };
+        // };
     }
 
-    ScriptableEntity* Instance = nullptr;
+    // ScriptableEntity* Instance = nullptr;
 
     Script(const Script& other) = delete;
     Script(Script&& other) {
-        this->Instance = other.Instance;
-        this->Instantiate = other.Instantiate;
+        // this->Instance = other.Instance;
+        // this->Instantiate = other.Instantiate;
         this->DestroyInstance = other.DestroyInstance;
         this->OnCreate = other.OnCreate;
         this->OnUpdate = other.OnUpdate;
         this->OnDestroy = other.OnDestroy;
+        this->GetInstanceAsVoidPtr = other.GetInstanceAsVoidPtr;
 
-        other.Instance = nullptr;
+        // other.Instantiate = nullptr;
+        other.DestroyInstance = nullptr;
+        other.OnCreate = nullptr;
+        other.OnUpdate = nullptr;
+        other.OnDestroy = nullptr;
+        other.GetInstanceAsVoidPtr = nullptr;
+
+        // other.Instance = nullptr;
     }
     Script& operator=(Script&& other) {
         if (this != &other) {
-            this->Instance = other.Instance;
-            this->Instantiate = other.Instantiate;
+            // this->Instance = other.Instance;
+            // this->Instantiate = other.Instantiate;
             this->DestroyInstance = other.DestroyInstance;
             this->OnCreate = other.OnCreate;
             this->OnUpdate = other.OnUpdate;
             this->OnDestroy = other.OnDestroy;
+            this->GetInstanceAsVoidPtr = other.GetInstanceAsVoidPtr;
 
-            other.Instance = nullptr;
+            // other.Instantiate = nullptr;
+            other.DestroyInstance = nullptr;
+            other.OnCreate = nullptr;
+            other.OnUpdate = nullptr;
+            other.OnDestroy = nullptr;
+            other.GetInstanceAsVoidPtr = nullptr;
+
+            // other.Instance = nullptr;
         }
         return *this;
     }

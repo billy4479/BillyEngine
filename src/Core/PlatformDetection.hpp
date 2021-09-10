@@ -50,3 +50,8 @@
 #else
     #error "Unsupported compiler"
 #endif
+
+#if __cplusplus > 201907L
+    // C++20
+    #define BE_HAS_CPP20
+#endif

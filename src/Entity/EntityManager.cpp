@@ -14,10 +14,9 @@ void EntityManager::Update(f32 delta) {
         [&](auto entity, Components::Script &script) {
             (void)entity;
             // auto e = Entity(entity, this);
-            if (script.Instance == nullptr) script.Instantiate();
-            if (!script.WasOnCreateCalled) script.OnCreate(script.Instance);
+            if (!script.WasOnCreateCalled) script.OnCreate();
 
-            script.OnUpdate(script.Instance, delta);
+            script.OnUpdate(delta);
         });
 
     m_Registry.view<Components::Text, Components::Transform>().each(

@@ -49,10 +49,8 @@ class Application {
     Entity CreateScriptableEntity(const std::string &name = "",
                                   Args &&...args) {
         auto e = CreateEntity(name);
-        auto &sc = e.AddComponent<Components::Script>();
-        sc.Bind<T, Args...>(e, std::forward<Args>(args)...);
-        sc.Instantiate();
-        // sc.OnCreate(sc.Instance);
+        e.AddComponent<Components::Script>().Bind<T, Args...>(
+            e, std::forward<Args>(args)...);
         return e;
     }
 
