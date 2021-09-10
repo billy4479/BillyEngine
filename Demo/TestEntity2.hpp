@@ -8,5 +8,4 @@ class TestEntity2 : public BillyEngine::ScriptableEntity {
    public:
     void OnCreate();
     void OnUpdate(f32);
-    void OnDestroy() {}
 };

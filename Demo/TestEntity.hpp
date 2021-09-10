@@ -14,5 +14,4 @@ class TestEntity : public BillyEngine::ScriptableEntity {
 
     void OnCreate();
     void OnUpdate(f32 delta);
-    void OnDestroy() {}
 };

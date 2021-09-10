@@ -13,7 +13,4 @@ class TestEntity3 : public BillyEngine::ScriptableEntity {
         dt->Finalize();
         AddComponent<BillyEngine::Components::Sprite>(dt, color);
     }
-
-    void OnUpdate(f32) {}
-    void OnDestroy() {}
 };

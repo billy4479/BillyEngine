@@ -39,6 +39,12 @@ class ScriptableEntity {
         return m_Entity.m_EntityManager->m_Application;
     }
 
+    //    protected:
+
+    void OnCreate() {}
+    void OnUpdate(f32) {}
+    void OnDestroy() {}
+
    private:
     Entity m_Entity;
 };
