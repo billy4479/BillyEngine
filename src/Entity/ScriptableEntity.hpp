@@ -6,17 +6,10 @@
 namespace BillyEngine {
 class ScriptableEntity {
    public:
-    BE_NON_COPY_CONSTRUTIBLE(ScriptableEntity)
-
     ScriptableEntity(entt::entity handle, EntityManager* application);
     ScriptableEntity(Entity e);
 
     virtual ~ScriptableEntity() = default;
-
-   protected:
-    virtual void OnCreate() = 0;
-    virtual void OnUpdate(f32) = 0;
-    virtual void OnDestroy() = 0;
 
     void Destroy();
 

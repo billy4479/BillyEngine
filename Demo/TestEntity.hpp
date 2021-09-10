@@ -12,7 +12,7 @@ class TestEntity : public BillyEngine::ScriptableEntity {
     const f32 maxSpeed = 300;
     bool down = false;
 
-    void OnCreate() override;
-    void OnUpdate(f32 delta) override;
-    void OnDestroy() override {}
+    void OnCreate();
+    void OnUpdate(f32 delta);
+    void OnDestroy() {}
 };

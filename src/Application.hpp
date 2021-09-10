@@ -60,7 +60,7 @@ class Application {
      * @param name The name of the new Entity (tag component)
      * @return The created entity
      */
-    inline Entity CreateEntity(const std::string &name) {
+    inline Entity CreateEntity(const std::string &name = "") {
         return m_EntityManager.CreateEntity(name);
     }
 

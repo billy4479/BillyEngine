@@ -7,13 +7,13 @@ class TestEntity3 : public BillyEngine::ScriptableEntity {
    public:
     BillyEngine::Color color = BillyEngine::Color::white;
 
-    void OnCreate() override {
+    void OnCreate() {
         auto dt = GetApplication()->CreateDrawableTexture({100, 100});
         dt->Clear(BillyEngine::Color::white);
         dt->Finalize();
         AddComponent<BillyEngine::Components::Sprite>(dt, color);
     }
 
-    void OnUpdate(f32) override {}
-    void OnDestroy() override {}
+    void OnUpdate(f32) {}
+    void OnDestroy() {}
 };

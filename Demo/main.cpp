@@ -29,7 +29,7 @@ int main() {
     e2.GetComponent<BillyEngine::Components::Transform>().Position = {210, 500};
     e3.GetComponent<BillyEngine::Components::Transform>().Position = {320, 500};
 
-    auto e = app.CreateEntity("");
+    auto e = app.CreateEntity();
     e.AddComponent<BillyEngine::Components::Text>("BillyEngine!",
                                                   app.GetFont("JetBrainsMono"));
     auto& t = e.GetComponent<BillyEngine::Components::Transform>();
