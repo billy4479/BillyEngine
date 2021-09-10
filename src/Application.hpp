@@ -46,7 +46,8 @@ class Application {
      * @return The created Entity
      */
     template <typename T, typename... Args>
-    Entity CreateScriptableEntity(const std::string &name, Args &&...args) {
+    Entity CreateScriptableEntity(const std::string &name = "",
+                                  Args &&...args) {
         auto e = CreateEntity(name);
         auto &sc = e.AddComponent<Components::Script>();
         sc.Bind<T, Args...>(e, std::forward<Args>(args)...);

@@ -10,11 +10,11 @@ int main() {
     app.LoadFont("JetBrains Mono Regular Nerd Font Complete Mono.ttf",
                  "JetBrainsMono", 34);
 
-    app.CreateScriptableEntity<TestEntity>("");
-    app.CreateScriptableEntity<TestEntity2>("");
-    auto e1 = app.CreateScriptableEntity<TestEntity3>("");
-    auto e2 = app.CreateScriptableEntity<TestEntity3>("");
-    auto e3 = app.CreateScriptableEntity<TestEntity3>("");
+    app.CreateScriptableEntity<TestEntity>();
+    app.CreateScriptableEntity<TestEntity2>();
+    auto e1 = app.CreateScriptableEntity<TestEntity3>();
+    auto e2 = app.CreateScriptableEntity<TestEntity3>();
+    auto e3 = app.CreateScriptableEntity<TestEntity3>();
     e1.GetComponent<BillyEngine::Components::Script>()
         .GetInstanceOrFail<TestEntity3>()
         ->color = BillyEngine::Color::red;
