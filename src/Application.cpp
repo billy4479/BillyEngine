@@ -28,7 +28,7 @@ void Application::Run() {
     BE_ASSERT(!isRunning);
     isRunning = true;
 
-    u32 lastDelta;
+    u32 lastDelta = 1;
     while (isRunning) {
         auto start = SDL_GetTicks();
 
