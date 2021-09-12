@@ -4,6 +4,7 @@
 - [x] Use the Application class more as a proxy to other classes which implement the actual functionality
 - [x] Create a Window class to manage all the window related stuff abstracted away from SDL
 - [ ] Use a proper logger (maybe [spdlog](https://github.com/gabime/spdlog)?)
+- [ ] Get this to compile on Windows and add it to the CI
 
 ## Input class
 
