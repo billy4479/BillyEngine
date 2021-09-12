@@ -7,16 +7,20 @@
 namespace BillyEngine {
 
 Renderer::Renderer(SDL_Window* window)
-    : m_Renderer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) {}
+    : m_Renderer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) {
+    BE_CHECK_SDL_ERROR_AND_DIE();
+}
 
 Renderer::~Renderer() {
     if (m_Renderer == nullptr) return;
     SDL_DestroyRenderer(m_Renderer);
+    BE_CHECK_SDL_ERROR_AND_DIE();
 }
 
 void Renderer::Clear() {
     BE_ASSERT(m_Renderer != nullptr);
     SDL_RenderClear(m_Renderer);
+    BE_CHECK_SDL_ERROR_AND_DIE();
 }
 
 Ref<Texture> Renderer::RenderTextToTexture(
@@ -37,12 +41,8 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
     BE_ASSERT(texture != nullptr);
 
     i32 w, h;
-    [[maybe_unused]] auto result =
-        SDL_QueryTexture(texture->AsSDLTexture(), nullptr, nullptr, &w, &h);
-#ifdef DEBUG
-    if (result != 0) dbg_print("%s\n", SDL_GetError());
-#endif
-    BE_ASSERT(result == 0);
+    SDL_QueryTexture(texture->AsSDLTexture(), nullptr, nullptr, &w, &h);
+    BE_CHECK_SDL_ERROR_AND_DIE();
 
     SDL_Rect sRect{0, 0, w, h};
     SDL_Rect dRect{position.x, position.y, static_cast<i32>(abs(scale.x) * w),
@@ -62,15 +62,12 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
                                         rotationCenterPoint.y};
 
     SDL_SetTextureColorMod(texture->AsSDLTexture(), tint.r, tint.g, tint.b);
+    BE_CHECK_SDL_ERROR_AND_DIE();
     SDL_SetTextureAlphaMod(texture->AsSDLTexture(), tint.a);
-    result = SDL_RenderCopyEx(m_Renderer, texture->AsSDLTexture(), &sRect,
-                              &dRect, rotation, &rotationCenterPointSDL,
-                              (SDL_RendererFlip)flip);
-
-#ifdef DEBUG
-    if (result != 0) dbg_print("%s\n", SDL_GetError());
-#endif
-    BE_ASSERT(result == 0);
+    BE_CHECK_SDL_ERROR_AND_DIE();
+    SDL_RenderCopyEx(m_Renderer, texture->AsSDLTexture(), &sRect, &dRect,
+                     rotation, &rotationCenterPointSDL, (SDL_RendererFlip)flip);
+    BE_CHECK_SDL_ERROR_AND_DIE();
 }
 
 DrawableTexture Renderer::CreateDrawableTexture(glm::ivec2 size) {
@@ -82,6 +79,7 @@ DrawableTexture Renderer::CreateDrawableTexture(glm::ivec2 size) {
 void Renderer::RenderToScreen() {
     BE_ASSERT(m_Renderer != nullptr);
     SDL_RenderPresent(m_Renderer);
+    BE_CHECK_SDL_ERROR_AND_DIE();
 }
 
 }  // namespace BillyEngine

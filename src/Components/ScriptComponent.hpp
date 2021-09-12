@@ -34,7 +34,7 @@ struct Script {
     template <EntityScriptClass T>
     inline T* GetInstanceOrFail() {
         if (GetInstanceAsVoidPtr() == nullptr) {
-            BE_ABORT
+            BE_ABORT();
         }
         auto r = static_cast<T*>(GetInstanceAsVoidPtr());
         BE_ASSERT(r != nullptr);

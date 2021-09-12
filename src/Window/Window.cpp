@@ -2,10 +2,6 @@
 
 namespace BillyEngine {
 Window::Window(std::string_view title, glm::ivec2 size) : m_Size(size) {
-#ifdef DEBUG
-    SDL_SetHint(SDL_HINT_WINDOWS_DISABLE_THREAD_NAMING, "1");
-#endif
-
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO))
         throw std::runtime_error("SDL failed to initialize.");
     if (TTF_Init()) throw std::runtime_error("SDL_ttf failed to initialize.");

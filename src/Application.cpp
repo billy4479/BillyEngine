@@ -30,6 +30,8 @@ void Application::Run() {
 
     u32 lastDelta = 1;
     while (isRunning) {
+        // BE_PROFILE_SCOPE();
+
         auto start = SDL_GetTicks();
 
         m_Renderer->Clear();

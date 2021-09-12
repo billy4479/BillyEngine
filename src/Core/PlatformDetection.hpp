@@ -55,3 +55,7 @@
     // C++20
     #define BE_HAS_CPP20
 #endif
+
+#ifdef BE_PLATFORM_WINDOWS
+    #define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif

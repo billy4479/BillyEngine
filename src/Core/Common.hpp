@@ -1,10 +1,10 @@
 #pragma once
 
-#ifndef NDEBUG
-    #define DEBUG 1
-#endif
+#include "Config.hpp"
 
+// Those depend on Config.hpp
 #include "Assert.hpp"
+#include "Profiler.hpp"
 #include "STDInclude.hpp"
 
 using u8 = std::uint8_t;
