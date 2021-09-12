@@ -18,7 +18,7 @@ Timer::~Timer() {
                    .time_since_epoch()
                    .count();
 
-    f64 time = (end - start) / 1000.0;
+    f64 time = (f32)(end - start) / 1000.0f;
 
     dbg_print("[PROFILER]: %s took %fms\n", ScopeName.data(), time);
 }

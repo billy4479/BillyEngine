@@ -22,10 +22,11 @@ namespace BillyEngine {
     UNLOCK();
 
 #define TO_PIXEL_COORDS(x, y) \
-    y*(m_Surface->AsSDLSurface()->pitch / sizeof(u32)) + x
+    y*((u32)m_Surface->AsSDLSurface()->pitch / sizeof(u32)) + x
 
 void DrawableTexture::PutPixel(glm::ivec2 position, const Color& c) {
-    DO_WITH_PIXELS(pixels[TO_PIXEL_COORDS(position.x, position.y)] = c;)
+    DO_WITH_PIXELS(pixels[TO_PIXEL_COORDS((u32)position.x, (u32)position.y)] =
+                       c;)
 }
 
 void DrawableTexture::Clear(const Color& c) {

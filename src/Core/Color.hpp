@@ -31,7 +31,7 @@ struct Color {
      * @return The result unsigned int
      */
     inline operator u32() const {
-        auto res = (r << 24) | (g << 16) | (b << 8) | a;
+        u32 res = ((u32)r << 24) | ((u32)g << 16) | ((u32)b << 8) | a;
         // dbg_print("#%X\n", res);
         return res;
     }

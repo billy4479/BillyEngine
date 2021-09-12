@@ -176,7 +176,7 @@ class Application {
    private:
     static constexpr f32 FPS = 60;
     // Min frame time in milliseconds
-    static constexpr u32 frameDelay = 1000.0 / FPS;
+    static constexpr u32 frameDelay = u32(1000.0f / FPS);
 
     f32 m_ActualFps = 0;
 

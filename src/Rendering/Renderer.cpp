@@ -45,8 +45,9 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
     BE_CHECK_SDL_ERROR_AND_DIE();
 
     SDL_Rect sRect{0, 0, w, h};
-    SDL_Rect dRect{position.x, position.y, static_cast<i32>(abs(scale.x) * w),
-                   static_cast<i32>(abs(scale.y) * h)};
+    SDL_Rect dRect{position.x, position.y,
+                   static_cast<i32>(abs(scale.x) * (f32)w),
+                   static_cast<i32>(abs(scale.y) * (f32)h)};
 
     auto anchorPoint = CenterPointToCoords(anchor, dRect);
     auto rotationCenterPoint = CenterPointToCoords(rotationCenter, dRect);

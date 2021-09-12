@@ -9,12 +9,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2-cmake-modules)
 include(FetchContent)
 
-if (MSVC)
-    add_compile_options(/W4 /WX)
-else()
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
-endif()
-
 option(COMPILE_DEMO "Compile the demo program" ON)
 
 find_package(SDL2 REQUIRED)
@@ -50,6 +44,11 @@ target_link_libraries(${PROJECT_NAME}
 target_precompile_headers(${PROJECT_NAME} PRIVATE src/Core/Common.hpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC src/include)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>: -Wall -Wextra -pedantic -Werror>
+)
 
 if(COMPILE_DEMO)
     add_subdirectory(Demo)

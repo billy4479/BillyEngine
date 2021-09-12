@@ -48,7 +48,7 @@ void Application::Run() {
             lastDelta = frameDelay;
         }
 
-        m_ActualFps = 1000.0 / lastDelta;
+        m_ActualFps = 1000.0f / (f32)lastDelta;
     }
 }
 

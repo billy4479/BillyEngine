@@ -17,9 +17,9 @@ Color Color::hsl(u16 h, f32 s, f32 l, u8 a) {
 
     // dbg_print("h: %u, s: %f, l: %f\n", h, s, l);
 
-    auto c = (1 - abs(2 * l - 1)) * s;
-    auto x = c * (1 - abs(fmod(((f32)h / 60), 2) - 1));
-    auto m = l - c / 2;
+    f32 c = (1 - abs(2 * l - 1)) * s;
+    f32 x = c * (1 - abs((f32)fmod(((f32)h / 60), 2) - 1));
+    f32 m = l - c / 2;
 
     // dbg_print("c: %f, x: %f, m: %f\n", c, x, m);
 

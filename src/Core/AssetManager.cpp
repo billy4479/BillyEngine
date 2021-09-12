@@ -60,7 +60,7 @@ std::filesystem::path AssetManager::GetBasePath() {
 #else
     char result[PATH_MAX];
     ssize_t count = readlink("/proc/self/exe", result, PATH_MAX);
-    auto p = std::string(result, (count > 0) ? count : 0);
+    auto p = std::string(result, (size_t)((count > 0) ? count : 0));
     return std::filesystem::path(p).parent_path();
 #endif
 }
