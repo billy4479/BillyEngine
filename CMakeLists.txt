@@ -36,7 +36,13 @@ aux_source_directory( src/Rendering RENDERING)
 aux_source_directory( src/Window WINDOW)
 aux_source_directory( src/Wrappers WRAPPERS)
 
-add_library( ${PROJECT_NAME} SHARED ${SOURCES} ${CORE} ${RENDERING} ${ENTITY} ${WINDOW} ${WRAPPERS})
+list(APPEND SOURCES ${CORE} ${RENDERING} ${ENTITY} ${WINDOW} ${WRAPPERS})
+
+# Maybe just in debug mode?
+aux_source_directory( src/Debugging DEBUGGING)
+list(APPEND SOURCES ${DEBUGGING})
+
+add_library( ${PROJECT_NAME} SHARED ${SOURCES} )
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC SDL2::Main SDL2::TTF SDL2::Image EnTT glm

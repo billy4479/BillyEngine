@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Config.hpp"
-#include "STDInclude.hpp"
+#include "../Core/STDInclude.hpp"
 
 #if defined(DEBUG) && defined(BE_USE_PROFILER)
 

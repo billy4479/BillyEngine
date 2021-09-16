@@ -1,10 +1,6 @@
 #pragma once
 
-#include "Config.hpp"
-
-// Those depend on Config.hpp
-#include "Assert.hpp"
-#include "Profiler.hpp"
+#include "../Debugging/Debug.hpp"
 #include "STDInclude.hpp"
 
 using u8 = std::uint8_t;
@@ -20,7 +16,7 @@ using i64 = std::int64_t;
 using f32 = float;
 using f64 = double;
 
-using size_t = __SIZE_TYPE__;
+using std::size_t;
 
 #ifdef DEBUG
     #include <cstdio>

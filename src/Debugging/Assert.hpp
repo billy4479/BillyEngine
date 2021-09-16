@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Config.hpp"
-#include "PlatformDetection.hpp"
+#include "../Core/PlatformDetection.hpp"
 
 #ifdef DEBUG
     #if defined(__has_builtin) && __has_builtin(__builtin_debugtrap)
