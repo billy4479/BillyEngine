@@ -13,7 +13,7 @@ class EntityManager {
     explicit EntityManager(Application *application);
     ~EntityManager();
 
-    BE_NON_COPY_CONSTRUTIBLE(EntityManager)
+    BE_NON_COPY_CONSTRUCTIBLE(EntityManager)
 
     void Update(f32 delta);
     Entity CreateEntity(const std::string &name);

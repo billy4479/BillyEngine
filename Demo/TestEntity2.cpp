@@ -12,5 +12,5 @@ void TestEntity2::OnUpdate(f32) {
     std::stringstream ss;
     ss << "FPS: " << GetApplication()->GetFPS();
 
-    GetComponent<BillyEngine::Components::Text>().UpdateText(ss.str());
+    GetComponent<BillyEngine::Components::Text>().SetText(ss.str());
 }

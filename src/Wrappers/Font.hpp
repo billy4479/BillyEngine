@@ -8,7 +8,7 @@ struct Font {
     Font(std::filesystem::path path, i32 size);
     explicit Font(TTF_Font* font);
 
-    BE_NON_COPY_CONSTRUTIBLE(Font)
+    BE_NON_COPY_CONSTRUCTIBLE(Font)
     Font(Font&& other);
     Font& operator=(Font&& other);
 

@@ -12,7 +12,7 @@ struct Font;
 class Renderer : public std::enable_shared_from_this<Renderer> {
    public:
     Renderer(SDL_Window *);
-    BE_NON_COPY_CONSTRUTIBLE(Renderer)
+    BE_NON_COPY_CONSTRUCTIBLE(Renderer)
     Renderer(Renderer &&other) {
         this->m_Renderer = other.m_Renderer;
         other.m_Renderer = nullptr;

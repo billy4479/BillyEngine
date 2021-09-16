@@ -4,20 +4,14 @@
 
 namespace BillyEngine {
 namespace Components {
-struct Tag {
+class Tag {
+   public:
     std::string Name;
 
-    Tag() = default;
-    Tag(const Tag&) = delete;
-    Tag(const std::string& tag) : Name(tag) {}
+    Tag(const std::string& tag);
 
-    Tag(Tag&& other) noexcept { this->Name = std::move(other.Name); }
-    Tag& operator=(Tag&& other) noexcept {
-        if (this != &other) {
-            this->Name = std::move(other.Name);
-        }
-        return *this;
-    }
+    Tag(Tag&& other) noexcept;
+    Tag& operator=(Tag&& other) noexcept;
 };
 }  // namespace Components
 }  // namespace BillyEngine

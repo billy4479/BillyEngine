@@ -12,7 +12,7 @@ class Texture {
     Texture(Ref<Surface> surface, Ref<Renderer> renderer);
     explicit Texture(SDL_Texture* texture);
 
-    BE_NON_COPY_CONSTRUTIBLE(Texture)
+    BE_NON_COPY_CONSTRUCTIBLE(Texture)
     Texture(Texture&& other);
     Texture& operator=(Texture&& other);
 

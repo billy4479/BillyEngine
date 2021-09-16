@@ -26,7 +26,7 @@ void EntityManager::Update(f32 delta) {
                 BE_ASSERT(label.m_Font != nullptr);
                 label.m_Texture =
                     m_Application->GetRenderer()->RenderTextToTexture(
-                        label.m_Content, label.m_Font, label.fgColor);
+                        label.m_Content, label.m_Font, label.m_Color);
             }
             m_Application->GetRenderer()->DrawTexture(
                 label.m_Texture, t.Position, t.Scale, t.Rotation, t.Anchor,

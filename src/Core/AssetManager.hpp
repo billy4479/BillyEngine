@@ -9,7 +9,7 @@ class AssetManager {
    public:
     explicit AssetManager(std::filesystem::path assetFolder = "");
     ~AssetManager();
-    BE_NON_COPY_CONSTRUTIBLE(AssetManager)
+    BE_NON_COPY_CONSTRUCTIBLE(AssetManager)
 
     void SetAssetFolder(const std::filesystem::path &);
     std::filesystem::path GetAssetFolder();

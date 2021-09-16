@@ -8,7 +8,7 @@ class Window {
     Window(std::string_view title, glm::ivec2 size);
     ~Window();
 
-    BE_NON_COPY_CONSTRUTIBLE(Window)
+    BE_NON_COPY_CONSTRUCTIBLE(Window)
 
     void SetTitle(std::string_view title);
     const glm::ivec2 GetSize() const;

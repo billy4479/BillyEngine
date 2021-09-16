@@ -10,7 +10,7 @@ class Surface {
     Surface(glm::ivec2 size);
     explicit Surface(SDL_Surface* surface);
 
-    BE_NON_COPY_CONSTRUTIBLE(Surface)
+    BE_NON_COPY_CONSTRUCTIBLE(Surface)
     Surface(Surface&& other);
     Surface& operator=(Surface&& other);
 

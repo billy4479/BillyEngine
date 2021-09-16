@@ -18,19 +18,8 @@ concept EntityScriptClass = requires {
     #define EntityScriptClass typename
 #endif
 
-struct Script {
-    // std::function<void()> Instantiate;
-    std::function<void()> DestroyInstance;
-
-    std::function<void()> OnCreate;
-    std::function<void(f32)> OnUpdate;
-    std::function<void()> OnDestroy;
-
-    std::function<void*()> GetInstanceAsVoidPtr = []() { return nullptr; };
-
-    bool WasOnCreateCalled = false;
-    ~Script() { DestroyInstance(); }
-
+class Script {
+   public:
     template <EntityScriptClass T>
     inline T* GetInstanceOrFail() {
         if (GetInstanceAsVoidPtr() == nullptr) {
@@ -52,8 +41,6 @@ struct Script {
     void Bind(Entity e, Args&&... args) {
         T* instance = nullptr;
 
-        // Instantiate = [&, e]() {
-        // BE_ASSERT(instance == nullptr);
         instance = new T(e, std::forward<Args>(args)...);
         BE_ASSERT(instance != nullptr);
 
@@ -62,7 +49,6 @@ struct Script {
 
             OnDestroy();
             delete instance;
-            // instance = nullptr;
         };
 
         OnCreate = [&, instance]() {
@@ -83,52 +69,30 @@ struct Script {
         };
 
         GetInstanceAsVoidPtr = [&, instance]() { return instance; };
-        // };
     }
 
-    // ScriptableEntity* Instance = nullptr;
+    Script();
+    ~Script();
 
-    Script(const Script& other) = delete;
-    Script(Script&& other) {
-        // this->Instance = other.Instance;
-        // this->Instantiate = other.Instantiate;
-        this->DestroyInstance = other.DestroyInstance;
-        this->OnCreate = other.OnCreate;
-        this->OnUpdate = other.OnUpdate;
-        this->OnDestroy = other.OnDestroy;
-        this->GetInstanceAsVoidPtr = other.GetInstanceAsVoidPtr;
+    BE_NON_COPY_CONSTRUCTIBLE(Script)
 
-        // other.Instantiate = nullptr;
-        other.DestroyInstance = nullptr;
-        other.OnCreate = nullptr;
-        other.OnUpdate = nullptr;
-        other.OnDestroy = nullptr;
-        other.GetInstanceAsVoidPtr = nullptr;
+    Script(Script&& other) noexcept;
+    Script& operator=(Script&& other) noexcept;
 
-        // other.Instance = nullptr;
-    }
-    Script& operator=(Script&& other) {
-        if (this != &other) {
-            // this->Instance = other.Instance;
-            // this->Instantiate = other.Instantiate;
-            this->DestroyInstance = other.DestroyInstance;
-            this->OnCreate = other.OnCreate;
-            this->OnUpdate = other.OnUpdate;
-            this->OnDestroy = other.OnDestroy;
-            this->GetInstanceAsVoidPtr = other.GetInstanceAsVoidPtr;
+   private:
+    std::function<void()> DestroyInstance;
 
-            // other.Instantiate = nullptr;
-            other.DestroyInstance = nullptr;
-            other.OnCreate = nullptr;
-            other.OnUpdate = nullptr;
-            other.OnDestroy = nullptr;
-            other.GetInstanceAsVoidPtr = nullptr;
+    std::function<void()> OnCreate;
+    std::function<void(f32)> OnUpdate;
+    std::function<void()> OnDestroy;
 
-            // other.Instance = nullptr;
-        }
-        return *this;
-    }
-    Script() = default;
+    std::function<void*()> GetInstanceAsVoidPtr = []() { return nullptr; };
+
+    bool WasOnCreateCalled = false;
+
+    friend class ::BillyEngine::EntityManager;
 };
 }  // namespace Components
 }  // namespace BillyEngine
+
+#undef EntityScriptClass
