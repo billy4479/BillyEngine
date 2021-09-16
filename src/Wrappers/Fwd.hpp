@@ -1,7 +1,7 @@
 #pragma once
 
 namespace BillyEngine {
-struct Font;
-struct Surface;
-struct Texture;
+class Font;
+class Surface;
+class Texture;
 }  // namespace BillyEngine

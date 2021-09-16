@@ -5,35 +5,16 @@
 namespace BillyEngine {
 
 struct Font {
-    Font(std::filesystem::path path, i32 size) {
-        m_Font = TTF_OpenFont(path.c_str(), size);
-        BE_CHECK_SDL_ERROR_AND_DIE();
-        BE_ASSERT(m_Font != nullptr);
-    }
-    explicit Font(TTF_Font* font) : m_Font(font) {
-        BE_CHECK_SDL_ERROR_AND_DIE();
-        BE_ASSERT(m_Font != nullptr);
-    }
+    Font(std::filesystem::path path, i32 size);
+    explicit Font(TTF_Font* font);
 
     BE_NON_COPY_CONSTRUTIBLE(Font)
-    Font(Font&& other) {
-        this->m_Font = other.m_Font;
-        other.m_Font = nullptr;
-    }
-    Font& operator=(Font&& other) {
-        if (this != &other) {
-            this->m_Font = other.m_Font;
-            other.m_Font = nullptr;
-        }
-        return *this;
-    }
+    Font(Font&& other);
+    Font& operator=(Font&& other);
 
     inline TTF_Font* AsSDLFont() { return m_Font; }
 
-    ~Font() {
-        TTF_CloseFont(m_Font);
-        BE_CHECK_SDL_ERROR_AND_DIE();
-    }
+    ~Font();
 
    private:
     TTF_Font* m_Font = nullptr;
