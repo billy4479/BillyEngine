@@ -3,6 +3,8 @@
 // This later
 #include "Profiler.hpp"
 
+#if defined(DEBUG) && defined(BE_USE_PROFILER)
+
 namespace BillyEngine {
 
 Timer::Timer(std::string_view scopeName) : ScopeName(scopeName) {
@@ -24,3 +26,5 @@ Timer::~Timer() {
     dbg_print("[PROFILER]: %s took %fms\n", ScopeName.data(), time);
 }
 }  // namespace BillyEngine
+
+#endif
