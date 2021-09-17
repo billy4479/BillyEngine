@@ -12,5 +12,7 @@ class TestEntity3 : public BillyEngine::ScriptableEntity {
         dt->Clear(BillyEngine::Color::white);
         dt->Finalize();
         AddComponent<BillyEngine::Components::Sprite>(dt, color);
+
+        Log.Debug("Created entity with color {:#x}", color);
     }
 };

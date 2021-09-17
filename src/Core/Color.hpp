@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <fmt/format.h>
+
 #include "Common.hpp"
 
 namespace BillyEngine {
@@ -65,3 +67,63 @@ struct Color {
     static Color hsl(u16 h, f32 s, f32 l, u8 a = 0xff);
 };
 }  // namespace BillyEngine
+
+// https://fmt.dev/latest/api.html#format-api
+template <>
+struct fmt::formatter<BillyEngine::Color> {
+    char presentation = 'd';
+    bool useHashTag = false;
+
+    static constexpr std::string_view xHash =
+        "(R: {:#04x}, G: {:#04x}, B: {:#04x}, A: {:#04x})";
+    static constexpr std::string_view XHash =
+        "(R: {:#04X}, G: {:#04X}, B: {:#04X}, A: {:#04X})";
+    static constexpr std::string_view d =
+        "(R: {:d}, G: {:d}, B: {:d}, A: {:d})";
+    static constexpr std::string_view x =
+        "(R: {:x}, G: {:x}, B: {:x}, A: {:x})";
+    static constexpr std::string_view X =
+        "(R: {:X}, G: {:X}, B: {:X}, A: {:X})";
+
+    constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+        auto it = ctx.begin(), end = ctx.end();
+        if (it != end && *it == '#') {
+            useHashTag = true;
+            it++;
+        }
+
+        if (it != end && (*it == 'd' || *it == 'x' || *it == 'X')) {
+            if (useHashTag && *it == 'd') throw format_error("invalid format");
+
+            presentation = *it++;
+        }
+
+        if (it != end && *it != '}') throw format_error("invalid format");
+
+        return it;
+    }
+
+    template <typename FormatCtx>
+    auto format(const BillyEngine::Color& c, FormatCtx& ctx)
+        -> decltype(ctx.out()) {
+        if (useHashTag) {
+            switch (presentation) {
+                case 'x':
+                    return format_to(ctx.out(), xHash, c.r, c.g, c.b, c.a);
+                case 'X':
+                default:
+                    return format_to(ctx.out(), XHash, c.r, c.g, c.b, c.a);
+            }
+        } else {
+            switch (presentation) {
+                case 'x':
+                    return format_to(ctx.out(), x, c.r, c.g, c.b, c.a);
+                case 'X':
+                    return format_to(ctx.out(), X, c.r, c.g, c.b, c.a);
+                case 'd':
+                default:
+                    return format_to(ctx.out(), d, c.r, c.g, c.b, c.a);
+            }
+        }
+    }
+};
