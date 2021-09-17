@@ -44,7 +44,7 @@ void EntityManager::Update(f32 delta) {
                     t.Anchor, t.RotationCenter, sprite.Tint);
 #ifdef DEBUG
             else
-                dbg_print("Not drawing since the texture is null\n");
+                BE_CORE_WARN("Not drawing since the texture is null");
 #endif
         });
 }

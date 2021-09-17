@@ -11,10 +11,7 @@ Window::Window(std::string_view title, glm::ivec2 size) : m_Size(size) {
     m_Window = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED, m_Size.x, m_Size.y, 0);
 
-#ifdef DEBUG
-    if (m_Window == nullptr) dbg_print("%s\n", SDL_GetError());
-#endif
-    BE_ASSERT(m_Window != nullptr);
+    BE_CHECK_SDL_ERROR_AND_DIE();
 }
 
 Window::~Window() {

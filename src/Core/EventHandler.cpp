@@ -8,7 +8,7 @@ void EventHandler::HandleEvents() {
             case SDL_QUIT:
 
                 m_ShouldClose = true;
-                dbg_print("Quitting\n");
+                BE_CORE_INFO("Quitting...");
                 break;
         }
     }

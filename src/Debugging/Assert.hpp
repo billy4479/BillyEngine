@@ -16,15 +16,14 @@
     #endif
 
     #if BE_USE_CUSTOM_ASSERT
-        #define BE_ASSERT(check)                                  \
-            {                                                     \
-                if (!(check)) {                                   \
-                    dbg_print("Assertion failed in " __FILE__     \
-                              ":%d in function %s: " #check "\n", \
-                              __LINE__, __FUNCTION__);            \
-                    fflush(stderr);                               \
-                    BE_TRAP();                                    \
-                }                                                 \
+        #define BE_ASSERT(check)                                        \
+            {                                                           \
+                if (!(check)) {                                         \
+                    BE_CORE_CRITICAL(                                   \
+                        "Assertion failed in {}:{} in function {}: {}", \
+                        __FILE__, __LINE__, __FUNCTION__, #check);      \
+                    BE_TRAP();                                          \
+                }                                                       \
             }
     #else
         #include <cassert>
@@ -33,13 +32,13 @@
 
     #define BE_ABORT() BE_TRAP()
 
-    #define BE_CHECK_SDL_ERROR_AND_DIE()                    \
-        {                                                   \
-            auto err = SDL_GetError();                      \
-            if (err != nullptr && strlen(err) != 0) {       \
-                dbg_print("SDL error occurred: %s\n", err); \
-                BE_TRAP();                                  \
-            }                                               \
+    #define BE_CHECK_SDL_ERROR_AND_DIE()                         \
+        {                                                        \
+            auto err = SDL_GetError();                           \
+            if (err != nullptr && strlen(err) != 0) {            \
+                BE_CORE_CRITICAL("SDL error occurred: {}", err); \
+                BE_TRAP();                                       \
+            }                                                    \
         }
 
 #else

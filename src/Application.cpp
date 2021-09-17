@@ -1,10 +1,9 @@
 #include "Application.hpp"
 
-#include <SDL_timer.h>
-
 #include "Components/Components.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
+#include "Core/Logger.hpp"
 #include "Entity/Entity.hpp"
 #include "Entity/ScriptableEntity.hpp"
 #include "Rendering/DrawableTexture.hpp"
@@ -15,6 +14,8 @@ namespace BillyEngine {
 Application::Application(std::string_view title, glm::ivec2 size,
                          const std::filesystem::path &assetsPath)
     : m_Window(title, size), m_AssetManager(assetsPath), m_EntityManager(this) {
+    Logger::Init();
+
     m_Window.m_DestructionCallback = [&]() {
         m_AssetManager.ReleaseSDLModules();
     };

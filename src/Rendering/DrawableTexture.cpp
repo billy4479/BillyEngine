@@ -1,17 +1,9 @@
 #include "DrawableTexture.hpp"
 
 namespace BillyEngine {
-#ifdef DEBUG
-    #define CHECK_ERR()                                    \
-        if (lockR != 0) dbg_print("%s\n", SDL_GetError()); \
-        BE_ASSERT(lockR == 0);
-#else
-    #define CHECK_ERR()
-#endif
-
 #define LOCK_AND_GET_PIXELS()                                                 \
     [[maybe_unused]] auto lockR = SDL_LockSurface(m_Surface->AsSDLSurface()); \
-    CHECK_ERR();                                                              \
+    BE_CHECK_SDL_ERROR_AND_DIE();                                             \
     u32* pixels = (u32*)m_Surface->AsSDLSurface()->pixels
 
 #define UNLOCK() SDL_UnlockSurface(m_Surface->AsSDLSurface());

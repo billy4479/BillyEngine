@@ -23,7 +23,7 @@ Timer::~Timer() {
 
     f64 time = (f32)(end - start) / 1000.0f;
 
-    dbg_print("[PROFILER]: %s took %fms\n", ScopeName.data(), time);
+    BE_CORE_TRACE("{} took {}ms", ScopeName.data(), time);
 }
 }  // namespace BillyEngine
 
