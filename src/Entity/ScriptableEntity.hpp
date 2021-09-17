@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Core/Common.hpp"
+#include "../Core/Logger.hpp"
 #include "Entity.hpp"
 
 namespace BillyEngine {
@@ -44,6 +45,24 @@ class ScriptableEntity {
     void OnCreate() {}
     void OnUpdate(f32) {}
     void OnDestroy() {}
+
+   protected:
+    struct EntityLog {
+#define LOG_FN(name, scope)                      \
+    template <typename... Args>                  \
+    inline void name(Args&&... args) const {     \
+        BE_##scope(std::forward<Args>(args)...); \
+    }
+
+        LOG_FN(Trace, TRACE)
+        LOG_FN(Debug, INFO)
+        LOG_FN(Warning, WARN)
+        LOG_FN(Error, ERROR)
+        LOG_FN(Critical, CRITICAL)
+
+#undef LOG_FN
+    };
+    EntityLog Log;
 
    private:
     Entity m_Entity;
