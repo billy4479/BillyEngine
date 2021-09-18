@@ -5,7 +5,7 @@
  */
 #pragma once
 
-#include <fmt/format.h>
+#include <spdlog/formatter.h>
 
 #include "Common.hpp"
 
