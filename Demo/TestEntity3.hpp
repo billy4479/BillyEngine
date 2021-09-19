@@ -3,8 +3,8 @@
 #include <BillyEngine.hpp>
 
 class TestEntity3 : public BillyEngine::ScriptableEntity {
-    SCRIPTABLE_ENTITY(TestEntity3)
    public:
+    SCRIPTABLE_ENTITY(TestEntity3)
     BillyEngine::Color color = BillyEngine::Color::white;
 
     void OnCreate() {
@@ -12,7 +12,5 @@ class TestEntity3 : public BillyEngine::ScriptableEntity {
         dt->Clear(BillyEngine::Color::white);
         dt->Finalize();
         AddComponent<BillyEngine::Components::Sprite>(dt, color);
-
-        Log.Debug("Created entity with color {:#x}", color);
     }
 };

@@ -3,9 +3,8 @@
 #include <BillyEngine.hpp>
 
 class TestEntity : public BillyEngine::ScriptableEntity {
-    SCRIPTABLE_ENTITY(TestEntity)
-
    public:
+    SCRIPTABLE_ENTITY(TestEntity)
     Ref<BillyEngine::DrawableTexture> texture;
     f32 hue = 0;
     f32 speed = 10;

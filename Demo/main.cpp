@@ -12,22 +12,16 @@ int main() {
 
     app.CreateScriptableEntity<TestEntity>();
     app.CreateScriptableEntity<TestEntity2>();
-    auto e1 = app.CreateScriptableEntity<TestEntity3>();
-    auto e2 = app.CreateScriptableEntity<TestEntity3>();
-    auto e3 = app.CreateScriptableEntity<TestEntity3>();
-    e1.GetComponent<BillyEngine::Components::Script>()
-        .GetInstanceOrFail<TestEntity3>()
-        ->color = BillyEngine::Color::red;
-    e2.GetComponent<BillyEngine::Components::Script>()
-        .GetInstanceOrFail<TestEntity3>()
-        ->color = BillyEngine::Color::blue;
-    e3.GetComponent<BillyEngine::Components::Script>()
-        .GetInstanceOrFail<TestEntity3>()
-        ->color = BillyEngine::Color::green;
+    auto& e1 = app.CreateScriptableEntity<TestEntity3>();
+    auto& e2 = app.CreateScriptableEntity<TestEntity3>();
+    auto& e3 = app.CreateScriptableEntity<TestEntity3>();
+    e1.color = BillyEngine::Color::red;
+    e2.color = BillyEngine::Color::blue;
+    e3.color = BillyEngine::Color::green;
 
-    e1.GetComponent<BillyEngine::Components::Transform>().Position = {100, 500};
-    e2.GetComponent<BillyEngine::Components::Transform>().Position = {210, 500};
-    e3.GetComponent<BillyEngine::Components::Transform>().Position = {320, 500};
+    e1.Transform().Position = {100, 500};
+    e2.Transform().Position = {210, 500};
+    e3.Transform().Position = {320, 500};
 
     auto e = app.CreateEntity();
     e.AddComponent<BillyEngine::Components::Text>("BillyEngine!",

@@ -8,7 +8,5 @@
 #include "../Rendering/DrawableTexture.hpp"
 
 #define SCRIPTABLE_ENTITY(className)                                       \
-   public:                                                                 \
     className(BillyEngine::Entity e) : BillyEngine::ScriptableEntity(e) {} \
-                                                                           \
-   private:
+    BE_NON_COPY_CONSTRUCTIBLE(className)

@@ -32,18 +32,19 @@
 
     #define BE_ABORT() BE_TRAP()
 
-    #define BE_CHECK_SDL_ERROR_AND_DIE()                         \
-        {                                                        \
-            auto err = SDL_GetError();                           \
-            if (err != nullptr && strlen(err) != 0) {            \
-                BE_CORE_CRITICAL("SDL error occurred: {}", err); \
-                BE_TRAP();                                       \
-            }                                                    \
+    #define BE_CHECK_SDL_ERROR_AND_DIE()                                     \
+        {                                                                    \
+            auto err = SDL_GetError();                                       \
+            if (err != nullptr && strlen(err) != 0) {                        \
+                BE_CORE_ERROR("SDL error occurred at {}:{} in function: {}", \
+                              __FILE__, __LINE__, __FUNCTION__, err);        \
+                BE_TRAP();                                                   \
+            }                                                                \
         }
 
 #else
     #define BE_ASSERT(...)
     #define BE_TRAP()
-    #define BE_ABORT() abort()
+    #define BE_ABORT() std::terminate()
     #define BE_CHECK_SDL_ERROR_AND_DIE()
 #endif

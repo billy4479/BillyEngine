@@ -8,6 +8,7 @@
 #include "Core/EventHandler.hpp"
 #include "Entity/Entity.hpp"
 #include "Entity/EntityManager.hpp"
+#include "Entity/ScriptableEntity.hpp"
 #include "Rendering/Renderer.hpp"
 #include "Window/Window.hpp"
 #include "Wrappers/Fwd.hpp"
@@ -46,12 +47,13 @@ class Application {
      * @return The created Entity
      */
     template <typename T, typename... Args>
-    Entity CreateScriptableEntity(const std::string &name = "",
-                                  Args &&...args) {
+    T &CreateScriptableEntity(const std::string &name = "", Args &&...args) {
+        static_assert(std::is_base_of<ScriptableEntity, T>(),
+                      "T must be derived from ScriptableEntity");
         auto e = CreateEntity(name);
-        e.AddComponent<Components::Script>().Bind<T, Args...>(
-            e, std::forward<Args>(args)...);
-        return e;
+        auto &sc = e.AddComponent<Components::Script>();
+        sc.Bind<T, Args...>(e, std::forward<Args>(args)...);
+        return *sc.GetInstanceOrFail<T>();
     }
 
     /**

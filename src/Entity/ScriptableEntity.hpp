@@ -1,10 +1,17 @@
 #pragma once
 
+#include "../Components/ScriptComponent.hpp"
 #include "../Core/Common.hpp"
 #include "../Core/Logger.hpp"
 #include "Entity.hpp"
 
 namespace BillyEngine {
+
+namespace Components {
+class Transform;
+class Tag;
+}  // namespace Components
+
 class ScriptableEntity {
    public:
     ScriptableEntity(entt::entity handle, EntityManager* application);
@@ -39,6 +46,9 @@ class ScriptableEntity {
     inline Application* GetApplication() {
         return m_Entity.m_EntityManager->m_Application;
     }
+
+    Components::Transform& Transform();
+    Components::Tag& Tag();
 
     //    protected:
 

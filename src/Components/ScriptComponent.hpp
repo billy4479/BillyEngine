@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Core/Common.hpp"
-#include "../Entity/ScriptableEntity.hpp"
+#include "../Entity/Entity.hpp"
 
 namespace BillyEngine {
 

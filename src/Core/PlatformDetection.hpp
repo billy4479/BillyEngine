@@ -59,3 +59,7 @@
 #ifdef BE_PLATFORM_WINDOWS
     #define __PRETTY_FUNCTION__ __FUNCSIG__
 #endif
+
+#ifndef NDEBUG
+    #define DEBUG 1
+#endif
