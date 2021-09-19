@@ -56,7 +56,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC SDL2::Main SDL2::TTF SDL2::Image EnTT glm spdlog::spdlog
 )
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE src/Core/Common.hpp)
+target_precompile_headers(${PROJECT_NAME} PRIVATE src/Core/STDInclude.hpp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC src/include)
 

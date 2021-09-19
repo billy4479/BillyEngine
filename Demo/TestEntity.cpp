@@ -25,4 +25,6 @@ void TestEntity::OnUpdate(f32 delta) {
         speed += 1;
     if (speed >= maxSpeed) down = true;
     if (speed <= -maxSpeed) down = false;
+
+    // Log.Debug("{}", t.Position);
 }
