@@ -2,6 +2,8 @@
 
 namespace BillyEngine {
 void EventHandler::HandleEvents() {
+    BE_PROFILE_FUNCTION();
+
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {

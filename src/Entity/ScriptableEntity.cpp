@@ -8,13 +8,9 @@
 namespace BillyEngine {
 
 ScriptableEntity::ScriptableEntity(entt::entity handle, EntityManager* em)
-    : m_Entity(handle, em) {
-    BE_CORE_INFO("Create scriptable entity for {}", (u32)handle);
-}
+    : m_Entity(handle, em) {}
 
-ScriptableEntity::ScriptableEntity(Entity e) : m_Entity(e) {
-    BE_CORE_INFO("Create scriptable entity for {}", (u32)e);
-}
+ScriptableEntity::ScriptableEntity(Entity e) : m_Entity(e) {}
 
 void ScriptableEntity::Destroy() {
     m_Entity.m_EntityManager->DestroyEntity(m_Entity);

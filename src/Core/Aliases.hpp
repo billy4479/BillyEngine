@@ -36,3 +36,9 @@ template <typename T, typename... Args>
 constexpr Ref<T> CreateRef(Args&&... args) {
     return std::make_shared<T>(std::forward<Args>(args)...);
 }
+
+#ifdef BE_PLATFORM_WINDOWS
+    #define BE_FUNC_SIG __FUNCSIG__
+#else
+    #define BE_FUNC_SIG __PRETTY_FUNCTION__
+#endif

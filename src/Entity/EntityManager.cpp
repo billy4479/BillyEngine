@@ -10,6 +10,8 @@ EntityManager::EntityManager(Application *application)
 EntityManager::~EntityManager() { m_Registry.clear(); }
 
 void EntityManager::Update(f32 delta) {
+    BE_PROFILE_FUNCTION();
+
     m_Registry.view<Components::Script>().each(
         [&](auto entity, Components::Script &script) {
             (void)entity;

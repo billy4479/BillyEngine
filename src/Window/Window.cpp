@@ -2,6 +2,8 @@
 
 namespace BillyEngine {
 Window::Window(std::string_view title, glm::ivec2 size) : m_Size(size) {
+    BE_PROFILE_FUNCTION();
+
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO))
         throw std::runtime_error("SDL failed to initialize.");
     if (TTF_Init()) throw std::runtime_error("SDL_ttf failed to initialize.");
@@ -17,8 +19,6 @@ Window::Window(std::string_view title, glm::ivec2 size) : m_Size(size) {
 Window::~Window() {
     SDL_DestroyWindow(m_Window);
     m_Window = nullptr;
-
-    m_DestructionCallback();
 
     TTF_Quit();
     IMG_Quit();

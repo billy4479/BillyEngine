@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <entt/entt.hpp>
 #include <filesystem>
+#include <fstream>
 #include <functional>
 #include <glm/ext/vector_int2.hpp>
 #include <glm/vec2.hpp>
@@ -17,6 +18,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <thread>
 #include <utility>
 
 #ifdef _WIN32

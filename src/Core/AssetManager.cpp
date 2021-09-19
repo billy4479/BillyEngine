@@ -8,6 +8,8 @@
 namespace BillyEngine {
 
 AssetManager::AssetManager(std::filesystem::path assetFolder) {
+    BE_PROFILE_FUNCTION();
+
     SetAssetFolder(assetFolder);
 }
 

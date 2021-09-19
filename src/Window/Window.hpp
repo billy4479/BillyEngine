@@ -16,7 +16,6 @@ class Window {
    private:
     glm::ivec2 m_Size;
     SDL_Window* m_Window = nullptr;
-    std::function<void()> m_DestructionCallback;
 
     friend class Application;
 };

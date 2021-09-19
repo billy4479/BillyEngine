@@ -8,6 +8,8 @@ namespace BillyEngine {
 
 Renderer::Renderer(SDL_Window* window)
     : m_Renderer(SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED)) {
+    BE_PROFILE_FUNCTION();
+
     BE_CHECK_SDL_ERROR_AND_DIE();
 }
 
@@ -78,6 +80,8 @@ DrawableTexture Renderer::CreateDrawableTexture(glm::ivec2 size) {
 }
 
 void Renderer::RenderToScreen() {
+    BE_PROFILE_FUNCTION();
+
     BE_ASSERT(m_Renderer != nullptr);
     SDL_RenderPresent(m_Renderer);
     BE_CHECK_SDL_ERROR_AND_DIE();

@@ -14,11 +14,8 @@ namespace BillyEngine {
 Application::Application(std::string_view title, glm::ivec2 size,
                          const std::filesystem::path &assetsPath)
     : m_Window(title, size), m_AssetManager(assetsPath), m_EntityManager(this) {
+    BE_PROFILE_FUNCTION();
     Logger::Init();
-
-    m_Window.m_DestructionCallback = [&]() {
-        m_AssetManager.ReleaseSDLModules();
-    };
 
     m_Renderer = CreateRef<Renderer>(m_Window.m_Window);
 }
@@ -26,23 +23,27 @@ Application::Application(std::string_view title, glm::ivec2 size,
 Application::~Application() = default;
 
 void Application::Run() {
+    BE_PROFILE_FUNCTION();
+
     BE_ASSERT(!isRunning);
     isRunning = true;
 
     u32 lastDelta = 1;
     while (isRunning) {
-        // BE_PROFILE_SCOPE();
+        {
+            BE_PROFILE_SCOPE("Frame");
 
-        auto start = SDL_GetTicks();
+            auto start = SDL_GetTicks();
 
-        m_Renderer->Clear();
+            m_Renderer->Clear();
 
-        OnUpdate((f32)lastDelta / 1000.0f);
+            OnUpdate((f32)lastDelta / 1000.0f);
 
-        isRunning = !m_EventHandler.ShouldClose();
+            isRunning = !m_EventHandler.ShouldClose();
 
-        auto end = SDL_GetTicks();
-        lastDelta = end - start;
+            auto end = SDL_GetTicks();
+            lastDelta = end - start;
+        }
 
         if (frameDelay > lastDelta) {
             SDL_Delay(frameDelay - lastDelta);

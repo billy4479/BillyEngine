@@ -3,12 +3,16 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#include "Common.hpp"
+
 namespace BillyEngine {
 
 Ref<spdlog::logger> Logger::m_EngineLogger;
 Ref<spdlog::logger> Logger::m_ClientLogger;
 
 void Logger::Init() {
+    BE_PROFILE_FUNCTION();
+
     std::vector<spdlog::sink_ptr> logSinks;
     logSinks.emplace_back(
         std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
