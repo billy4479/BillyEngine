@@ -34,7 +34,7 @@ Texture::~Texture() {
     // this is not critical and I don't really know where the issue is, I'll
     // just ignore this for now :)
     SDL_DestroyTexture(m_Texture);
-    BE_CHECK_SDL_ERROR_AND_DIE();
+    BE_CHECK_SDL_ERROR();
 }
 
 }  // namespace BillyEngine

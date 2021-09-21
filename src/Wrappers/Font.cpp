@@ -23,6 +23,6 @@ Font& Font::operator=(Font&& other) {
 }
 Font::~Font() {
     TTF_CloseFont(m_Font);
-    BE_CHECK_SDL_ERROR_AND_DIE();
+    BE_CHECK_SDL_ERROR();
 }
 }  // namespace BillyEngine

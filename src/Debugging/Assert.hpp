@@ -32,14 +32,26 @@
 
     #define BE_ABORT() BE_TRAP()
 
-    #define BE_CHECK_SDL_ERROR_AND_DIE()                                     \
-        {                                                                    \
-            auto err = SDL_GetError();                                       \
-            if (err != nullptr && strlen(err) != 0) {                        \
-                BE_CORE_ERROR("SDL error occurred at {}:{} in function: {}", \
-                              __FILE__, __LINE__, __FUNCTION__, err);        \
-                BE_TRAP();                                                   \
-            }                                                                \
+    #define BE_CHECK_SDL_ERROR_AND_DIE()                              \
+        {                                                             \
+            auto err = SDL_GetError();                                \
+            if (err != nullptr && strlen(err) != 0) {                 \
+                BE_CORE_ERROR(                                        \
+                    "SDL error occurred at {}:{} in function {}: {}", \
+                    __FILE__, __LINE__, BE_FUNC_SIG, err);            \
+                BE_TRAP();                                            \
+            }                                                         \
+        }
+
+    #define BE_CHECK_SDL_ERROR()                                      \
+        {                                                             \
+            auto err = SDL_GetError();                                \
+            if (err != nullptr && strlen(err) != 0) {                 \
+                BE_CORE_ERROR(                                        \
+                    "SDL error occurred at {}:{} in function {}: {}", \
+                    __FILE__, __LINE__, BE_FUNC_SIG, err);            \
+                SDL_ClearError();                                     \
+            }                                                         \
         }
 
 #else
@@ -47,4 +59,5 @@
     #define BE_TRAP()
     #define BE_ABORT() std::terminate()
     #define BE_CHECK_SDL_ERROR_AND_DIE()
+    #define BE_CHECK_SDL_ERROR()
 #endif
