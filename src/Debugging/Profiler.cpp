@@ -1,12 +1,10 @@
-#include <thread>
-
-#include "../Core/Common.hpp"
-
-// This later
-#include "Assert.hpp"
 #include "Profiler.hpp"
 
-#if defined(DEBUG) && defined(BE_USE_PROFILER)
+#include "../Core/Common.hpp"
+#include "Assert.hpp"
+#include "DebugSettings.hpp"
+
+#if defined(DEBUG) && BE_USE_PROFILER
 
 namespace BillyEngine {
 

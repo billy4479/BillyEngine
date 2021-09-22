@@ -40,11 +40,12 @@ aux_source_directory( src SOURCES)
 aux_source_directory( src/Core CORE)
 aux_source_directory( src/Components COMPONENTS)
 aux_source_directory( src/Entity ENTITY)
+aux_source_directory( src/Event EVENT)
 aux_source_directory( src/Rendering RENDERING)
 aux_source_directory( src/Window WINDOW)
 aux_source_directory( src/Wrappers WRAPPERS)
 
-list(APPEND SOURCES ${COMPONENTS} ${CORE} ${RENDERING} ${ENTITY} ${WINDOW} ${WRAPPERS})
+list(APPEND SOURCES ${COMPONENTS} ${CORE} ${RENDERING} ${ENTITY} ${EVENT} ${WINDOW} ${WRAPPERS})
 
 # Maybe just in debug mode?
 aux_source_directory( src/Debugging DEBUGGING)

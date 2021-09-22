@@ -5,7 +5,7 @@
 #include "../Core/STDInclude.hpp"
 #include "DebugSettings.hpp"
 
-#if defined(DEBUG) && defined(BE_USE_PROFILER)
+#if defined(DEBUG) && BE_USE_PROFILER
 
 namespace BillyEngine {
 

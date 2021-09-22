@@ -19,6 +19,8 @@ using std::size_t;
 
 #define BE_STRINGIFY(x) #x
 
+#define BE_BIT(x) (1 << x)
+
 #define BE_NON_COPY_CONSTRUCTIBLE(className)    \
     className(const className& other) = delete; \
     className& operator=(const className&) = delete;

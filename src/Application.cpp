@@ -13,7 +13,10 @@ namespace BillyEngine {
 
 Application::Application(std::string_view title, glm::ivec2 size,
                          const std::filesystem::path &assetsPath)
-    : m_Window(title, size), m_AssetManager(assetsPath), m_EntityManager(this) {
+    : m_Window(title, size),
+      m_AssetManager(assetsPath),
+      m_EventHandler(this),
+      m_EntityManager(this) {
     BE_PROFILE_FUNCTION();
     Logger::Init();
 
@@ -39,8 +42,6 @@ void Application::Run() {
 
             OnUpdate((f32)lastDelta / 1000.0f);
 
-            isRunning = !m_EventHandler.ShouldClose();
-
             auto end = SDL_GetTicks();
             lastDelta = end - start;
         }
@@ -54,7 +55,10 @@ void Application::Run() {
     }
 }
 
-void Application::AskToStop() { isRunning = false; }
+void Application::AskToStop() {
+    BE_CORE_INFO("Quitting...");
+    isRunning = false;
+}
 
 void Application::OnUpdate(f32 delta) {
     m_EventHandler.HandleEvents();
