@@ -12,9 +12,8 @@ class EventHandler {
    public:
     explicit EventHandler(Application*);
 
-    void HandleEvents();
-
     void RegisterBeforeUpdateHook(std::function<void()>);
+    bool FireEvent(Event&&);
 
     u32 RegisterListener(std::function<bool(Event&)>);
     void UnregisterListener(u32 id);
@@ -31,13 +30,15 @@ class EventHandler {
     }
 
    private:
-    void OnEvent(Event&&);
-    void GetEventObject(const SDL_Event&);
+    void HandleSDLEvent(const SDL_Event&);
+
+    void HandleEvents();
 
     std::map<u32, std::function<bool(Event&)>> m_Listeners;
     std::vector<std::function<void()>> m_BeforeUpdateHooks;
     u32 m_NextListenerID = 0;
 
     Application* m_Application;
+    friend Application;
 };
 }  // namespace BillyEngine

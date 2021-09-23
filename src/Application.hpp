@@ -17,10 +17,9 @@ namespace BillyEngine {
 class DrawableTexture;
 class Application {
    public:
-    Application(std::string_view title, i32 width, i32 height,
-                const std::filesystem::path &assetsPath = "")
-        : Application(title, {width, height}, assetsPath) {}
-    Application(std::string_view title, glm::ivec2 size,
+    Application(std::string_view title = "BillyEngine",
+                glm::ivec2 size = {1280, 720}, bool resizable = true,
+                bool fullscreen = false,
                 const std::filesystem::path &assetsPath = "");
     ~Application();
 
@@ -171,6 +170,40 @@ class Application {
      * @param title The new title
      */
     inline void SetTitle(std::string_view title) { m_Window.SetTitle(title); }
+
+    /**
+     * @brief Set whether the window is resizable or not
+     *
+     * @param resizable If the window is resizable
+     */
+    inline void SetResizable(bool resizable) {
+        m_Window.SetResizable(resizable);
+    }
+
+    /**
+     * @brief Set whether the window is fullscreen or not
+     *
+     * @param fullscreen If the window is fullscreen
+     */
+    inline void SetFullscreen(bool fullscreen) {
+        m_Window.SetFullScreen(fullscreen);
+    }
+
+    /**
+     * @brief Check if the window is resizable
+     *
+     * @return true The window is resizable
+     * @return false The window is not resizable
+     */
+    inline bool IsResizable() { return m_Window.IsResizable(); }
+
+    /**
+     * @brief Check if the window is fullscreen
+     *
+     * @return true The window is fullscreen
+     * @return false Thw window is not fullscreen
+     */
+    inline bool IsFullscreen() { return m_Window.IsFullScreen(); }
 
    private:
     bool isRunning = false;

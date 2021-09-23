@@ -1,6 +1,7 @@
 #include "EventHandler.hpp"
 
 #include <SDL_events.h>
+#include <SDL_video.h>
 
 #include "../Application.hpp"
 #include "KeyboardEvent.hpp"
@@ -11,30 +12,54 @@ EventHandler::EventHandler(Application* application)
     : m_Application(application) {
     BE_ASSERT(m_Application != nullptr);
 
-    RegisterListenerForEventType<CloseEvent>([this](CloseEvent&) -> bool {
-        m_Application->AskToStop();
-        return true;
-    });
+    RegisterListenerForEventType<WindowCloseEvent>(
+        [this](WindowCloseEvent&) -> bool {
+            m_Application->AskToStop();
+            return true;
+        });
 }
 
-void EventHandler::GetEventObject(const SDL_Event& event) {
+void EventHandler::HandleSDLEvent(const SDL_Event& event) {
     switch (event.type) {
         case SDL_QUIT:
-            OnEvent(CloseEvent());
+            FireEvent(WindowCloseEvent());
             break;
 
         case SDL_KEYUP:
-            OnEvent(KeyReleasedEvent(event.key.keysym.scancode,
-                                     event.key.keysym.mod));
+            FireEvent(KeyReleasedEvent(event.key.keysym.scancode,
+                                       event.key.keysym.mod));
             break;
 
         case SDL_KEYDOWN:
-            OnEvent(KeyPressedEvent(event.key.keysym.scancode,
-                                    event.key.keysym.mod));
+            FireEvent(KeyPressedEvent(event.key.keysym.scancode,
+                                      event.key.keysym.mod));
             break;
 
+        case SDL_WINDOWEVENT: {
+            switch (event.window.type) {
+                case SDL_WINDOWEVENT_MOVED:
+                    FireEvent(WindowMovedEvent(event.window.data1,
+                                               event.window.data2));
+                    break;
+                case SDL_WINDOWEVENT_RESIZED:
+                    FireEvent(WindowResizeEvent(event.window.data1,
+                                                event.window.data2));
+                    break;
+                case SDL_WINDOWEVENT_FOCUS_GAINED:
+                    FireEvent(WindowFocusEvent());
+                    break;
+                case SDL_WINDOWEVENT_FOCUS_LOST:
+                    FireEvent(WindowLostFocusEvent());
+                    break;
+                default:
+                    FireEvent(EventUnknown());
+                    break;
+            }
+
+        } break;
+
         default:
-            OnEvent(EventUnknown());
+            FireEvent(EventUnknown());
             break;
     }
 }
@@ -46,7 +71,7 @@ void EventHandler::HandleEvents() {
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        GetEventObject(event);
+        HandleSDLEvent(event);
     }
 }
 
@@ -61,13 +86,14 @@ u32 EventHandler::RegisterListener(std::function<bool(Event&)> callback) {
 
 void EventHandler::UnregisterListener(u32 id) { m_Listeners.erase(id); }
 
-void EventHandler::OnEvent(Event&& e) {
+bool EventHandler::FireEvent(Event&& e) {
     auto& event = e;
 
     for (auto listener : m_Listeners) {
         if (event.Handled) break;
         event.Handled = listener.second(event);
     }
+    return event.Handled;
 }
 
 }  // namespace BillyEngine

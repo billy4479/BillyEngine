@@ -11,11 +11,19 @@ class Window {
     BE_NON_COPY_CONSTRUCTIBLE(Window)
 
     void SetTitle(std::string_view title);
+
+    void SetResizable(bool);
+    bool IsResizable();
+    void SetFullScreen(bool);
+    bool IsFullScreen();
+
     const glm::ivec2 GetSize() const;
 
    private:
     glm::ivec2 m_Size;
     SDL_Window* m_Window = nullptr;
+    bool m_Resizable = true;
+    bool m_Fullscreen = false;
 
     friend class Application;
 };

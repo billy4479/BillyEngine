@@ -13,9 +13,8 @@ enum class EventType {
     WindowFocus,
     WindowLostFocus,
     WindowMoved,
-    AppTick,
-    AppUpdate,
-    AppRender,
+    AppBeforeScripts,
+    AppAfterScripts,
     KeyPressed,
     KeyReleased,
     KeyTyped,
@@ -34,6 +33,7 @@ enum EventCategory : u8 {
     Keyboard = BE_BIT(5),
     Mouse = BE_BIT(4),
     MouseButton = BE_BIT(3),
+    App = BE_BIT(2),
 };
 }  // namespace EventCategory
 

@@ -7,6 +7,7 @@
 #include "Debugging/Profiler.hpp"
 #include "Entity/Entity.hpp"
 #include "Entity/ScriptableEntity.hpp"
+#include "Event/AppEvents.hpp"
 #include "Event/Input.hpp"
 #include "Rendering/DrawableTexture.hpp"
 #include "Rendering/Renderer.hpp"
@@ -14,6 +15,7 @@
 namespace BillyEngine {
 
 Application::Application(std::string_view title, glm::ivec2 size,
+                         bool resizable, bool fullscreen,
                          const std::filesystem::path &assetsPath)
     : m_Window(title, size),
       m_AssetManager(assetsPath),
@@ -23,6 +25,8 @@ Application::Application(std::string_view title, glm::ivec2 size,
     Logger::Init();
     Input::Bind(this);
 
+    m_Window.SetResizable(resizable);
+    m_Window.SetFullScreen(fullscreen);
     m_Renderer = CreateRef<Renderer>(m_Window.m_Window);
 }
 
@@ -62,7 +66,9 @@ void Application::Frame(f32 delta) {
 
     m_Renderer->Clear();
     m_EventHandler.HandleEvents();
+    m_EventHandler.FireEvent(BeforeScriptsEvent(delta));
     m_EntityManager.Update(delta);
+    m_EventHandler.FireEvent(AfterScriptsEvent(delta));
     m_Renderer->RenderToScreen();
 }
 

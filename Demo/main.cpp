@@ -5,7 +5,8 @@
 #include "TestEntity3.hpp"
 
 int main() {
-    BillyEngine::Application app("Test", {1280, 720}, "assets");
+    BillyEngine::Application app;
+    app.SetAssetFolder("assets");
     app.LoadFont("OpenSans-Regular.ttf", "OpenSans", 28);
     app.LoadFont("JetBrains Mono Regular Nerd Font Complete Mono.ttf",
                  "JetBrainsMono", 34);

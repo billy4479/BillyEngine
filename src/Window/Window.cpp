@@ -1,5 +1,7 @@
 #include "Window.hpp"
 
+#include <SDL_video.h>
+
 namespace BillyEngine {
 Window::Window(std::string_view title, glm::ivec2 size) : m_Size(size) {
     BE_PROFILE_FUNCTION();
@@ -28,6 +30,20 @@ Window::~Window() {
 void Window::SetTitle(std::string_view title) {
     SDL_SetWindowTitle(m_Window, title.data());
 }
+
+void Window::SetResizable(bool resizable) {
+    SDL_SetWindowResizable(m_Window, SDL_bool(resizable));
+    m_Resizable = resizable;
+}
+
+bool Window::IsResizable() { return m_Resizable; }
+
+void Window::SetFullScreen(bool fullscreen) {
+    SDL_SetWindowFullscreen(m_Window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
+    m_Fullscreen = fullscreen;
+}
+
+bool Window::IsFullScreen() { return m_Fullscreen; }
 
 const glm::ivec2 Window::GetSize() const { return m_Size; }
 
