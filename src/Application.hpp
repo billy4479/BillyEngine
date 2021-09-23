@@ -195,15 +195,23 @@ class Application {
      * @return true The window is resizable
      * @return false The window is not resizable
      */
-    inline bool IsResizable() { return m_Window.IsResizable(); }
+    inline bool IsResizable() const { return m_Window.IsResizable(); }
 
     /**
      * @brief Check if the window is fullscreen
      *
      * @return true The window is fullscreen
-     * @return false Thw window is not fullscreen
+     * @return false The window is not fullscreen
      */
-    inline bool IsFullscreen() { return m_Window.IsFullScreen(); }
+    inline bool IsFullscreen() const { return m_Window.IsFullScreen(); }
+
+    /**
+     * @brief Check if the window has keyboard focus
+     *
+     * @return true The window has focus
+     * @return false The window does not have focus
+     */
+    inline bool HasFocus() const { return m_Window.HasFocus(); }
 
    private:
     bool isRunning = false;
@@ -218,9 +226,9 @@ class Application {
     f32 m_ActualFps = 0;
 
    private:
+    EventHandler m_EventHandler;
     Window m_Window;
     AssetManager m_AssetManager;
-    EventHandler m_EventHandler;
     EntityManager m_EntityManager;
     Ref<Renderer> m_Renderer = nullptr;
 

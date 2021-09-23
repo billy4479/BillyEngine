@@ -17,9 +17,9 @@ namespace BillyEngine {
 Application::Application(std::string_view title, glm::ivec2 size,
                          bool resizable, bool fullscreen,
                          const std::filesystem::path &assetsPath)
-    : m_Window(title, size),
+    : m_EventHandler(this),
+      m_Window(title, size, this),
       m_AssetManager(assetsPath),
-      m_EventHandler(this),
       m_EntityManager(this) {
     BE_PROFILE_FUNCTION();
     Logger::Init();

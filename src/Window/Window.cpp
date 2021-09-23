@@ -1,9 +1,12 @@
 #include "Window.hpp"
 
-#include <SDL_video.h>
+#include "../Application.hpp"
+#include "../Event/EventHandler.hpp"
+#include "../Event/WindowEvent.hpp"
 
 namespace BillyEngine {
-Window::Window(std::string_view title, glm::ivec2 size) {
+Window::Window(std::string_view title, glm::ivec2 size,
+               Application *application) {
     BE_PROFILE_FUNCTION();
 
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO))
@@ -16,6 +19,19 @@ Window::Window(std::string_view title, glm::ivec2 size) {
                                 SDL_WINDOWPOS_UNDEFINED, size.x, size.y, 0);
 
     BE_CHECK_SDL_ERROR_AND_DIE();
+
+    application->GetEventHandler()
+        .RegisterListenerForEventType<WindowLostFocusEvent>(
+            [this](WindowLostFocusEvent &) -> bool {
+                m_Focus = false;
+                return false;
+            });
+    application->GetEventHandler()
+        .RegisterListenerForEventType<WindowFocusEvent>(
+            [this](WindowFocusEvent &) -> bool {
+                m_Focus = true;
+                return false;
+            });
 }
 
 Window::~Window() {
@@ -36,19 +52,21 @@ void Window::SetResizable(bool resizable) {
     m_Resizable = resizable;
 }
 
-bool Window::IsResizable() { return m_Resizable; }
+bool Window::IsResizable() const { return m_Resizable; }
 
 void Window::SetFullScreen(bool fullscreen) {
     SDL_SetWindowFullscreen(m_Window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
     m_Fullscreen = fullscreen;
 }
 
-bool Window::IsFullScreen() { return m_Fullscreen; }
+bool Window::IsFullScreen() const { return m_Fullscreen; }
 
 const glm::ivec2 Window::GetSize() const {
     i32 w, h;
     SDL_GetWindowSize(m_Window, &w, &h);
     return {w, h};
 }
+
+bool Window::HasFocus() const { return m_Focus; }
 
 }  // namespace BillyEngine
