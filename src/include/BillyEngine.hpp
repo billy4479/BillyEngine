@@ -10,7 +10,3 @@
 #include "../Event/KeyboardEvent.hpp"
 #include "../Event/WindowEvent.hpp"
 #include "../Rendering/DrawableTexture.hpp"
-
-#define SCRIPTABLE_ENTITY(className)                                       \
-    className(BillyEngine::Entity e) : BillyEngine::ScriptableEntity(e) {} \
-    BE_NON_COPY_CONSTRUCTIBLE(className)

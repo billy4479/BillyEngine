@@ -79,3 +79,7 @@ class ScriptableEntity {
 };
 
 }  // namespace BillyEngine
+
+#define SCRIPTABLE_ENTITY(className)                                       \
+    className(BillyEngine::Entity e) : BillyEngine::ScriptableEntity(e) {} \
+    BE_NON_COPY_CONSTRUCTIBLE(className)
