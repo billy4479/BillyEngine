@@ -1,7 +1,6 @@
 #include "TestEntity.hpp"
 
 void TestEntity::OnCreate() {
-    // dbg_print("%u\n", (u32) * this);
     texture = GetApplication()->CreateDrawableTexture({100, 100});
     texture->Clear(BillyEngine::Color::white);
     texture->Finalize();
@@ -13,6 +12,10 @@ void TestEntity::OnCreate() {
 }
 
 void TestEntity::OnUpdate(f32 delta) {
+    if (BillyEngine::Input::KeyDown(BillyEngine::Key::Space)) paused = !paused;
+
+    if (paused) return;
+
     auto &t = GetComponent<BillyEngine::Components::Transform>();
     t.Rotation += speed * delta;
     GetComponent<BillyEngine::Components::Sprite>().Tint =

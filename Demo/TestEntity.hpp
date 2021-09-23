@@ -10,6 +10,7 @@ class TestEntity : public BillyEngine::ScriptableEntity {
     f32 speed = 10;
     const f32 maxSpeed = 300;
     bool down = false;
+    bool paused = false;
 
     void OnCreate();
     void OnUpdate(f32 delta);

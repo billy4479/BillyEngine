@@ -30,6 +30,8 @@ class Application {
     Ref<DrawableTexture> CreateDrawableTexture(glm::ivec2 size);
     void AskToStop();
 
+    inline EventHandler &GetEventHandler() { return m_EventHandler; }
+
    public:
     /*** EntityManager proxy ***/
 

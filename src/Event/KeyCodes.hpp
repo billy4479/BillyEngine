@@ -125,7 +125,7 @@ enum : KeyCode {
     KPEnter = SDL_SCANCODE_KP_ENTER,
     KPEqual = SDL_SCANCODE_EQUALS,
 
-    Menu = SDL_SCANCODE_MENU
+    Menu = SDL_SCANCODE_MENU,
 
     // TODO: maybe add some more
 };

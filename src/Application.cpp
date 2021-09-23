@@ -6,6 +6,7 @@
 #include "Core/Logger.hpp"
 #include "Entity/Entity.hpp"
 #include "Entity/ScriptableEntity.hpp"
+#include "Event/Input.hpp"
 #include "Rendering/DrawableTexture.hpp"
 #include "Rendering/Renderer.hpp"
 
@@ -19,6 +20,7 @@ Application::Application(std::string_view title, glm::ivec2 size,
       m_EntityManager(this) {
     BE_PROFILE_FUNCTION();
     Logger::Init();
+    Input::Bind(this);
 
     m_Renderer = CreateRef<Renderer>(m_Window.m_Window);
 }

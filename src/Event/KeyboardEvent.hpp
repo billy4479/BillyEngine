@@ -9,7 +9,7 @@ class KeyboardEvent : public Event {
    public:
     KeyboardEvent(Key::KeyCode keyCode, Key::Mods::Mods mods)
         : m_Key(keyCode), m_Mods(mods) {}
-    EVENT_CLASS_CATEGORY(EventEnum::Input | EventEnum::Keyboard)
+    EVENT_CLASS_CATEGORY(EventCategory::Input | EventCategory::Keyboard)
 
     Key::KeyCode GetKeyCode() { return m_Key; }
     Key::Mods::Mods GetKeyMods() { return m_Mods; }

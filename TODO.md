@@ -8,9 +8,9 @@
 
 ## Input class
 
-- [ ] Actually create it
+- [x] Actually create it
 - [ ] Mouse events
-- [ ] Keyboard events
+- [x] Keyboard events
 
 ## Rendering
 

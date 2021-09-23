@@ -6,7 +6,7 @@ namespace BillyEngine {
 
 class WindowEvent : public Event {
    public:
-    EVENT_CLASS_CATEGORY(EventEnum::Window)
+    EVENT_CLASS_CATEGORY(EventCategory::Window)
 };
 
 class CloseEvent final : public WindowEvent {

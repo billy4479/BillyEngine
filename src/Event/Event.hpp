@@ -5,7 +5,7 @@
 #include "../Core/Common.hpp"
 
 namespace BillyEngine {
-namespace EventEnum {
+namespace EventType {
 enum class EventType {
     Unknown = 0,
     WindowClose,
@@ -24,7 +24,9 @@ enum class EventType {
     MouseMoved,
     MouseScrolled,
 };
+}
 
+namespace EventCategory {
 enum EventCategory : u8 {
     None = 0,
     Window = BE_BIT(7),
@@ -33,7 +35,7 @@ enum EventCategory : u8 {
     Mouse = BE_BIT(4),
     MouseButton = BE_BIT(3),
 };
-}  // namespace EventEnum
+}  // namespace EventCategory
 
 class Event {
    public:
@@ -41,21 +43,24 @@ class Event {
 
     bool Handled = false;
 
-    virtual EventEnum::EventType GetEventType() const = 0;
-    virtual EventEnum::EventCategory GetEventCategory() const = 0;
+    virtual EventType::EventType GetEventType() const = 0;
+    virtual EventCategory::EventCategory GetEventCategory() const = 0;
     virtual const char* GetName() const = 0;
     virtual std::string ToString() const { return GetName(); }
 };
 
 #define EVENT_CLASS_TYPE(type)                                   \
-    virtual EventEnum::EventType GetEventType() const override { \
-        return EventEnum::EventType::type;                       \
+    static EventType::EventType s_GetEventType() {               \
+        return EventType::EventType::type;                       \
+    }                                                            \
+    virtual EventType::EventType GetEventType() const override { \
+        return s_GetEventType();                                 \
     }                                                            \
     virtual const char* GetName() const override { return #type; }
 
-#define EVENT_CLASS_CATEGORY(category)                                   \
-    virtual EventEnum::EventCategory GetEventCategory() const override { \
-        return EventEnum::EventCategory(static_cast<u8>(category));      \
+#define EVENT_CLASS_CATEGORY(category)                                       \
+    virtual EventCategory::EventCategory GetEventCategory() const override { \
+        return EventCategory::EventCategory(static_cast<u8>(category));      \
     }
 
 inline std::ostream& operator<<(std::ostream& os, const Event& e) {
@@ -64,7 +69,7 @@ inline std::ostream& operator<<(std::ostream& os, const Event& e) {
 
 class EventUnknown final : public Event {
    public:
-    EVENT_CLASS_CATEGORY(EventEnum::None)
+    EVENT_CLASS_CATEGORY(EventCategory::None)
     EVENT_CLASS_TYPE(Unknown)
 };
 
