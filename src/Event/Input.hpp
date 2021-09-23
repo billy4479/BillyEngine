@@ -31,6 +31,8 @@ class Input {
      */
     static bool KeyPressed(Key::KeyCode, Key::Mods::Mods = Key::Mods::None);
 
+    static glm::ivec2 GetMousePosition();
+
    private:
     Input() = default;
     static void Bind(Application*);

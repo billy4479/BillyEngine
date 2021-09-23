@@ -30,6 +30,12 @@ bool Input::KeyPressed(Key::KeyCode keyCode, Key::Mods::Mods mods) {
     return ((s_Mods & mods) == mods && IsInPressedKeys(keyCode));
 }
 
+glm::ivec2 Input::GetMousePosition() {
+    glm::ivec2 result;
+    SDL_GetMouseState(&result.x, &result.y);
+    return result;
+}
+
 void Input::Bind(Application* application) {
     BE_ASSERT(application != nullptr);
     BE_ASSERT(s_Application == nullptr);

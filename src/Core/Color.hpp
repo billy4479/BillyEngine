@@ -50,6 +50,7 @@ struct Color {
     static Color red;
     static Color blue;
     static Color green;
+    static Color yellow;
     static Color black;
     static Color white;
 

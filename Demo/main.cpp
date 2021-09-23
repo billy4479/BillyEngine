@@ -3,6 +3,7 @@
 #include "TestEntity.hpp"
 #include "TestEntity2.hpp"
 #include "TestEntity3.hpp"
+#include "TestEntity4.hpp"
 
 int main() {
     BillyEngine::Application app;
@@ -13,6 +14,7 @@ int main() {
 
     app.CreateScriptableEntity<TestEntity>();
     app.CreateScriptableEntity<TestEntity2>();
+    app.CreateScriptableEntity<TestEntity4>();
     auto& e1 = app.CreateScriptableEntity<TestEntity3>();
     auto& e2 = app.CreateScriptableEntity<TestEntity3>();
     auto& e3 = app.CreateScriptableEntity<TestEntity3>();

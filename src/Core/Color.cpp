@@ -9,6 +9,7 @@ Color Color::red(255, 0, 0);
 Color Color::green(0, 255, 0);
 Color Color::blue(0, 0, 255);
 Color Color::white(255, 255, 255);
+Color Color::yellow(255, 255, 0);
 
 Color Color::hsl(u16 h, f32 s, f32 l, u8 a) {
     h = h % 360;

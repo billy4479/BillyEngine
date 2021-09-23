@@ -1,11 +1,9 @@
 #include "EventHandler.hpp"
 
-#include <SDL_events.h>
-#include <SDL_video.h>
-
 #include "../Application.hpp"
 #include "Event.hpp"
 #include "KeyboardEvent.hpp"
+#include "MouseEvents.hpp"
 #include "WindowEvent.hpp"
 
 namespace BillyEngine {
@@ -18,6 +16,24 @@ EventHandler::EventHandler(Application* application)
             m_Application->AskToStop();
             return true;
         });
+}
+
+constexpr static MouseButton ConvertMouseButton(u8 button) {
+    switch (button) {
+        case SDL_BUTTON_LEFT:
+            return MouseButton::Left;
+        case SDL_BUTTON_RIGHT:
+            return MouseButton::Right;
+        case SDL_BUTTON_MIDDLE:
+            return MouseButton::Middle;
+        case SDL_BUTTON_X1:
+            return MouseButton::Button4;
+        case SDL_BUTTON_X2:
+            return MouseButton::Button5;
+        default:
+            BE_ABORT();
+            return MouseButton::Right;
+    }
 }
 
 void EventHandler::HandleSDLEvent(const SDL_Event& event) {
@@ -67,6 +83,29 @@ void EventHandler::HandleSDLEvent(const SDL_Event& event) {
             }
 
         } break;
+
+        case SDL_MOUSEWHEEL:
+            if (event.wheel.direction == SDL_MOUSEWHEEL_NORMAL)
+                FireEvent(MouseScrolledEvent(event.wheel.x, event.wheel.y));
+            else
+                FireEvent(
+                    MouseScrolledEvent(event.wheel.x * -1, event.wheel.y * -1));
+            break;
+
+        case SDL_MOUSEBUTTONDOWN:
+            FireEvent(MouseButtonPressedEvent(
+                event.button.x, event.button.y,
+                ConvertMouseButton(event.button.button)));
+            break;
+        case SDL_MOUSEBUTTONUP:
+            FireEvent(MouseButtonReleasedEvent(
+                event.button.x, event.button.y,
+                ConvertMouseButton(event.button.button)));
+            break;
+
+        case SDL_MOUSEMOTION:
+            FireEvent(MouseMovedEvent(event.motion.x, event.motion.y));
+            break;
 
         default:
             FireEvent(EventUnknown());
