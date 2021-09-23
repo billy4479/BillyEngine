@@ -174,7 +174,7 @@ class Application {
 
    private:
     bool isRunning = false;
-    void OnUpdate(f32);
+    void Frame(f32);
     Ref<Renderer> GetRenderer();
 
    private:

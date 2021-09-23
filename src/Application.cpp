@@ -4,6 +4,7 @@
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Core/Logger.hpp"
+#include "Debugging/Profiler.hpp"
 #include "Entity/Entity.hpp"
 #include "Entity/ScriptableEntity.hpp"
 #include "Event/Input.hpp"
@@ -35,18 +36,12 @@ void Application::Run() {
 
     u32 lastDelta = 1;
     while (isRunning) {
-        {
-            BE_PROFILE_SCOPE("Frame");
+        auto start = SDL_GetTicks();
 
-            auto start = SDL_GetTicks();
+        Frame((f32)lastDelta / 1000.0f);
 
-            m_Renderer->Clear();
-
-            OnUpdate((f32)lastDelta / 1000.0f);
-
-            auto end = SDL_GetTicks();
-            lastDelta = end - start;
-        }
+        auto end = SDL_GetTicks();
+        lastDelta = end - start;
 
         if (frameDelay > lastDelta) {
             SDL_Delay(frameDelay - lastDelta);
@@ -62,11 +57,12 @@ void Application::AskToStop() {
     isRunning = false;
 }
 
-void Application::OnUpdate(f32 delta) {
+void Application::Frame(f32 delta) {
+    BE_PROFILE_FUNCTION();
+
+    m_Renderer->Clear();
     m_EventHandler.HandleEvents();
-
     m_EntityManager.Update(delta);
-
     m_Renderer->RenderToScreen();
 }
 
