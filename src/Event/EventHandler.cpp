@@ -4,6 +4,7 @@
 #include <SDL_video.h>
 
 #include "../Application.hpp"
+#include "Event.hpp"
 #include "KeyboardEvent.hpp"
 #include "WindowEvent.hpp"
 
@@ -36,7 +37,10 @@ void EventHandler::HandleSDLEvent(const SDL_Event& event) {
             break;
 
         case SDL_WINDOWEVENT: {
-            switch (event.window.type) {
+            switch (event.window.event) {
+                case SDL_WINDOWEVENT_EXPOSED:
+                case SDL_WINDOWEVENT_NONE:
+                    break;
                 case SDL_WINDOWEVENT_MOVED:
                     FireEvent(WindowMovedEvent(event.window.data1,
                                                event.window.data2));
@@ -45,6 +49,12 @@ void EventHandler::HandleSDLEvent(const SDL_Event& event) {
                     FireEvent(WindowResizeEvent(event.window.data1,
                                                 event.window.data2));
                     break;
+                case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                    i32 w, h;
+                    SDL_GetWindowSize(
+                        SDL_GetWindowFromID(event.window.windowID), &w, &h);
+                    FireEvent(WindowResizeEvent(w, h));
+                } break;
                 case SDL_WINDOWEVENT_FOCUS_GAINED:
                     FireEvent(WindowFocusEvent());
                     break;

@@ -8,9 +8,14 @@
 namespace BillyEngine {
 
 ScriptableEntity::ScriptableEntity(entt::entity handle, EntityManager* em)
-    : m_Entity(handle, em) {}
+    : App(*em->m_Application),
+      m_Entity(handle, em),
+      m_EventManager(em->m_Application->GetEventHandler()) {}
 
-ScriptableEntity::ScriptableEntity(Entity e) : m_Entity(e) {}
+ScriptableEntity::ScriptableEntity(Entity e)
+    : App(*e.m_EntityManager->m_Application),
+      m_Entity(e),
+      m_EventManager(e.m_EntityManager->m_Application->GetEventHandler()) {}
 
 void ScriptableEntity::Destroy() {
     m_Entity.m_EntityManager->DestroyEntity(m_Entity);

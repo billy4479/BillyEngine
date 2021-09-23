@@ -3,6 +3,8 @@
 #include "../Components/ScriptComponent.hpp"
 #include "../Core/Common.hpp"
 #include "../Core/Logger.hpp"
+#include "../Event/Event.hpp"
+#include "../Event/EventHandler.hpp"
 #include "Entity.hpp"
 
 namespace BillyEngine {
@@ -14,7 +16,7 @@ class Tag;
 
 class ScriptableEntity {
    public:
-    ScriptableEntity(entt::entity handle, EntityManager* application);
+    ScriptableEntity(entt::entity handle, EntityManager*);
     ScriptableEntity(Entity e);
 
     virtual ~ScriptableEntity() = default;
@@ -43,10 +45,6 @@ class ScriptableEntity {
         return m_Entity.GetComponent<T>();
     }
 
-    inline Application* GetApplication() {
-        return m_Entity.m_EntityManager->m_Application;
-    }
-
     Components::Transform& Transform();
     Components::Tag& Tag();
 
@@ -73,9 +71,16 @@ class ScriptableEntity {
 #undef LOG_FN
     };
     EntityLog Log;
+    Application& App;
+
+    template <typename T>
+    inline u32 RegisterEventListener(std::function<bool(T&)> listener) {
+        return m_EventManager.RegisterListenerForEventType<T>(listener);
+    }
 
    private:
     Entity m_Entity;
+    EventHandler& m_EventManager;
 };
 
 }  // namespace BillyEngine

@@ -20,7 +20,6 @@ class Window {
     const glm::ivec2 GetSize() const;
 
    private:
-    glm::ivec2 m_Size;
     SDL_Window* m_Window = nullptr;
     bool m_Resizable = true;
     bool m_Fullscreen = false;

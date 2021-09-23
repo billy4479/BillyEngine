@@ -3,7 +3,7 @@
 #include <SDL_video.h>
 
 namespace BillyEngine {
-Window::Window(std::string_view title, glm::ivec2 size) : m_Size(size) {
+Window::Window(std::string_view title, glm::ivec2 size) {
     BE_PROFILE_FUNCTION();
 
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO))
@@ -13,7 +13,7 @@ Window::Window(std::string_view title, glm::ivec2 size) : m_Size(size) {
         throw std::runtime_error("SDL_image failed to initialize.");
 
     m_Window = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_UNDEFINED,
-                                SDL_WINDOWPOS_UNDEFINED, m_Size.x, m_Size.y, 0);
+                                SDL_WINDOWPOS_UNDEFINED, size.x, size.y, 0);
 
     BE_CHECK_SDL_ERROR_AND_DIE();
 }
@@ -45,6 +45,10 @@ void Window::SetFullScreen(bool fullscreen) {
 
 bool Window::IsFullScreen() { return m_Fullscreen; }
 
-const glm::ivec2 Window::GetSize() const { return m_Size; }
+const glm::ivec2 Window::GetSize() const {
+    i32 w, h;
+    SDL_GetWindowSize(m_Window, &w, &h);
+    return {w, h};
+}
 
 }  // namespace BillyEngine
