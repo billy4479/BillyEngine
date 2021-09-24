@@ -9,13 +9,13 @@
 ## Input class
 
 - [x] Actually create it
-- [ ] Mouse events
+- [x] Mouse events
 - [x] Keyboard events
 
 ## Rendering
 
 - [x] Use `SDL_Surface`s when needed and choose where to use those and where `SDL_Texture`s
-- [ ] Resizable window
+- [x] Resizable window
 - [x] ~~Differentiate between DrawableTexture that can be refinalized and those which don't~~ Think it's fine
 - [x] Implement rendering tinted textures
 - [ ] Draw shapes and primitives
@@ -40,6 +40,10 @@
 ## Entity
 
 - [ ] Parent-children entities
+
+## Audio
+
+- [ ] Figure out how it works in SDL and think of a proper design
 
 ## Scene (?)
 
