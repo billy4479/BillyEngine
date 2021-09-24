@@ -9,7 +9,7 @@ class Renderer;
 
 class Texture {
    public:
-    Texture(Ref<Surface> surface, Ref<Renderer> renderer);
+    Texture(Ref<Surface> surface, Renderer* renderer);
     explicit Texture(SDL_Texture* texture);
 
     BE_NON_COPY_CONSTRUCTIBLE(Texture)
@@ -22,6 +22,8 @@ class Texture {
 
    private:
     SDL_Texture* m_Texture = nullptr;
+    Renderer* m_Renderer = nullptr;
+    bool m_ValidRenderer = true;
 };
 
 }  // namespace BillyEngine

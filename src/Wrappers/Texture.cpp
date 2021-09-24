@@ -5,10 +5,16 @@
 
 namespace BillyEngine {
 
-Texture::Texture(Ref<Surface> surface, Ref<Renderer> renderer) {
+Texture::Texture(Ref<Surface> surface, Renderer* renderer)
+    : m_Renderer(renderer) {
     m_Texture = SDL_CreateTextureFromSurface(renderer->GetSDLRenderer(),
                                              surface->AsSDLSurface());
     BE_CHECK_SDL_ERROR_AND_DIE();
+
+    m_Renderer->RegisterDestructionCallback(this, [this]() {
+        m_Texture = nullptr;
+        m_ValidRenderer = false;
+    });
 }
 
 Texture::Texture(SDL_Texture* texture) : m_Texture(texture) {
@@ -29,12 +35,11 @@ Texture& Texture::operator=(Texture&& other) {
 }
 
 Texture::~Texture() {
-    // FIXME: Some weird stuff is going on here...
-    // The last texture which gets destroyed generates an error, but since
-    // this is not critical and I don't really know where the issue is, I'll
-    // just ignore this for now :)
-    SDL_DestroyTexture(m_Texture);
-    BE_CHECK_SDL_ERROR();
+    if (m_ValidRenderer) {
+        m_Renderer->UnregisterDestructionCallback(this);
+        SDL_DestroyTexture(m_Texture);
+        BE_CHECK_SDL_ERROR();
+    }
 }
 
 }  // namespace BillyEngine

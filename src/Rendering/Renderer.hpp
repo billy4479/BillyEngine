@@ -9,7 +9,7 @@ namespace BillyEngine {
 class DrawableTexture;
 struct Texture;
 struct Font;
-class Renderer : public std::enable_shared_from_this<Renderer> {
+class Renderer {
    public:
     Renderer(SDL_Window *);
     BE_NON_COPY_CONSTRUCTIBLE(Renderer)
@@ -38,7 +38,11 @@ class Renderer : public std::enable_shared_from_this<Renderer> {
                      f32 rotation, CenterPoint anchor,
                      CenterPoint rotationCenter, Color tint = Color::white);
 
+    void RegisterDestructionCallback(Texture *, std::function<void()>);
+    void UnregisterDestructionCallback(Texture *);
+
    private:
+    std::map<Texture *, std::function<void()>> m_DestructionCallbacks;
     SDL_Renderer *m_Renderer = nullptr;
 };
 

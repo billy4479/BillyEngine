@@ -29,7 +29,7 @@ Ref<Font> AssetManager::GetFont(const std::string &name) {
     return font;
 }
 
-AssetManager::~AssetManager() { ReleaseSDLModules(); }
+AssetManager::~AssetManager() { ReleaseSDLDependencies(); }
 
 void AssetManager::SetAssetFolder(const std::filesystem::path &path) {
     if (path.is_relative())
@@ -40,7 +40,7 @@ void AssetManager::SetAssetFolder(const std::filesystem::path &path) {
 
 std::filesystem::path AssetManager::GetAssetFolder() { return m_AssetsFolder; }
 
-void AssetManager::ReleaseSDLModules() {
+void AssetManager::ReleaseSDLDependencies() {
     // The first one is for the vector, the second is for `font` created in
     // the for loop
 

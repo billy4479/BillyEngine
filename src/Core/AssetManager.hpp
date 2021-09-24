@@ -20,7 +20,7 @@ class AssetManager {
     Ref<Surface> LoadImage(const std::filesystem::path &, const std::string);
     Ref<Surface> GetImage(const std::string &);
 
-    void ReleaseSDLModules();
+    void ReleaseSDLDependencies();
 
    private:
     // https://stackoverflow.com/questions/1528298/get-path-of-executable

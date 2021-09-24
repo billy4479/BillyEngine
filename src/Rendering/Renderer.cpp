@@ -16,7 +16,10 @@ Renderer::Renderer(SDL_Window* window)
 Renderer::~Renderer() {
     if (m_Renderer == nullptr) return;
     SDL_DestroyRenderer(m_Renderer);
-    BE_CHECK_SDL_ERROR_AND_DIE();
+    for (auto callback : m_DestructionCallbacks) {
+        callback.second();
+    }
+    BE_CHECK_SDL_ERROR();
 }
 
 void Renderer::Clear() {
@@ -32,7 +35,7 @@ Ref<Texture> Renderer::RenderTextToTexture(
 
     auto tmpSurf = CreateRef<Surface>(
         TTF_RenderText_Blended(font->AsSDLFont(), text.c_str(), fgColor));
-    auto texture = CreateRef<Texture>(tmpSurf, shared_from_this());
+    auto texture = CreateRef<Texture>(tmpSurf, this);
     return texture;
 }
 
@@ -73,10 +76,19 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
     BE_CHECK_SDL_ERROR_AND_DIE();
 }
 
+void Renderer::RegisterDestructionCallback(Texture* texture,
+                                           std::function<void()> callback) {
+    m_DestructionCallbacks[texture] = callback;
+}
+
+void Renderer::UnregisterDestructionCallback(Texture* texture) {
+    m_DestructionCallbacks.erase(texture);
+}
+
 DrawableTexture Renderer::CreateDrawableTexture(glm::ivec2 size) {
     BE_ASSERT(m_Renderer != nullptr);
 
-    return DrawableTexture(shared_from_this(), size);
+    return DrawableTexture(this, size);
 }
 
 void Renderer::RenderToScreen() {

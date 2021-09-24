@@ -30,7 +30,7 @@ void DrawableTexture::Finalize() {
     m_HasTexture = true;
 }
 
-DrawableTexture::DrawableTexture(Ref<Renderer> renderer, glm::ivec2 size)
+DrawableTexture::DrawableTexture(Renderer* renderer, glm::ivec2 size)
     : m_Renderer(renderer), m_Size(size) {
     m_Surface = CreateRef<Surface>(size);
     BE_ASSERT(m_Surface != nullptr);

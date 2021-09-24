@@ -16,18 +16,18 @@ namespace BillyEngine {
 
 Application::Application(std::string_view title, glm::ivec2 size,
                          bool resizable, bool fullscreen,
-                         const std::filesystem::path &assetsPath)
+                         const std::filesystem::path& assetsPath)
     : m_EventHandler(this),
       m_Window(title, size, this),
       m_AssetManager(assetsPath),
-      m_EntityManager(this) {
+      m_EntityManager(this),
+      m_Renderer(m_Window.m_Window) {
     BE_PROFILE_FUNCTION();
     Logger::Init();
     Input::Bind(this);
 
     m_Window.SetResizable(resizable);
     m_Window.SetFullScreen(fullscreen);
-    m_Renderer = CreateRef<Renderer>(m_Window.m_Window);
 }
 
 Application::~Application() = default;
@@ -64,18 +64,18 @@ void Application::AskToStop() {
 void Application::Frame(f32 delta) {
     BE_PROFILE_FUNCTION();
 
-    m_Renderer->Clear();
+    m_Renderer.Clear();
     m_EventHandler.HandleEvents();
     m_EventHandler.FireEvent(BeforeScriptsEvent(delta));
     m_EntityManager.Update(delta);
     m_EventHandler.FireEvent(AfterScriptsEvent(delta));
-    m_Renderer->RenderToScreen();
+    m_Renderer.RenderToScreen();
 }
 
-Ref<Renderer> Application::GetRenderer() { return m_Renderer; }
+Renderer* Application::GetRenderer() { return &m_Renderer; }
 
 Ref<DrawableTexture> Application::CreateDrawableTexture(glm::ivec2 size) {
-    return CreateRef<DrawableTexture>(m_Renderer->CreateDrawableTexture(size));
+    return CreateRef<DrawableTexture>(m_Renderer.CreateDrawableTexture(size));
 }
 
 }  // namespace BillyEngine

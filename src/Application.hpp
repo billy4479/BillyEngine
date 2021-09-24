@@ -216,7 +216,7 @@ class Application {
    private:
     bool isRunning = false;
     void Frame(f32);
-    Ref<Renderer> GetRenderer();
+    Renderer *GetRenderer();
 
    private:
     static constexpr f32 FPS = 60;
@@ -230,7 +230,7 @@ class Application {
     Window m_Window;
     AssetManager m_AssetManager;
     EntityManager m_EntityManager;
-    Ref<Renderer> m_Renderer = nullptr;
+    Renderer m_Renderer;
 
     friend class Entity;
     friend class EntityManager;

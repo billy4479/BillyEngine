@@ -98,20 +98,20 @@ class DrawableTexture {
      * @param renderer The current renderer
      * @param size The size of the texture
      */
-    DrawableTexture(Ref<Renderer> renderer, glm::ivec2 size);
+    DrawableTexture(Renderer* renderer, glm::ivec2 size);
     // DrawableTexture() = default;
     /**
      * @brief Create a new `DrawableTexture` from an existing `Surface`
      *
      * @param surface The base texture
      */
-    DrawableTexture(Ref<Surface> surface, Ref<Renderer> renderer)
+    DrawableTexture(Ref<Surface> surface, Renderer* renderer)
         : m_Renderer(renderer), m_Surface(surface) {}
 
     ~DrawableTexture() = default;
 
    private:
-    Ref<Renderer> m_Renderer = nullptr;
+    Renderer* m_Renderer = nullptr;
     Ref<Surface> m_Surface = nullptr;
     Ref<Texture> m_Texture = nullptr;
     glm::ivec2 m_Size{0, 0};
