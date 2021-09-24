@@ -1,5 +1,7 @@
 #include "Renderer.hpp"
 
+#include <algorithm>
+
 #include "../Wrappers/Font.hpp"
 #include "../Wrappers/Texture.hpp"
 #include "DrawableTexture.hpp"
@@ -39,9 +41,14 @@ Ref<Texture> Renderer::RenderTextToTexture(
     return texture;
 }
 
-void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
-                           glm::vec2 scale, f32 rotation, CenterPoint anchor,
-                           CenterPoint rotationCenter, Color tint) {
+void Renderer::DrawTexture(Ref<Texture> texture,
+                           Components::Transform& transform, Color tint) {
+    m_TextureBatch.push_back({texture, transform, tint});
+}
+
+void Renderer::DrawTextureInternal(TextureData& textureData) {
+    auto [texture, t, tint] = textureData;
+
     BE_ASSERT(m_Renderer != nullptr);
     BE_ASSERT(texture != nullptr);
 
@@ -50,19 +57,19 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
     BE_CHECK_SDL_ERROR_AND_DIE();
 
     SDL_Rect sRect{0, 0, w, h};
-    SDL_Rect dRect{position.x, position.y,
-                   static_cast<i32>(abs(scale.x) * (f32)w),
-                   static_cast<i32>(abs(scale.y) * (f32)h)};
+    SDL_Rect dRect{t.Position.x, t.Position.y,
+                   static_cast<i32>(abs(t.Scale.x) * (f32)w),
+                   static_cast<i32>(abs(t.Scale.y) * (f32)h)};
 
-    auto anchorPoint = CenterPointToCoords(anchor, dRect);
-    auto rotationCenterPoint = CenterPointToCoords(rotationCenter, dRect);
+    auto anchorPoint = CenterPointToCoords(t.Anchor, dRect);
+    auto rotationCenterPoint = CenterPointToCoords(t.RotationCenter, dRect);
 
     dRect.x -= anchorPoint.x;
     dRect.y -= anchorPoint.y;
 
     i32 flip = SDL_FLIP_NONE;
-    if (scale.x < 0) flip |= SDL_FLIP_HORIZONTAL;
-    if (scale.y < 0) flip |= SDL_FLIP_VERTICAL;
+    if (t.Scale.x < 0) flip |= SDL_FLIP_HORIZONTAL;
+    if (t.Scale.y < 0) flip |= SDL_FLIP_VERTICAL;
 
     SDL_Point rotationCenterPointSDL = {rotationCenterPoint.x,
                                         rotationCenterPoint.y};
@@ -72,7 +79,8 @@ void Renderer::DrawTexture(Ref<Texture> texture, glm::ivec2 position,
     SDL_SetTextureAlphaMod(texture->AsSDLTexture(), tint.a);
     BE_CHECK_SDL_ERROR_AND_DIE();
     SDL_RenderCopyEx(m_Renderer, texture->AsSDLTexture(), &sRect, &dRect,
-                     rotation, &rotationCenterPointSDL, (SDL_RendererFlip)flip);
+                     t.Rotation, &rotationCenterPointSDL,
+                     (SDL_RendererFlip)flip);
     BE_CHECK_SDL_ERROR_AND_DIE();
 }
 
@@ -95,6 +103,16 @@ void Renderer::RenderToScreen() {
     BE_PROFILE_FUNCTION();
 
     BE_ASSERT(m_Renderer != nullptr);
+
+    std::sort(m_TextureBatch.begin(), m_TextureBatch.end(),
+              [](const TextureData& tdata1, const TextureData& tdata2) {
+                  return tdata1.Transform.zIndex < tdata2.Transform.zIndex;
+              });
+    for (auto& textureData : m_TextureBatch) {
+        DrawTextureInternal(textureData);
+    }
+    m_TextureBatch.clear();
+
     SDL_RenderPresent(m_Renderer);
     BE_CHECK_SDL_ERROR_AND_DIE();
 }

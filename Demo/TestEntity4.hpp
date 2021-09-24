@@ -36,6 +36,7 @@ class TestEntity4 : public BillyEngine::ScriptableEntity {
 
         AddComponent<BillyEngine::Components::Sprite>(t);
         Transform().Anchor = BillyEngine::CenterPoint::CENTER_CENTER;
+        Transform().zIndex = 1;
     }
 
     void OnUpdate(f32) {

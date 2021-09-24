@@ -13,11 +13,12 @@ class Transform {
     f32 Rotation;
     CenterPoint RotationCenter;
     CenterPoint Anchor;
+    i32 zIndex;
 
     Transform(glm::ivec2 position = {0, 0}, glm::vec2 scale = {1, 1},
               f32 rotation = 0,
               CenterPoint rotationCenter = CenterPoint::CENTER_CENTER,
-              CenterPoint anchor = CenterPoint::TOP_LEFT);
+              CenterPoint anchor = CenterPoint::TOP_LEFT, i32 zIndex = 0);
 };
 
 }  // namespace Components

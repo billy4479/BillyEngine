@@ -21,7 +21,7 @@ void EntityManager::Update(f32 delta) {
             script.OnUpdate(delta);
         });
 
-    m_Registry.view<Components::Text, Components::Transform>().each(
+    m_Registry.group<Components::Text, Components::Transform>().each(
         [&](auto entity, Components::Text &label, Components::Transform &t) {
             (void)entity;
             if (label.m_Texture == nullptr) {
@@ -30,9 +30,7 @@ void EntityManager::Update(f32 delta) {
                     m_Application->GetRenderer()->RenderTextToTexture(
                         label.m_Content, label.m_Font, label.m_Color);
             }
-            m_Application->GetRenderer()->DrawTexture(
-                label.m_Texture, t.Position, t.Scale, t.Rotation, t.Anchor,
-                t.RotationCenter);
+            m_Application->GetRenderer()->DrawTexture(label.m_Texture, t);
         });
 
     m_Registry.view<Components::Sprite, Components::Transform>().each(
@@ -41,9 +39,8 @@ void EntityManager::Update(f32 delta) {
 #ifdef DEBUG
             if (sprite.GetTexture() != nullptr)
 #endif
-                m_Application->GetRenderer()->DrawTexture(
-                    sprite.GetTexture(), t.Position, t.Scale, t.Rotation,
-                    t.Anchor, t.RotationCenter, sprite.Tint);
+                m_Application->GetRenderer()->DrawTexture(sprite.GetTexture(),
+                                                          t, sprite.Tint);
 #ifdef DEBUG
             else
                 BE_CORE_WARN("Not drawing since the texture is null");
