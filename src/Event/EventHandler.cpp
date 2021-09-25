@@ -37,6 +37,7 @@ constexpr static MouseButton ConvertMouseButton(u8 button) {
 }
 
 void EventHandler::HandleSDLEvent(const SDL_Event& event) {
+    BE_PROFILE_FUNCTION();
     switch (event.type) {
         case SDL_QUIT:
             FireEvent(WindowCloseEvent());
@@ -119,7 +120,12 @@ void EventHandler::HandleEvents() {
     for (auto hook : m_BeforeUpdateHooks) hook();
 
     SDL_Event event;
-    while (SDL_PollEvent(&event)) {
+    bool left = true;
+    while (left) {
+        {
+            BE_PROFILE_SCOPE("Poll");
+            left = SDL_PollEvent(&event);
+        }
         HandleSDLEvent(event);
     }
 }

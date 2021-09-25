@@ -12,40 +12,49 @@ EntityManager::~EntityManager() { m_Registry.clear(); }
 void EntityManager::Update(f32 delta) {
     BE_PROFILE_FUNCTION();
 
-    m_Registry.view<Components::Script>().each(
-        [&](auto entity, Components::Script &script) {
-            (void)entity;
-            // auto e = Entity(entity, this);
-            if (!script.WasOnCreateCalled) script.OnCreate();
+    {
+        BE_PROFILE_SCOPE("Scripts");
+        m_Registry.view<Components::Script>().each(
+            [&](auto entity, Components::Script &script) {
+                (void)entity;
+                // auto e = Entity(entity, this);
+                if (!script.WasOnCreateCalled) script.OnCreate();
 
-            script.OnUpdate(delta);
-        });
-
-    m_Registry.group<Components::Text, Components::Transform>().each(
-        [&](auto entity, Components::Text &label, Components::Transform &t) {
-            (void)entity;
-            if (label.m_Texture == nullptr) {
-                BE_ASSERT(label.m_Font != nullptr);
-                label.m_Texture =
-                    m_Application->GetRenderer()->RenderTextToTexture(
-                        label.m_Content, label.m_Font, label.m_Color);
-            }
-            m_Application->GetRenderer()->DrawTexture(label.m_Texture, t);
-        });
-
-    m_Registry.view<Components::Sprite, Components::Transform>().each(
-        [&](auto entity, Components::Sprite &sprite, Components::Transform &t) {
-            (void)entity;
+                script.OnUpdate(delta);
+            });
+    }
+    {
+        BE_PROFILE_SCOPE("Text");
+        m_Registry.group<Components::Text, Components::Transform>().each(
+            [&](auto entity, Components::Text &label,
+                Components::Transform &t) {
+                (void)entity;
+                if (label.m_Texture == nullptr) {
+                    BE_ASSERT(label.m_Font != nullptr);
+                    label.m_Texture =
+                        m_Application->GetRenderer()->RenderTextToTexture(
+                            label.m_Content, label.m_Font, label.m_Color);
+                }
+                m_Application->GetRenderer()->DrawTexture(label.m_Texture, t);
+            });
+    }
+    {
+        BE_PROFILE_SCOPE("Sprites");
+        m_Registry.view<Components::Sprite, Components::Transform>().each(
+            [&](auto entity, Components::Sprite &sprite,
+                Components::Transform &t) {
+                (void)entity;
 #ifdef DEBUG
-            if (sprite.GetTexture() != nullptr)
+                if (sprite.GetTexture() != nullptr)
 #endif
-                m_Application->GetRenderer()->DrawTexture(sprite.GetTexture(),
-                                                          t, sprite.Tint);
+                    m_Application->GetRenderer()->DrawTexture(
+                        sprite.GetTexture(), t, sprite.Tint);
 #ifdef DEBUG
-            else
-                BE_CORE_WARN("Not drawing since the texture is null");
+                else
+                    BE_CORE_WARN("Not drawing since the texture is null");
 #endif
-        });
+            });
+    }
 }
 
 Entity EntityManager::CreateEntity(const std::string &name) {

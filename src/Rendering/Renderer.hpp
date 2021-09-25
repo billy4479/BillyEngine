@@ -55,16 +55,11 @@ class Renderer {
         TextureData(Ref<Texture> data, const Components::Transform &transform,
                     Color tint)
             : Data(data), Transform(transform), Tint(tint) {}
-        TextureData(const TextureData &other)
-            : Data(other.Data), Transform(other.Transform), Tint(other.Tint) {}
-        TextureData &operator=(const TextureData &other) {
-            if (this != &other) {
-                Data = other.Data;
-                Transform = other.Transform;
-                Tint = other.Tint;
-            }
-            return *this;
-        }
+        TextureData(const TextureData &) = default;
+        TextureData(TextureData &&) = default;
+        TextureData &operator=(const TextureData &) = default;
+        TextureData &operator=(TextureData &&) = default;
+        ~TextureData() = default;
 
         void swap(TextureData &other) {
             TextureData tmp = other;

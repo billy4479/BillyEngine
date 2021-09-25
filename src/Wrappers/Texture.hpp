@@ -23,7 +23,6 @@ class Texture {
    private:
     SDL_Texture* m_Texture = nullptr;
     Renderer* m_Renderer = nullptr;
-    bool m_ValidRenderer = true;
 };
 
 }  // namespace BillyEngine

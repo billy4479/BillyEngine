@@ -11,10 +11,8 @@ Texture::Texture(Ref<Surface> surface, Renderer* renderer)
                                              surface->AsSDLSurface());
     BE_CHECK_SDL_ERROR_AND_DIE();
 
-    m_Renderer->RegisterDestructionCallback(this, [this]() {
-        m_Texture = nullptr;
-        m_ValidRenderer = false;
-    });
+    m_Renderer->RegisterDestructionCallback(this,
+                                            [this]() { m_Texture = nullptr; });
 }
 
 Texture::Texture(SDL_Texture* texture) : m_Texture(texture) {
@@ -35,7 +33,7 @@ Texture& Texture::operator=(Texture&& other) {
 }
 
 Texture::~Texture() {
-    if (m_ValidRenderer) {
+    if (m_Texture != nullptr) {
         m_Renderer->UnregisterDestructionCallback(this);
         SDL_DestroyTexture(m_Texture);
         BE_CHECK_SDL_ERROR();
