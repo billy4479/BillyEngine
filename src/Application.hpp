@@ -5,6 +5,7 @@
 #include "Components/ScriptComponent.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
+#include "Core/FPSManager.hpp"
 #include "Entity/Entity.hpp"
 #include "Entity/EntityManager.hpp"
 #include "Entity/ScriptableEntity.hpp"
@@ -25,7 +26,7 @@ class Application {
 
    public:
     void Run();
-    inline f32 GetFPS() const { return m_ActualFps; };
+    inline f32 GetFPS() const { return m_FPSManager.GetActualFPS(); };
     Ref<DrawableTexture> CreateDrawableTexture(glm::ivec2 size);
     void AskToStop();
 
@@ -219,18 +220,12 @@ class Application {
     Renderer *GetRenderer();
 
    private:
-    static constexpr f32 FPS = 60;
-    // Min frame time in milliseconds
-    static constexpr u32 frameDelay = u32(1000.0f / FPS);
-
-    f32 m_ActualFps = 0;
-
-   private:
     EventHandler m_EventHandler;
     Window m_Window;
     AssetManager m_AssetManager;
     EntityManager m_EntityManager;
     Renderer m_Renderer;
+    FPSManager m_FPSManager;
 
     friend class Entity;
     friend class EntityManager;

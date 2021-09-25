@@ -38,21 +38,12 @@ void Application::Run() {
     BE_ASSERT(!isRunning);
     isRunning = true;
 
-    u32 lastDelta = 1;
     while (isRunning) {
-        auto start = SDL_GetTicks();
+        m_FPSManager.StartFrame();
 
-        Frame((f32)lastDelta / 1000.0f);
+        Frame(m_FPSManager.GetElapsed());
 
-        auto end = SDL_GetTicks();
-        lastDelta = end - start;
-
-        if (frameDelay > lastDelta) {
-            SDL_Delay(frameDelay - lastDelta);
-            lastDelta = frameDelay;
-        }
-
-        m_ActualFps = 1000.0f / (f32)lastDelta;
+        m_FPSManager.EndFrameAndWait();
     }
 }
 

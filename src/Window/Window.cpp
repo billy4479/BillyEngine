@@ -9,7 +9,7 @@ Window::Window(std::string_view title, glm::ivec2 size,
                Application *application) {
     BE_PROFILE_FUNCTION();
 
-    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER | SDL_INIT_VIDEO))
+    if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO))
         throw std::runtime_error("SDL failed to initialize.");
     if (TTF_Init()) throw std::runtime_error("SDL_ttf failed to initialize.");
     if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0)
