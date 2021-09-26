@@ -9,7 +9,7 @@
 #include "Entity/Entity.hpp"
 #include "Entity/EntityManager.hpp"
 #include "Entity/ScriptableEntity.hpp"
-#include "Event/EventHandler.hpp"
+#include "Event/EventManager.hpp"
 #include "Rendering/Renderer.hpp"
 #include "Window/Window.hpp"
 #include "Wrappers/Fwd.hpp"
@@ -25,12 +25,26 @@ class Application {
     ~Application();
 
    public:
+    /**
+     * @brief Starts the application
+     *
+     */
     void Run();
-    inline f32 GetFPS() const { return m_FPSManager.GetActualFPS(); };
-    Ref<DrawableTexture> CreateDrawableTexture(glm::ivec2 size);
-    void AskToStop();
 
-    inline EventHandler &GetEventHandler() { return m_EventHandler; }
+    /**
+     * @brief Stops the application
+     *
+     * @note The current frame will be completed
+     */
+    void Stop();
+
+    /**
+     * @brief Create a Drawable Texture
+     *
+     * @param size The DrawableTexture size in pixels
+     * @return Ref<DrawableTexture> The created DrawableTexture
+     */
+    Ref<DrawableTexture> CreateDrawableTexture(glm::ivec2 size);
 
    public:
     /*** EntityManager proxy ***/
@@ -214,13 +228,88 @@ class Application {
      */
     inline bool HasFocus() const { return m_Window.HasFocus(); }
 
+   public:
+    /*** FPSManager proxy ***/
+
+    /**
+     * @brief Get FPS
+     *
+     * @return f32 FPS
+     */
+    inline f32 GetFPS() const { return m_FPSManager.GetActualFPS(); }
+
+    /**
+     * @brief Get the target (max) FPS
+     *
+     * @return f32 Target FPS
+     */
+    inline f32 GetTargetFPS() const { return m_FPSManager.GetTargetFPS(); }
+
+    /**
+     * @brief Set the target (max) FPS
+     *
+     * @param fps Target FPS
+     */
+    inline void SetTargetFPS(f32 fps) { m_FPSManager.SetTargetFPS(fps); }
+
+   public:
+    /*** EventManager proxy ***/
+
+    /**
+     * @brief Fire a custom event
+     *
+     * @param event The event to be fired, derived from Event
+     * @return true If the event was handled
+     * @return false It the event was not handled
+     */
+    inline bool FireEvent(Event &&event) {
+        return m_EventManager.FireEvent(std::move(event));
+    }
+
+    /**
+     * @brief Register a event listener
+     *
+     * The provided function gets called every time an event occurs and it has
+     * to return true if the event was handled by it or false if it wasn't
+     *
+     * @param listener On event callback
+     * @return u32 Listener ID
+     */
+    inline u32 RegisterEventListener(std::function<bool(Event &)> listener) {
+        return m_EventManager.RegisterListener(listener);
+    }
+
+    /**
+     * @brief Unregister a event listener by ID
+     *
+     * @param id The listener ID (provided at listener's registration)
+     */
+    inline void UnregisterEventListener(u32 id) {
+        m_EventManager.UnregisterListener(id);
+    }
+
+    /**
+     * @brief Register a event listener for a specific event type
+     *
+     * The provided function will be called on every event of the specified type
+     * and it has to return true if the event was handled by it or false if it
+     * wasn't
+     *
+     * @tparam T The event type
+     * @param listener On event callback
+     * @return u32 Listener ID
+     */
+    template <typename T>
+    inline u32 RegisterEventListenerFor(std::function<bool(T &)> listener) {
+        return m_EventManager.RegisterListenerForEventType<T>(listener);
+    }
+
    private:
     bool isRunning = false;
     void Frame(f32);
-    Renderer *GetRenderer();
 
    private:
-    EventHandler m_EventHandler;
+    EventManager m_EventManager;
     Window m_Window;
     AssetManager m_AssetManager;
     EntityManager m_EntityManager;
@@ -230,5 +319,6 @@ class Application {
     friend class Entity;
     friend class EntityManager;
     friend class AssetManager;
+    friend class Input;
 };
 }  // namespace BillyEngine

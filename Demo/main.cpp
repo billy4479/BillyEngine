@@ -31,12 +31,11 @@ int main() {
                                                   app.GetFont("JetBrainsMono"));
     auto& t = e.GetComponent<BillyEngine::Components::Transform>();
     t.Position = app.GetSize() / 2;
-    app.GetEventHandler()
-        .RegisterListenerForEventType<BillyEngine::WindowResizeEvent>(
-            [&](BillyEngine::WindowResizeEvent&) -> bool {
-                t.Position = app.GetSize() / 2;
-                return false;
-            });
+    app.RegisterEventListenerFor<BillyEngine::WindowResizeEvent>(
+        [&](BillyEngine::WindowResizeEvent&) -> bool {
+            t.Position = app.GetSize() / 2;
+            return false;
+        });
 
     t.Anchor = BillyEngine::CenterPoint::CENTER_CENTER;
 

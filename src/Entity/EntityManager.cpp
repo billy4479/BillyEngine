@@ -32,10 +32,10 @@ void EntityManager::Update(f32 delta) {
                 if (label.m_Texture == nullptr) {
                     BE_ASSERT(label.m_Font != nullptr);
                     label.m_Texture =
-                        m_Application->GetRenderer()->RenderTextToTexture(
+                        m_Application->m_Renderer.RenderTextToTexture(
                             label.m_Content, label.m_Font, label.m_Color);
                 }
-                m_Application->GetRenderer()->DrawTexture(label.m_Texture, t);
+                m_Application->m_Renderer.DrawTexture(label.m_Texture, t);
             });
     }
     {
@@ -47,8 +47,8 @@ void EntityManager::Update(f32 delta) {
 #ifdef DEBUG
                 if (sprite.GetTexture() != nullptr)
 #endif
-                    m_Application->GetRenderer()->DrawTexture(
-                        sprite.GetTexture(), t, sprite.Tint);
+                    m_Application->m_Renderer.DrawTexture(sprite.GetTexture(),
+                                                          t, sprite.Tint);
 #ifdef DEBUG
                 else
                     BE_CORE_WARN("Not drawing since the texture is null");

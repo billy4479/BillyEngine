@@ -4,7 +4,7 @@
 #include "../Core/Common.hpp"
 #include "../Core/Logger.hpp"
 #include "../Event/Event.hpp"
-#include "../Event/EventHandler.hpp"
+#include "../Event/EventManager.hpp"
 #include "Entity.hpp"
 
 namespace BillyEngine {
@@ -73,14 +73,8 @@ class ScriptableEntity {
     EntityLog Log;
     Application& App;
 
-    template <typename T>
-    inline u32 RegisterEventListener(std::function<bool(T&)> listener) {
-        return m_EventManager.RegisterListenerForEventType<T>(listener);
-    }
-
    private:
     Entity m_Entity;
-    EventHandler& m_EventManager;
 };
 
 }  // namespace BillyEngine

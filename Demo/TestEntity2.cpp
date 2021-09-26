@@ -5,7 +5,7 @@ void TestEntity2::OnCreate() {
     auto &t = GetComponent<BillyEngine::Components::Transform>();
     t.Position = {App.GetSize().x - 10, 5};
 
-    RegisterEventListener<BillyEngine::WindowResizeEvent>(
+    App.RegisterEventListenerFor<BillyEngine::WindowResizeEvent>(
         [&](BillyEngine::WindowResizeEvent &) -> bool {
             GetComponent<BillyEngine::Components::Transform>().Position = {
                 App.GetSize().x - 10, 5};

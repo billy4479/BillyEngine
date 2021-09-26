@@ -1,7 +1,5 @@
 #include "Renderer.hpp"
 
-#include <algorithm>
-
 #include "../Wrappers/Font.hpp"
 #include "../Wrappers/Texture.hpp"
 #include "DrawableTexture.hpp"

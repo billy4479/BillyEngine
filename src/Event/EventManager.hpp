@@ -1,17 +1,13 @@
 #pragma once
 
-#include <functional>
-
 #include "../Core/Common.hpp"
 #include "Event.hpp"
 #include "KeyCodes.hpp"
 
 namespace BillyEngine {
 class Application;
-class EventHandler {
+class EventManager {
    public:
-    explicit EventHandler(Application*);
-
     void RegisterBeforeUpdateHook(std::function<void()>);
     bool FireEvent(Event&&);
 
@@ -30,6 +26,10 @@ class EventHandler {
     }
 
    private:
+    explicit EventManager(Application*);
+    Application* m_Application;
+    friend Application;
+
     void HandleSDLEvent(const SDL_Event&);
 
     void HandleEvents();
@@ -37,8 +37,5 @@ class EventHandler {
     std::map<u32, std::function<bool(Event&)>> m_Listeners;
     std::vector<std::function<void()>> m_BeforeUpdateHooks;
     u32 m_NextListenerID = 0;
-
-    Application* m_Application;
-    friend Application;
 };
 }  // namespace BillyEngine

@@ -1,7 +1,5 @@
 #include "FPSManager.hpp"
 
-#include <thread>
-
 #include "Logger.hpp"
 
 namespace BillyEngine {

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <ostream>
-
 #include "../Core/Common.hpp"
 
 namespace BillyEngine {

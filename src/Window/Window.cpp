@@ -1,7 +1,7 @@
 #include "Window.hpp"
 
 #include "../Application.hpp"
-#include "../Event/EventHandler.hpp"
+#include "../Event/EventManager.hpp"
 #include "../Event/WindowEvent.hpp"
 
 namespace BillyEngine {
@@ -20,18 +20,16 @@ Window::Window(std::string_view title, glm::ivec2 size,
 
     BE_CHECK_SDL_ERROR_AND_DIE();
 
-    application->GetEventHandler()
-        .RegisterListenerForEventType<WindowLostFocusEvent>(
-            [this](WindowLostFocusEvent &) -> bool {
-                m_Focus = false;
-                return false;
-            });
-    application->GetEventHandler()
-        .RegisterListenerForEventType<WindowFocusEvent>(
-            [this](WindowFocusEvent &) -> bool {
-                m_Focus = true;
-                return false;
-            });
+    application->RegisterEventListenerFor<WindowLostFocusEvent>(
+        [this](WindowLostFocusEvent &) -> bool {
+            m_Focus = false;
+            return false;
+        });
+    application->RegisterEventListenerFor<WindowFocusEvent>(
+        [this](WindowFocusEvent &) -> bool {
+            m_Focus = true;
+            return false;
+        });
 }
 
 Window::~Window() {

@@ -1,4 +1,4 @@
-#include "EventHandler.hpp"
+#include "EventManager.hpp"
 
 #include "../Application.hpp"
 #include "Event.hpp"
@@ -7,13 +7,13 @@
 #include "WindowEvent.hpp"
 
 namespace BillyEngine {
-EventHandler::EventHandler(Application* application)
+EventManager::EventManager(Application* application)
     : m_Application(application) {
     BE_ASSERT(m_Application != nullptr);
 
     RegisterListenerForEventType<WindowCloseEvent>(
         [this](WindowCloseEvent&) -> bool {
-            m_Application->AskToStop();
+            m_Application->Stop();
             return true;
         });
 }
@@ -36,7 +36,7 @@ constexpr static MouseButton ConvertMouseButton(u8 button) {
     }
 }
 
-void EventHandler::HandleSDLEvent(const SDL_Event& event) {
+void EventManager::HandleSDLEvent(const SDL_Event& event) {
     BE_PROFILE_FUNCTION();
     switch (event.type) {
         case SDL_QUIT:
@@ -114,7 +114,7 @@ void EventHandler::HandleSDLEvent(const SDL_Event& event) {
     }
 }
 
-void EventHandler::HandleEvents() {
+void EventManager::HandleEvents() {
     BE_PROFILE_FUNCTION();
 
     for (auto hook : m_BeforeUpdateHooks) hook();
@@ -130,18 +130,18 @@ void EventHandler::HandleEvents() {
     }
 }
 
-void EventHandler::RegisterBeforeUpdateHook(std::function<void()> hook) {
+void EventManager::RegisterBeforeUpdateHook(std::function<void()> hook) {
     m_BeforeUpdateHooks.push_back(hook);
 }
 
-u32 EventHandler::RegisterListener(std::function<bool(Event&)> callback) {
+u32 EventManager::RegisterListener(std::function<bool(Event&)> callback) {
     m_Listeners[m_NextListenerID] = callback;
     return ++m_NextListenerID;
 }
 
-void EventHandler::UnregisterListener(u32 id) { m_Listeners.erase(id); }
+void EventManager::UnregisterListener(u32 id) { m_Listeners.erase(id); }
 
-bool EventHandler::FireEvent(Event&& e) {
+bool EventManager::FireEvent(Event&& e) {
     auto& event = e;
 
     for (auto listener : m_Listeners) {

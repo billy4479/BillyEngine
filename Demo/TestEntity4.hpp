@@ -10,7 +10,7 @@ class TestEntity4 : public BillyEngine::ScriptableEntity {
         AddComponent<BillyEngine::Components::Sprite>(
             t->FinalizeAndGetTexture());
 
-        RegisterEventListener<BillyEngine::MouseButtonPressedEvent>(
+        App.RegisterEventListenerFor<BillyEngine::MouseButtonPressedEvent>(
             [this](auto& e) -> bool {
                 switch (e.Button) {
                     case BillyEngine::MouseButton::Left:
@@ -30,7 +30,7 @@ class TestEntity4 : public BillyEngine::ScriptableEntity {
                 }
                 return true;
             });
-        RegisterEventListener<BillyEngine::MouseButtonReleasedEvent>(
+        App.RegisterEventListenerFor<BillyEngine::MouseButtonReleasedEvent>(
             [this](auto&) -> bool {
                 GetComponent<BillyEngine::Components::Sprite>().Tint =
                     BillyEngine::Color::white;
