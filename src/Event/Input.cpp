@@ -41,7 +41,7 @@ void Input::Bind(Application* application) {
     BE_ASSERT(s_Application == nullptr);
     s_Application = application;
     s_Application->RegisterEventListener(EventHandler);
-    s_Application->m_EventManager.RegisterBeforeUpdateHook(Swap);
+    s_Application->m_EventManager->RegisterBeforeUpdateHook(Swap);
 }
 
 bool Input::EventHandler(Event& e) {

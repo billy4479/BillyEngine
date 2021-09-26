@@ -4,7 +4,7 @@
 #include "Event.hpp"
 #include "KeyboardEvent.hpp"
 #include "MouseEvents.hpp"
-#include "WindowEvent.hpp"
+#include "WindowEvents.hpp"
 
 namespace BillyEngine {
 EventManager::EventManager(Application* application)

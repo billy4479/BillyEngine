@@ -1,7 +1,6 @@
 #include "Application.hpp"
 
 #include "Components/Components.hpp"
-#include "Components/ScriptComponent.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
 #include "Core/FPSManager.hpp"
@@ -22,17 +21,18 @@ namespace BillyEngine {
 Application::Application(std::string_view title, glm::ivec2 size,
                          bool resizable, bool fullscreen,
                          const std::filesystem::path& assetsPath)
-    : m_EventManager(this),
-      m_Window(title, size, this),
-      m_AssetManager(assetsPath),
-      m_EntityManager(this),
-      m_Renderer(m_Window.m_Window) {
+    : m_EventManager(new EventManager(this)),
+      m_Window(CreateScope<Window>(title, size, this)),
+      m_AssetManager(CreateScope<AssetManager>(assetsPath)),
+      m_EntityManager(CreateScope<EntityManager>(this)),
+      m_Renderer(CreateScope<Renderer>(m_Window->m_Window)),
+      m_FPSManager(CreateScope<FPSManager>()) {
     BE_PROFILE_FUNCTION();
     Logger::Init();
     Input::Bind(this);
 
-    m_Window.SetResizable(resizable);
-    m_Window.SetFullScreen(fullscreen);
+    m_Window->SetResizable(resizable);
+    m_Window->SetFullScreen(fullscreen);
 }
 
 Application::~Application() = default;
@@ -44,11 +44,11 @@ void Application::Run() {
     isRunning = true;
 
     while (isRunning) {
-        m_FPSManager.StartFrame();
+        m_FPSManager->StartFrame();
 
-        Frame(m_FPSManager.GetElapsed());
+        Frame(m_FPSManager->GetElapsed());
 
-        m_FPSManager.EndFrameAndWait();
+        m_FPSManager->EndFrameAndWait();
     }
     BE_CORE_INFO("Quitting...");
 }
@@ -58,84 +58,86 @@ void Application::Stop() { isRunning = false; }
 void Application::Frame(f32 delta) {
     BE_PROFILE_FUNCTION();
 
-    m_Renderer.Clear();
-    m_EventManager.HandleEvents();
-    m_EventManager.FireEvent(BeforeScriptsEvent(delta));
-    m_EntityManager.Update(delta);
-    m_EventManager.FireEvent(AfterScriptsEvent(delta));
-    m_Renderer.RenderToScreen();
+    m_Renderer->Clear();
+    m_EventManager->HandleEvents();
+    m_EventManager->FireEvent(BeforeScriptsEvent(delta));
+    m_EntityManager->Update(delta);
+    m_EventManager->FireEvent(AfterScriptsEvent(delta));
+    m_Renderer->RenderToScreen();
 }
 
 // Proxies
 
 Ref<DrawableTexture> Application::CreateDrawableTexture(glm::ivec2 size) {
-    return CreateRef<DrawableTexture>(m_Renderer.CreateDrawableTexture(size));
+    return CreateRef<DrawableTexture>(m_Renderer->CreateDrawableTexture(size));
 }
 
 Entity Application::CreateEntity(const std::string& name) {
-    return m_EntityManager.CreateEntity(name);
+    return m_EntityManager->CreateEntity(name);
 }
 
 void Application::DestroyEntity(Entity entity) {
-    m_EntityManager.DestroyEntity(entity);
+    m_EntityManager->DestroyEntity(entity);
 }
 
 void Application::SetAssetFolder(const std::filesystem::path& path) {
-    m_AssetManager.SetAssetFolder(path);
+    m_AssetManager->SetAssetFolder(path);
 }
 
 std::filesystem::path Application::GetAssetFolder() {
-    return m_AssetManager.GetAssetFolder();
+    return m_AssetManager->GetAssetFolder();
 }
 
 Ref<Font> Application::LoadFont(const std::filesystem::path& path,
                                 const std::string& name, u32 size) {
-    return m_AssetManager.LoadFont(path, name, size);
+    return m_AssetManager->LoadFont(path, name, size);
 }
 
 Ref<Font> Application::GetFont(const std::string& name) {
-    return m_AssetManager.GetFont(name);
+    return m_AssetManager->GetFont(name);
 }
 
 Ref<Surface> Application::LoadImage(const std::filesystem::path& path,
                                     const std::string name) {
-    return m_AssetManager.LoadImage(path, name);
+    return m_AssetManager->LoadImage(path, name);
 }
 
 Ref<Surface> Application::GetImage(const std::string& name) {
-    return m_AssetManager.GetImage(name);
+    return m_AssetManager->GetImage(name);
 }
 
-const glm::ivec2 Application::GetSize() const { return m_Window.GetSize(); }
+const glm::ivec2 Application::GetSize() const { return m_Window->GetSize(); }
 
-void Application::SetTitle(std::string_view title) { m_Window.SetTitle(title); }
+void Application::SetTitle(std::string_view title) {
+    m_Window->SetTitle(title);
+}
 
 void Application::SetResizable(bool resizable) {
-    m_Window.SetResizable(resizable);
+    m_Window->SetResizable(resizable);
 }
 
 void Application::SetFullscreen(bool fullscreen) {
-    m_Window.SetFullScreen(fullscreen);
+    m_Window->SetFullScreen(fullscreen);
 }
 
-bool Application::IsResizable() const { return m_Window.IsResizable(); }
+bool Application::IsResizable() const { return m_Window->IsResizable(); }
 
-bool Application::IsFullscreen() const { return m_Window.IsFullScreen(); }
+bool Application::IsFullscreen() const { return m_Window->IsFullScreen(); }
 
-bool Application::HasFocus() const { return m_Window.HasFocus(); }
+bool Application::HasFocus() const { return m_Window->HasFocus(); }
 
-f32 Application::GetFPS() const { return m_FPSManager.GetActualFPS(); }
+f32 Application::GetFPS() const { return m_FPSManager->GetActualFPS(); }
 
-f32 Application::GetTargetFPS() const { return m_FPSManager.GetTargetFPS(); }
+f32 Application::GetTargetFPS() const { return m_FPSManager->GetTargetFPS(); }
 
-void Application::SetTargetFPS(f32 fps) { m_FPSManager.SetTargetFPS(fps); }
+void Application::SetTargetFPS(f32 fps) { m_FPSManager->SetTargetFPS(fps); }
 
 bool Application::FireEvent(Event&& event) {
-    return m_EventManager.FireEvent(std::move(event));
+    return m_EventManager->FireEvent(std::move(event));
 }
 
 u32 Application::RegisterEventListener(std::function<bool(Event&)> listener) {
-    return m_EventManager.RegisterListener(listener);
+    return m_EventManager->RegisterListener(listener);
 }
 
 }  // namespace BillyEngine

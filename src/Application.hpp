@@ -3,17 +3,18 @@
 #define SDL_MAIN_HANDLED
 
 #include "Components/ScriptComponent.hpp"
-#include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
-#include "Core/FPSManager.hpp"
 #include "Entity/Entity.hpp"
-#include "Entity/EntityManager.hpp"
 #include "Event/EventManager.hpp"
-#include "Rendering/Renderer.hpp"
-#include "Window/Window.hpp"
+#include "Wrappers/Fwd.hpp"
 
 namespace BillyEngine {
 class DrawableTexture;
+class AssetManager;
+class FPSManager;
+class EntityManager;
+class Renderer;
+class Window;
 class Application {
    public:
     Application(std::string_view title = "BillyEngine",
@@ -273,7 +274,7 @@ class Application {
      */
     template <typename T>
     inline u32 RegisterEventListenerFor(std::function<bool(T &)> listener) {
-        return m_EventManager.RegisterListenerForEventType<T>(listener);
+        return m_EventManager->RegisterListenerForEventType<T>(listener);
     }
 
    private:
@@ -283,12 +284,12 @@ class Application {
         const std::string &name = "");
 
    private:
-    EventManager m_EventManager;
-    Window m_Window;
-    AssetManager m_AssetManager;
-    EntityManager m_EntityManager;
-    Renderer m_Renderer;
-    FPSManager m_FPSManager;
+    Scope<EventManager> m_EventManager;
+    Scope<Window> m_Window;
+    Scope<AssetManager> m_AssetManager;
+    Scope<EntityManager> m_EntityManager;
+    Scope<Renderer> m_Renderer;
+    Scope<FPSManager> m_FPSManager;
 
     friend class Entity;
     friend class EntityManager;

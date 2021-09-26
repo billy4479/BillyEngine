@@ -1,10 +1,7 @@
 #pragma once
 
-#include "../Components/ScriptComponent.hpp"
 #include "../Core/Common.hpp"
 #include "../Core/Logger.hpp"
-#include "../Event/Event.hpp"
-#include "../Event/EventManager.hpp"
 #include "Entity.hpp"
 
 namespace BillyEngine {

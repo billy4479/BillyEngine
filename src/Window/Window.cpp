@@ -2,7 +2,7 @@
 
 #include "../Application.hpp"
 #include "../Event/EventManager.hpp"
-#include "../Event/WindowEvent.hpp"
+#include "../Event/WindowEvents.hpp"
 
 namespace BillyEngine {
 Window::Window(std::string_view title, glm::ivec2 size,
