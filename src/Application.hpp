@@ -8,11 +8,9 @@
 #include "Core/FPSManager.hpp"
 #include "Entity/Entity.hpp"
 #include "Entity/EntityManager.hpp"
-#include "Entity/ScriptableEntity.hpp"
 #include "Event/EventManager.hpp"
 #include "Rendering/Renderer.hpp"
 #include "Window/Window.hpp"
-#include "Wrappers/Fwd.hpp"
 
 namespace BillyEngine {
 class DrawableTexture;
@@ -64,8 +62,8 @@ class Application {
      */
     template <typename T, typename... Args>
     T &CreateScriptableEntity(const std::string &name = "", Args &&...args) {
-        static_assert(std::is_base_of<ScriptableEntity, T>(),
-                      "T must be derived from ScriptableEntity");
+        // static_assert(std::is_base_of<ScriptableEntity, T>(),
+        //               "T must be derived from ScriptableEntity");
         auto e = CreateEntity(name);
         auto &sc = e.AddComponent<Components::Script>();
         sc.Bind<T, Args...>(e, std::forward<Args>(args)...);
@@ -78,18 +76,14 @@ class Application {
      * @param name The name of the new Entity (tag component)
      * @return The created entity
      */
-    inline Entity CreateEntity(const std::string &name = "") {
-        return m_EntityManager.CreateEntity(name);
-    }
+    Entity CreateEntity(const std::string &name = "");
 
     /**
      * @brief Destroy an Entity
      *
      * @param entity The Entity to destroy
      */
-    inline void DestroyEntity(Entity entity) {
-        m_EntityManager.DestroyEntity(entity);
-    }
+    void DestroyEntity(Entity entity);
 
    public:
     /*** AssetManager proxy ***/
@@ -104,9 +98,7 @@ class Application {
      *
      * @param path The path to the folder (can be relative or absolute)
      */
-    inline void SetAssetFolder(const std::filesystem::path &path) {
-        m_AssetManager.SetAssetFolder(path);
-    }
+    void SetAssetFolder(const std::filesystem::path &path);
 
     /**
      * @brief Get the asset folder path
@@ -116,9 +108,7 @@ class Application {
      *
      * @return std::filesystem::path The current assets path
      */
-    inline std::filesystem::path GetAssetFolder() {
-        return m_AssetManager.GetAssetFolder();
-    }
+    std::filesystem::path GetAssetFolder();
 
     /**
      * @brief Load a TTF font
@@ -130,10 +120,8 @@ class Application {
      * @param size The size in pt
      * @return TTF_Font* The loaded font
      */
-    inline Ref<Font> LoadFont(const std::filesystem::path &path,
-                              const std::string &name, u32 size) {
-        return m_AssetManager.LoadFont(path, name, size);
-    }
+    Ref<Font> LoadFont(const std::filesystem::path &path,
+                       const std::string &name, u32 size);
 
     /**
      * @brief Get a font loaded previously using `LoadFont`
@@ -141,9 +129,7 @@ class Application {
      * @param name The name used when the font was loaded
      * @return TTF_Font* The font
      */
-    inline Ref<Font> GetFont(const std::string &name) {
-        return m_AssetManager.GetFont(name);
-    }
+    Ref<Font> GetFont(const std::string &name);
 
     // TODO: maybe return a DrawableTexture?
 
@@ -154,10 +140,8 @@ class Application {
      * @param name The name this image will have
      * @return SDL_Surface* A surface containing the loaded image data
      */
-    inline Ref<Surface> LoadImage(const std::filesystem::path &path,
-                                  const std::string name) {
-        return m_AssetManager.LoadImage(path, name);
-    }
+    Ref<Surface> LoadImage(const std::filesystem::path &path,
+                           const std::string name);
 
     /**
      * @brief Get a previously loaded image using `LoadImage`
@@ -165,9 +149,7 @@ class Application {
      * @param name The name used when the image was loaded
      * @return SDL_Surface* The image surface
      */
-    inline Ref<Surface> GetImage(const std::string &name) {
-        return m_AssetManager.GetImage(name);
-    }
+    Ref<Surface> GetImage(const std::string &name);
 
    public:
     /*** Window proxy ***/
@@ -177,32 +159,28 @@ class Application {
      *
      * @return const glm::ivec2 The window size
      */
-    inline const glm::ivec2 GetSize() const { return m_Window.GetSize(); }
+    const glm::ivec2 GetSize() const;
 
     /**
      * @brief Set the window title
      *
      * @param title The new title
      */
-    inline void SetTitle(std::string_view title) { m_Window.SetTitle(title); }
+    void SetTitle(std::string_view title);
 
     /**
      * @brief Set whether the window is resizable or not
      *
      * @param resizable If the window is resizable
      */
-    inline void SetResizable(bool resizable) {
-        m_Window.SetResizable(resizable);
-    }
+    void SetResizable(bool resizable);
 
     /**
      * @brief Set whether the window is fullscreen or not
      *
      * @param fullscreen If the window is fullscreen
      */
-    inline void SetFullscreen(bool fullscreen) {
-        m_Window.SetFullScreen(fullscreen);
-    }
+    void SetFullscreen(bool fullscreen);
 
     /**
      * @brief Check if the window is resizable
@@ -210,7 +188,7 @@ class Application {
      * @return true The window is resizable
      * @return false The window is not resizable
      */
-    inline bool IsResizable() const { return m_Window.IsResizable(); }
+    bool IsResizable() const;
 
     /**
      * @brief Check if the window is fullscreen
@@ -218,7 +196,7 @@ class Application {
      * @return true The window is fullscreen
      * @return false The window is not fullscreen
      */
-    inline bool IsFullscreen() const { return m_Window.IsFullScreen(); }
+    bool IsFullscreen() const;
 
     /**
      * @brief Check if the window has keyboard focus
@@ -226,7 +204,7 @@ class Application {
      * @return true The window has focus
      * @return false The window does not have focus
      */
-    inline bool HasFocus() const { return m_Window.HasFocus(); }
+    bool HasFocus() const;
 
    public:
     /*** FPSManager proxy ***/
@@ -236,21 +214,21 @@ class Application {
      *
      * @return f32 FPS
      */
-    inline f32 GetFPS() const { return m_FPSManager.GetActualFPS(); }
+    f32 GetFPS() const;
 
     /**
      * @brief Get the target (max) FPS
      *
      * @return f32 Target FPS
      */
-    inline f32 GetTargetFPS() const { return m_FPSManager.GetTargetFPS(); }
+    f32 GetTargetFPS() const;
 
     /**
      * @brief Set the target (max) FPS
      *
      * @param fps Target FPS
      */
-    inline void SetTargetFPS(f32 fps) { m_FPSManager.SetTargetFPS(fps); }
+    void SetTargetFPS(f32 fps);
 
    public:
     /*** EventManager proxy ***/
@@ -262,9 +240,7 @@ class Application {
      * @return true If the event was handled
      * @return false It the event was not handled
      */
-    inline bool FireEvent(Event &&event) {
-        return m_EventManager.FireEvent(std::move(event));
-    }
+    bool FireEvent(Event &&event);
 
     /**
      * @brief Register a event listener
@@ -275,18 +251,14 @@ class Application {
      * @param listener On event callback
      * @return u32 Listener ID
      */
-    inline u32 RegisterEventListener(std::function<bool(Event &)> listener) {
-        return m_EventManager.RegisterListener(listener);
-    }
+    u32 RegisterEventListener(std::function<bool(Event &)> listener);
 
     /**
      * @brief Unregister a event listener by ID
      *
      * @param id The listener ID (provided at listener's registration)
      */
-    inline void UnregisterEventListener(u32 id) {
-        m_EventManager.UnregisterListener(id);
-    }
+    void UnregisterEventListener(u32 id);
 
     /**
      * @brief Register a event listener for a specific event type
@@ -307,6 +279,8 @@ class Application {
    private:
     bool isRunning = false;
     void Frame(f32);
+    Components::Script &CreateScriptableEntityInternal(
+        const std::string &name = "");
 
    private:
     EventManager m_EventManager;

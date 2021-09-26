@@ -1,16 +1,21 @@
 #include "Application.hpp"
 
 #include "Components/Components.hpp"
+#include "Components/ScriptComponent.hpp"
 #include "Core/AssetManager.hpp"
 #include "Core/Common.hpp"
+#include "Core/FPSManager.hpp"
 #include "Core/Logger.hpp"
 #include "Debugging/Profiler.hpp"
 #include "Entity/Entity.hpp"
+#include "Entity/EntityManager.hpp"
 #include "Entity/ScriptableEntity.hpp"
 #include "Event/AppEvents.hpp"
+#include "Event/EventManager.hpp"
 #include "Event/Input.hpp"
 #include "Rendering/DrawableTexture.hpp"
 #include "Rendering/Renderer.hpp"
+#include "Window/Window.hpp"
 
 namespace BillyEngine {
 
@@ -61,8 +66,76 @@ void Application::Frame(f32 delta) {
     m_Renderer.RenderToScreen();
 }
 
+// Proxies
+
 Ref<DrawableTexture> Application::CreateDrawableTexture(glm::ivec2 size) {
     return CreateRef<DrawableTexture>(m_Renderer.CreateDrawableTexture(size));
+}
+
+Entity Application::CreateEntity(const std::string& name) {
+    return m_EntityManager.CreateEntity(name);
+}
+
+void Application::DestroyEntity(Entity entity) {
+    m_EntityManager.DestroyEntity(entity);
+}
+
+void Application::SetAssetFolder(const std::filesystem::path& path) {
+    m_AssetManager.SetAssetFolder(path);
+}
+
+std::filesystem::path Application::GetAssetFolder() {
+    return m_AssetManager.GetAssetFolder();
+}
+
+Ref<Font> Application::LoadFont(const std::filesystem::path& path,
+                                const std::string& name, u32 size) {
+    return m_AssetManager.LoadFont(path, name, size);
+}
+
+Ref<Font> Application::GetFont(const std::string& name) {
+    return m_AssetManager.GetFont(name);
+}
+
+Ref<Surface> Application::LoadImage(const std::filesystem::path& path,
+                                    const std::string name) {
+    return m_AssetManager.LoadImage(path, name);
+}
+
+Ref<Surface> Application::GetImage(const std::string& name) {
+    return m_AssetManager.GetImage(name);
+}
+
+const glm::ivec2 Application::GetSize() const { return m_Window.GetSize(); }
+
+void Application::SetTitle(std::string_view title) { m_Window.SetTitle(title); }
+
+void Application::SetResizable(bool resizable) {
+    m_Window.SetResizable(resizable);
+}
+
+void Application::SetFullscreen(bool fullscreen) {
+    m_Window.SetFullScreen(fullscreen);
+}
+
+bool Application::IsResizable() const { return m_Window.IsResizable(); }
+
+bool Application::IsFullscreen() const { return m_Window.IsFullScreen(); }
+
+bool Application::HasFocus() const { return m_Window.HasFocus(); }
+
+f32 Application::GetFPS() const { return m_FPSManager.GetActualFPS(); }
+
+f32 Application::GetTargetFPS() const { return m_FPSManager.GetTargetFPS(); }
+
+void Application::SetTargetFPS(f32 fps) { m_FPSManager.SetTargetFPS(fps); }
+
+bool Application::FireEvent(Event&& event) {
+    return m_EventManager.FireEvent(std::move(event));
+}
+
+u32 Application::RegisterEventListener(std::function<bool(Event&)> listener) {
+    return m_EventManager.RegisterListener(listener);
 }
 
 }  // namespace BillyEngine
