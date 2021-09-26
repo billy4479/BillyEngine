@@ -36,11 +36,41 @@ They provide some convenience function to interact with the `Application` or the
 
 ## Build
 
-This repository contains the source for the engine itself that gets compiled to a dynamic library and a little demo.
+This repository contains the source for the engine itself that gets compiled to a static library and a little demo.
 By default both are built but the demo can be disabled passing `-DCOMPILE_DEMO=OFF` to `cmake`.
 Using `-G Ninja` is recommended for faster build times.
+
+### Linux
+
+Linux is really easy, just install the needed dependencies and you are ready to go.
+On Arch based distros you can
+
+```sh
+sudo pacman -S sdl2 sdl2_image sdl2_ttf cmake base-devel
+```
+
+After you've cloned the repo, `cd` into it and run
 
 ```sh
 cmake -S . -B build
 cmake --build build
 ```
+
+### Windows
+
+On windows is a bit more complicated, you will need Visual Studio 2019 with C++ support enabled, CMake, vcpkg and Git.
+Follow the instructions on the [Github page](https://github.com/microsoft/vcpkg) and once you are setup run
+
+```sh
+vcpkg install sdl2 sdl2-image sdl2-ttf sdl2-image[libjpeg-turbo] --triplet=x64-windows --recurse
+```
+
+This will download and install SDL2 so that CMake will be able to find it.
+Clone the repo open a command prompt in the folder and run
+
+```sh
+cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=<vcpkg installation path>/scripts/buildsystems/vcpkg.cmake
+cmake --build build
+```
+
+You will have to insert the correct path in order to link correctly all the libs.

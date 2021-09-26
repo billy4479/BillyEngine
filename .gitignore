@@ -2,3 +2,5 @@ build
 .cache
 BillyEngine.log
 ProfilerResult.json
+.vs
+CMakeSettings.json

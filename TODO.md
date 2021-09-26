@@ -12,7 +12,7 @@
 ## Platform
 
 - [x] Linux
-- [ ] Windows
+- [x] Windows
 - [ ] OSX
 - [ ] WASM (?)
 

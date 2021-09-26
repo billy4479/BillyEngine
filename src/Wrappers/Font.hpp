@@ -4,7 +4,8 @@
 
 namespace BillyEngine {
 
-struct Font {
+class Font {
+  public:
     Font(std::filesystem::path path, i32 size);
     explicit Font(TTF_Font* font);
 

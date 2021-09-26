@@ -3,10 +3,10 @@
 #include "../Core/PlatformDetection.hpp"
 
 #ifdef DEBUG
-    #if defined(__has_builtin) && __has_builtin(__builtin_debugtrap)
-        #define BE_TRAP() __builtin_debugtrap()
-    #elif defined _WIN32
+    #if defined _WIN32
         #define BE_TRAP() __debugbreak()
+    #elif defined(__has_builtin) && __has_builtin(__builtin_debugtrap)
+        #define BE_TRAP() __builtin_debugtrap()
     #else
         #include <signal.h>
         #ifndef SIGTRAP

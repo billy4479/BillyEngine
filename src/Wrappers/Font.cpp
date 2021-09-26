@@ -2,7 +2,7 @@
 
 namespace BillyEngine {
 Font::Font(std::filesystem::path path, i32 size) {
-    m_Font = TTF_OpenFont(path.c_str(), size);
+    m_Font = TTF_OpenFont(path.string().c_str(), size);
     BE_CHECK_SDL_ERROR_AND_DIE();
     BE_ASSERT(m_Font != nullptr);
 }

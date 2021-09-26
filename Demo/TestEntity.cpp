@@ -19,7 +19,7 @@ void TestEntity::OnUpdate(f32 delta) {
     auto &t = GetComponent<BillyEngine::Components::Transform>();
     t.Rotation += speed * delta;
     GetComponent<BillyEngine::Components::Sprite>().Tint =
-        BillyEngine::Color::hsl(hue, 1, 0.5);
+        BillyEngine::Color::hsl((u16)hue, 1, 0.5);
 
     hue += u16(speed * delta);
     if (down)

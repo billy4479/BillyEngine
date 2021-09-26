@@ -19,7 +19,7 @@ f32 FPSManager::GetActualFPS() const {
     return (u32(100.0 / GetElapsed())) / 100.0f;
 }
 
-f32 FPSManager::GetElapsed() const { return m_Elapsed / 1000000.0; }
+f32 FPSManager::GetElapsed() const { return m_Elapsed / 1000000.0f; }
 
 void FPSManager::StartFrame() {
     m_StartFrame = std::chrono::time_point_cast<std::chrono::microseconds>(

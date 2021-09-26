@@ -44,12 +44,12 @@ void EventManager::HandleSDLEvent(const SDL_Event& event) {
             break;
 
         case SDL_KEYUP:
-            FireEvent(KeyReleasedEvent(event.key.keysym.scancode,
+            FireEvent(KeyReleasedEvent((Key::KeyCode)event.key.keysym.scancode,
                                        event.key.keysym.mod));
             break;
 
         case SDL_KEYDOWN:
-            FireEvent(KeyPressedEvent(event.key.keysym.scancode,
+            FireEvent(KeyPressedEvent((Key::KeyCode)event.key.keysym.scancode,
                                       event.key.keysym.mod));
             break;
 

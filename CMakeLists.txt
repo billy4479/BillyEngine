@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.18)
 
 project(BillyEngine LANGUAGES CXX VERSION 0.0.1)
 
@@ -6,14 +6,26 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2-cmake-modules)
 include(FetchContent)
 
 option(COMPILE_DEMO "Compile the demo program" ON)
 
+if(MSVC)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(sdl2-image CONFIG REQUIRED)
+find_package(sdl2-ttf CONFIG REQUIRED)
+
+add_library(SDL2::Main ALIAS SDL2::SDL2main)
+add_library(SDL2::Image ALIAS SDL2::SDL2_image)
+add_library(SDL2::TTF ALIAS SDL2::SDL2_ttf)
+
+else()
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2-cmake-modules)
+
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_image REQUIRED)
+endif()
 
 message(STATUS "Getting EnTT ready...")
 FetchContent_Declare(EnTT

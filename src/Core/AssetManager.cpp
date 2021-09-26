@@ -69,7 +69,7 @@ std::filesystem::path AssetManager::GetBasePath() {
 
 Ref<Surface> AssetManager::LoadImage(const std::filesystem::path &path,
                                      const std::string name) {
-    auto s = CreateRef<Surface>(IMG_Load(path.c_str()));
+    auto s = CreateRef<Surface>(IMG_Load(path.string().c_str()));
 
     [[maybe_unused]] auto result = m_Surfaces.emplace(name, s);
     BE_ASSERT(result.second);
