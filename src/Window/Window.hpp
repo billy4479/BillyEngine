@@ -4,9 +4,10 @@
 
 namespace BillyEngine {
 class Application;
+struct AppConfig;
 class Window {
    public:
-    Window(std::string_view title, glm::ivec2 size, Application*);
+    Window(const AppConfig&, Application*);
     ~Window();
 
     BE_NON_COPY_CONSTRUCTIBLE(Window)
@@ -17,15 +18,16 @@ class Window {
     bool IsResizable() const;
     void SetFullScreen(bool);
     bool IsFullScreen() const;
+    void SetBorderless(bool);
+    bool IsBorderless() const;
+    void GetFocus() const;
+    bool HasFocus() const;
 
     const glm::ivec2 GetSize() const;
-    bool HasFocus() const;
 
    private:
     SDL_Window* m_Window = nullptr;
-    bool m_Resizable = true;
-    bool m_Fullscreen = false;
-    bool m_Focus = true;
+    Application* m_App = nullptr;
 
     friend class Application;
 };

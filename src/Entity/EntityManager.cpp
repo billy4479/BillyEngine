@@ -2,6 +2,7 @@
 
 #include "../Application.hpp"
 #include "../Components/Components.hpp"
+#include "../Rendering/Renderer.hpp"
 
 namespace BillyEngine {
 EntityManager::EntityManager(Application *application)

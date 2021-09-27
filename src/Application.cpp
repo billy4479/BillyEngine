@@ -5,6 +5,7 @@
 #include "Core/Common.hpp"
 #include "Core/FPSManager.hpp"
 #include "Core/Logger.hpp"
+#include "Debugging/Assert.hpp"
 #include "Debugging/Profiler.hpp"
 #include "Entity/Entity.hpp"
 #include "Entity/EntityManager.hpp"
@@ -18,24 +19,26 @@
 
 namespace BillyEngine {
 
-Application::Application(std::string_view title, glm::ivec2 size,
-                         bool resizable, bool fullscreen,
-                         const std::filesystem::path& assetsPath)
-    : m_EventManager(new EventManager(this)),
-      m_Window(CreateScope<Window>(title, size, this)),
-      m_AssetManager(CreateScope<AssetManager>(assetsPath)),
-      m_EntityManager(CreateScope<EntityManager>(this)),
-      m_Renderer(CreateScope<Renderer>(m_Window->m_Window)),
-      m_FPSManager(CreateScope<FPSManager>()) {
-    BE_PROFILE_FUNCTION();
-    Logger::Init();
-    Input::Bind(this);
+Application* Application::s_Instance = nullptr;
 
-    m_Window->SetResizable(resizable);
-    m_Window->SetFullScreen(fullscreen);
+Application::Application(const AppConfig& appConfig) {
+    BE_PROFILE_FUNCTION();
+    if (s_Instance != nullptr) BE_ABORT();
+    s_Instance = this;
+
+    Logger::Init();
+
+    m_EventManager = Scope<EventManager>(new EventManager(this));
+    m_Window = CreateScope<Window>(appConfig, this);
+    m_AssetManager = CreateScope<AssetManager>(appConfig.AssetsPath);
+    m_EntityManager = CreateScope<EntityManager>(this);
+    m_Renderer = CreateScope<Renderer>(m_Window->m_Window);
+    m_FPSManager = CreateScope<FPSManager>();
+
+    Input::Bind(this);
 }
 
-Application::~Application() = default;
+Application::~Application() { s_Instance = nullptr; }
 
 void Application::Run() {
     BE_PROFILE_FUNCTION();
@@ -125,6 +128,14 @@ bool Application::IsResizable() const { return m_Window->IsResizable(); }
 bool Application::IsFullscreen() const { return m_Window->IsFullScreen(); }
 
 bool Application::HasFocus() const { return m_Window->HasFocus(); }
+
+void Application::GetFocus() { m_Window->GetFocus(); }
+
+bool Application::IsBorderless() const { return m_Window->IsBorderless(); }
+
+void Application::SetBorderless(bool borderless) {
+    m_Window->SetBorderless(borderless);
+}
 
 f32 Application::GetFPS() const { return m_FPSManager->GetActualFPS(); }
 

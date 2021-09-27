@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Core/Aliases.hpp"
 #define SDL_MAIN_HANDLED
 
 #include "Components/ScriptComponent.hpp"
@@ -15,13 +16,23 @@ class FPSManager;
 class EntityManager;
 class Renderer;
 class Window;
+
+struct AppConfig {
+    std::string_view Title = "BillyEngine";
+    glm::ivec2 Size = {1280, 720};
+    bool Resizable = true;
+    bool Fullscreen = false;
+    bool Maximized = false;
+    bool Borderless = false;
+    std::filesystem::path AssetsPath = "";
+};
+
 class Application {
    public:
-    Application(std::string_view title = "BillyEngine",
-                glm::ivec2 size = {1280, 720}, bool resizable = true,
-                bool fullscreen = false,
-                const std::filesystem::path &assetsPath = "");
+    Application(const AppConfig & = AppConfig());
     ~Application();
+
+    BE_NON_COPY_CONSTRUCTIBLE(Application)
 
    public:
     /**
@@ -207,6 +218,26 @@ class Application {
      */
     bool HasFocus() const;
 
+    /**
+     * @brief Raise the window abothe the other and get input focus
+     *
+     */
+    void GetFocus();
+
+    /**
+     * @brief Check if the window is borderless
+     *
+     * @return true If the window is borderless
+     * @return false If the window is not borderless
+     */
+    bool IsBorderless() const;
+
+    /**
+     * @brief Set whether the window is borderless or not
+     *
+     */
+    void SetBorderless(bool);
+
    public:
     /*** FPSManager proxy ***/
 
@@ -280,8 +311,6 @@ class Application {
    private:
     bool isRunning = false;
     void Frame(f32);
-    Components::Script &CreateScriptableEntityInternal(
-        const std::string &name = "");
 
    private:
     Scope<EventManager> m_EventManager;
@@ -290,6 +319,8 @@ class Application {
     Scope<EntityManager> m_EntityManager;
     Scope<Renderer> m_Renderer;
     Scope<FPSManager> m_FPSManager;
+
+    static Application *s_Instance;
 
     friend class Entity;
     friend class EntityManager;

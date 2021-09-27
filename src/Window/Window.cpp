@@ -5,8 +5,8 @@
 #include "../Event/WindowEvents.hpp"
 
 namespace BillyEngine {
-Window::Window(std::string_view title, glm::ivec2 size,
-               Application *application) {
+Window::Window(const AppConfig &appConfig, Application *application)
+    : m_App(application) {
     BE_PROFILE_FUNCTION();
 
     if (SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO))
@@ -15,21 +15,18 @@ Window::Window(std::string_view title, glm::ivec2 size,
     if (IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) == 0)
         throw std::runtime_error("SDL_image failed to initialize.");
 
-    m_Window = SDL_CreateWindow(title.data(), SDL_WINDOWPOS_UNDEFINED,
-                                SDL_WINDOWPOS_UNDEFINED, size.x, size.y, 0);
+    u32 flags = 0;
+
+    if (appConfig.Fullscreen) flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    if (appConfig.Resizable) flags |= SDL_WINDOW_RESIZABLE;
+    if (appConfig.Borderless) flags |= SDL_WINDOW_BORDERLESS;
+    if (appConfig.Maximized) flags |= SDL_WINDOW_MAXIMIZED;
+
+    m_Window = SDL_CreateWindow(appConfig.Title.data(), SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_UNDEFINED, appConfig.Size.x,
+                                appConfig.Size.y, flags);
 
     BE_CHECK_SDL_ERROR_AND_DIE();
-
-    application->RegisterEventListenerFor<WindowLostFocusEvent>(
-        [this](WindowLostFocusEvent &) -> bool {
-            m_Focus = false;
-            return false;
-        });
-    application->RegisterEventListenerFor<WindowFocusEvent>(
-        [this](WindowFocusEvent &) -> bool {
-            m_Focus = true;
-            return false;
-        });
 }
 
 Window::~Window() {
@@ -47,17 +44,34 @@ void Window::SetTitle(std::string_view title) {
 
 void Window::SetResizable(bool resizable) {
     SDL_SetWindowResizable(m_Window, SDL_bool(resizable));
-    m_Resizable = resizable;
 }
 
-bool Window::IsResizable() const { return m_Resizable; }
+bool Window::IsResizable() const {
+    return SDL_GetWindowFlags(m_Window) & SDL_WINDOW_RESIZABLE;
+}
 
 void Window::SetFullScreen(bool fullscreen) {
-    SDL_SetWindowFullscreen(m_Window, fullscreen ? SDL_WINDOW_FULLSCREEN : 0);
-    m_Fullscreen = fullscreen;
+    SDL_SetWindowFullscreen(m_Window,
+                            fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0);
+    if (fullscreen != IsFullScreen()) {
+        auto size = GetSize();
+        m_App->FireEvent(WindowResizeEvent(size.x, size.y));
+    }
 }
 
-bool Window::IsFullScreen() const { return m_Fullscreen; }
+bool Window::IsFullScreen() const {
+    return SDL_GetWindowFlags(m_Window) & SDL_WINDOW_FULLSCREEN_DESKTOP;
+}
+
+void Window::SetBorderless(bool borderless) {
+    SDL_SetWindowBordered(m_Window, SDL_bool(!borderless));
+}
+
+bool Window::IsBorderless() const {
+    return SDL_GetWindowFlags(m_Window) & SDL_WINDOW_BORDERLESS;
+}
+
+void Window::GetFocus() const { SDL_RaiseWindow(m_Window); }
 
 const glm::ivec2 Window::GetSize() const {
     i32 w, h;
@@ -65,6 +79,8 @@ const glm::ivec2 Window::GetSize() const {
     return {w, h};
 }
 
-bool Window::HasFocus() const { return m_Focus; }
+bool Window::HasFocus() const {
+    return SDL_GetWindowFlags(m_Window) & SDL_WINDOW_INPUT_FOCUS;
+}
 
 }  // namespace BillyEngine

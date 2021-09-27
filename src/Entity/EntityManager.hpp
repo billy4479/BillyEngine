@@ -1,9 +1,6 @@
 #pragma once
 
-// #include "../Components/ScriptComponent.hpp"
 #include "../Core/Common.hpp"
-#include "../Rendering/Renderer.hpp"
-// #include "Entity.hpp"
 
 namespace BillyEngine {
 class Application;
