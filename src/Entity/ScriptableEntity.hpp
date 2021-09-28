@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../Components/ScriptComponent.hpp"
 #include "../Core/Common.hpp"
 #include "../Core/Logger.hpp"
 #include "Entity.hpp"
@@ -44,8 +45,18 @@ class ScriptableEntity {
 
     Components::Transform& Transform();
     Components::Tag& Tag();
+    const UUID ID();
 
-    //    protected:
+    Entity FindEntityByID(UUID);
+    Entity FindEntityByTag(std::string_view);
+
+    template <typename T, typename... Args>
+    T& CreateScriptableEntity(const std::string& name = "", Args&&... args) {
+        auto e = m_Entity.m_EntityManager->CreateEntity(name);
+        auto& sc = e.AddComponent<Components::Script>();
+        sc.Bind<T, Args...>(e, std::forward<Args>(args)...);
+        return *sc.GetInstanceOrFail<T>();
+    }
 
     void OnCreate() {}
     void OnUpdate(f32) {}

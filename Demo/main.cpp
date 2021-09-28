@@ -1,5 +1,6 @@
 #include <BillyEngine.hpp>
 
+#include "Spawner.hpp"
 #include "TestEntity.hpp"
 #include "TestEntity2.hpp"
 #include "TestEntity3.hpp"
@@ -17,16 +18,7 @@ int main() {
     app.CreateScriptableEntity<TestEntity>();
     app.CreateScriptableEntity<TestEntity2>();
     app.CreateScriptableEntity<TestEntity4>();
-    auto& e1 = app.CreateScriptableEntity<TestEntity3>();
-    auto& e2 = app.CreateScriptableEntity<TestEntity3>();
-    auto& e3 = app.CreateScriptableEntity<TestEntity3>();
-    e1.color = BillyEngine::Color::red;
-    e2.color = BillyEngine::Color::blue;
-    e3.color = BillyEngine::Color::green;
-
-    e1.Transform().Position = {100, 500};
-    e2.Transform().Position = {210, 500};
-    e3.Transform().Position = {320, 500};
+    app.CreateScriptableEntity<Spawner>();
 
     auto e = app.CreateEntity();
     e.AddComponent<BillyEngine::Components::Text>("BillyEngine!",

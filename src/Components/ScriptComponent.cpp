@@ -10,6 +10,7 @@ Script::Script(Script&& other) noexcept {
     this->OnUpdate = other.OnUpdate;
     this->OnDestroy = other.OnDestroy;
     this->GetInstanceAsVoidPtr = other.GetInstanceAsVoidPtr;
+    this->WasOnCreateCalled = other.WasOnCreateCalled;
 
     other.DestroyInstance = nullptr;
     other.OnCreate = nullptr;
@@ -26,6 +27,7 @@ Script& Script::operator=(Script&& other) noexcept {
         this->OnUpdate = other.OnUpdate;
         this->OnDestroy = other.OnDestroy;
         this->GetInstanceAsVoidPtr = other.GetInstanceAsVoidPtr;
+        this->WasOnCreateCalled = other.WasOnCreateCalled;
 
         other.DestroyInstance = nullptr;
         other.OnCreate = nullptr;

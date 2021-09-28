@@ -70,6 +70,7 @@ Entity EntityManager::CreateEntity(const std::string &name) {
         n = name;
     }
 
+    e.AddComponent<Components::ID>();
     e.AddComponent<Components::Tag>(name);
     e.AddComponent<Components::Transform>();
 

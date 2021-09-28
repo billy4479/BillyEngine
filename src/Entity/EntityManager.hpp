@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Core/Common.hpp"
+#include "../Core/UUID.hpp"
 
 namespace BillyEngine {
 class Application;
@@ -15,6 +16,9 @@ class EntityManager {
     void Update(f32 delta);
     Entity CreateEntity(const std::string &name);
     void DestroyEntity(Entity entity);
+
+    Entity FindEntityByID(UUID);
+    Entity FindEntityByTag(std::string_view);
 
    private:
     entt::registry m_Registry;
