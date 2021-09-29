@@ -26,13 +26,13 @@ class ScriptManager {
         // BE_ASSERT(m_Entity.HasComponent<T>());
 
         auto create = [](Entity e, std::function<void(Entity)> next) {
-            e.GetComponent<T>().OnCreate();
+            if (e.HasComponent<T>()) e.GetComponent<T>().OnCreate();
             next(e);
         };
 
         auto update = [](Entity e, std::function<void(Entity, f32)> next,
                          f32 delta) {
-            e.GetComponent<T>().OnUpdate(delta);
+            if (e.HasComponent<T>()) e.GetComponent<T>().OnUpdate(delta);
             next(e, delta);
         };
 
