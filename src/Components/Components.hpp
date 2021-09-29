@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IDComponent.hpp"
-#include "ScriptComponent.hpp"
+#include "ScriptManagerComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "TagComponent.hpp"
 #include "TextComponent.hpp"

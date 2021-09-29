@@ -1,7 +1,7 @@
-#include "TestEntity.hpp"
+#include "SpinningQuad.hpp"
 
-void TestEntity::OnCreate() {
-    texture = App.CreateDrawableTexture({100, 100});
+void SpinningQuad::OnCreate() {
+    texture = App().CreateDrawableTexture({100, 100});
     texture->Clear(BillyEngine::Color::white);
     texture->Finalize();
 
@@ -11,7 +11,7 @@ void TestEntity::OnCreate() {
     t.Rotation = 0;
 }
 
-void TestEntity::OnUpdate(f32 delta) {
+void SpinningQuad::OnUpdate(f32 delta) {
     if (BillyEngine::Input::KeyDown(BillyEngine::Key::Space)) paused = !paused;
 
     if (paused) return;

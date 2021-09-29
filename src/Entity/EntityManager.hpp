@@ -29,6 +29,6 @@ class EntityManager {
 
     friend class Application;
     friend class Entity;
-    friend class ScriptableEntity;
+    friend class EntityBehavior;
 };
 }  // namespace BillyEngine

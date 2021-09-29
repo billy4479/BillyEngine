@@ -7,11 +7,11 @@
 // https://fmt.dev/latest/api.html#format-api
 template <>
 struct fmt::formatter<BillyEngine::Color> {
-    char presentation = 'd';
-    bool useHashTag = false;
+    char presentation = 'x';
+    bool useHashTag = true;
 
-    static constexpr std::string_view xHash = "{:#010x}";
-    static constexpr std::string_view XHash = "{:#010X}";
+    static constexpr std::string_view xHash = "#{:010x}";
+    static constexpr std::string_view XHash = "#{:010X}";
     static constexpr std::string_view x = "{:010x}";
     static constexpr std::string_view X = "{:010X}";
     static constexpr std::string_view d =
@@ -54,7 +54,7 @@ struct fmt::formatter<BillyEngine::Color> {
                     return format_to(ctx.out(), X, (u32)c);
                 case 'd':
                 default:
-                    return format_to(ctx.out(), d, (u32)c);
+                    return format_to(ctx.out(), d, c.r, c.g, c.b, c.a);
             }
         }
     }

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../Components/ScriptComponent.hpp"
+#include "../Components/ScriptManagerComponent.hpp"
 #include "../Core/Common.hpp"
 #include "../Core/Logger.hpp"
+#include "../Core/UUID.hpp"
 #include "Entity.hpp"
 
 namespace BillyEngine {
@@ -11,17 +12,20 @@ namespace Components {
 class Transform;
 class Tag;
 }  // namespace Components
+class Application;
 
-class ScriptableEntity {
+class EntityBehavior {
    public:
-    ScriptableEntity(entt::entity handle, EntityManager*);
-    ScriptableEntity(Entity e);
+    EntityBehavior(entt::entity handle, EntityManager*);
+    EntityBehavior(Entity e);
 
-    virtual ~ScriptableEntity() = default;
+    virtual ~EntityBehavior() = default;
 
     void Destroy();
+    void Destroy(Entity);
 
     inline operator u32() const { return (u32)m_Entity; }
+    inline operator Entity() const { return m_Entity; }
 
     template <typename T, typename... Args>
     inline T& AddComponent(Args&&... args) {
@@ -43,18 +47,33 @@ class ScriptableEntity {
         return m_Entity.GetComponent<T>();
     }
 
+    template <typename T>
+    const inline T& GetComponent() const {
+        return m_Entity.GetComponent<T>();
+    }
+
     Components::Transform& Transform();
+    const Components::Transform& Transform() const;
     Components::Tag& Tag();
-    const UUID ID();
+    const Components::Tag& Tag() const;
+    const UUID ID() const;
 
     Entity FindEntityByID(UUID);
     Entity FindEntityByTag(std::string_view);
 
-    void OnCreate() {}
-    void OnUpdate(f32) {}
-    void OnDestroy() {}
+    virtual void OnCreate() {}
+    virtual void OnUpdate(f32) {}
 
    protected:
+    template <typename T>
+    void Bind() {
+        if (!HasComponent<Components::ScriptManager>())
+            AddComponent<Components::ScriptManager>(m_Entity)
+                .RegisterScript<T>();
+        else
+            GetComponent<Components::ScriptManager>().RegisterScript<T>();
+    }
+
     struct EntityLog {
 #define LOG_FN(name, scope)                      \
     template <typename... Args>                  \
@@ -71,7 +90,7 @@ class ScriptableEntity {
 #undef LOG_FN
     };
     EntityLog Log;
-    Application& App;
+    Application& App() const noexcept;
 
    private:
     Entity m_Entity;
@@ -79,6 +98,7 @@ class ScriptableEntity {
 
 }  // namespace BillyEngine
 
-#define SCRIPTABLE_ENTITY(className)                                       \
-    className(BillyEngine::Entity e) : BillyEngine::ScriptableEntity(e) {} \
-    BE_NON_COPY_CONSTRUCTIBLE(className)
+#define SCRIPTABLE_ENTITY(className)                                    \
+    className(BillyEngine::Entity e) : BillyEngine::EntityBehavior(e) { \
+        Bind<className>();                                              \
+    }

@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(${PROJECT_NAME} main.cpp TestEntity.cpp TestEntity2.cpp)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src DEMO_SOURCES)
+add_executable(${PROJECT_NAME} ${DEMO_SOURCES})
 target_link_libraries(${PROJECT_NAME} PRIVATE BillyEngine)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
