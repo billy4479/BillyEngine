@@ -1,6 +1,6 @@
-#include "TestEntity2.hpp"
+#include "FPSCounter.hpp"
 
-void TestEntity2::OnCreate() {
+void FPSCounter::OnCreate() {
     AddComponent<BillyEngine::Components::Text>("", App().GetFont("OpenSans"));
     auto &t = GetComponent<BillyEngine::Components::Transform>();
     t.Position = {App().GetSize().x - 10, 5};
@@ -15,7 +15,7 @@ void TestEntity2::OnCreate() {
     t.Anchor = BillyEngine::CenterPoint::TOP_RIGHT;
 }
 
-void TestEntity2::OnUpdate(f32) {
+void FPSCounter::OnUpdate(f32) {
     std::stringstream ss;
     ss << "FPS: " << App().GetFPS();
 

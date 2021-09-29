@@ -2,9 +2,9 @@
 
 #include <BillyEngine.hpp>
 
-class TestEntity2 : public BillyEngine::EntityBehavior {
+class FPSCounter : public BillyEngine::EntityBehavior {
    public:
-    SCRIPTABLE_ENTITY(TestEntity2)
+    SCRIPTABLE_ENTITY(FPSCounter)
 
     void OnCreate() override;
     void OnUpdate(f32) override;

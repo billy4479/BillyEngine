@@ -22,11 +22,19 @@ void EntityBehavior::Destroy(Entity e) {
     m_Entity.m_EntityManager->DestroyEntity(e);
 }
 
+const Components::Transform& EntityBehavior::Transform() const {
+    return GetComponent<Components::Transform>();
+}
+
 Components::Transform& EntityBehavior::Transform() {
     return GetComponent<Components::Transform>();
 }
 
 Components::Tag& EntityBehavior::Tag() {
+    return GetComponent<Components::Tag>();
+}
+
+const Components::Tag& EntityBehavior::Tag() const {
     return GetComponent<Components::Tag>();
 }
 

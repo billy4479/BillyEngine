@@ -53,7 +53,9 @@ class EntityBehavior {
     }
 
     Components::Transform& Transform();
+    const Components::Transform& Transform() const;
     Components::Tag& Tag();
+    const Components::Tag& Tag() const;
     const UUID ID() const;
 
     Entity FindEntityByID(UUID);

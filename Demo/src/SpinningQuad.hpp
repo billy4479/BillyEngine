@@ -2,9 +2,9 @@
 
 #include <BillyEngine.hpp>
 
-class TestEntity : public BillyEngine::EntityBehavior {
+class SpinningQuad : public BillyEngine::EntityBehavior {
    public:
-    SCRIPTABLE_ENTITY(TestEntity)
+    SCRIPTABLE_ENTITY(SpinningQuad)
     Ref<BillyEngine::DrawableTexture> texture;
     f32 hue = 0;
     f32 speed = 10;
