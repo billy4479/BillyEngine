@@ -2,7 +2,7 @@
 
 #include <BillyEngine.hpp>
 
-class TestEntity : public BillyEngine::ScriptableEntity {
+class TestEntity : public BillyEngine::EntityBehavior {
    public:
     SCRIPTABLE_ENTITY(TestEntity)
     Ref<BillyEngine::DrawableTexture> texture;

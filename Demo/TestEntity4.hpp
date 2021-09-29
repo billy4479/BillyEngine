@@ -1,6 +1,6 @@
 #include <BillyEngine.hpp>
 
-class TestEntity4 : public BillyEngine::ScriptableEntity {
+class TestEntity4 : public BillyEngine::EntityBehavior {
    public:
     SCRIPTABLE_ENTITY(TestEntity4)
 

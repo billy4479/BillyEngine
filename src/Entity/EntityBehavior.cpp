@@ -1,4 +1,4 @@
-#include "ScriptableEntity.hpp"
+#include "EntityBehavior.hpp"
 
 #include "../Application.hpp"
 #include "../Components/IDComponent.hpp"
@@ -8,37 +8,37 @@
 
 namespace BillyEngine {
 
-ScriptableEntity::ScriptableEntity(entt::entity handle, EntityManager* em)
+EntityBehavior::EntityBehavior(entt::entity handle, EntityManager* em)
     : App(*em->m_Application), m_Entity(handle, em) {}
 
-ScriptableEntity::ScriptableEntity(Entity e)
+EntityBehavior::EntityBehavior(Entity e)
     : App(*e.m_EntityManager->m_Application), m_Entity(e) {}
 
-void ScriptableEntity::Destroy() {
+void EntityBehavior::Destroy() {
     m_Entity.m_EntityManager->DestroyEntity(m_Entity);
 }
 
-void ScriptableEntity::Destroy(Entity e) {
+void EntityBehavior::Destroy(Entity e) {
     m_Entity.m_EntityManager->DestroyEntity(e);
 }
 
-Components::Transform& ScriptableEntity::Transform() {
+Components::Transform& EntityBehavior::Transform() {
     return GetComponent<Components::Transform>();
 }
 
-Components::Tag& ScriptableEntity::Tag() {
+Components::Tag& EntityBehavior::Tag() {
     return GetComponent<Components::Tag>();
 }
 
-const UUID ScriptableEntity::ID() {
+const UUID EntityBehavior::ID() {
     return static_cast<UUID>(GetComponent<Components::ID>());
 }
 
-Entity ScriptableEntity::FindEntityByID(UUID id) {
+Entity EntityBehavior::FindEntityByID(UUID id) {
     return m_Entity.m_EntityManager->FindEntityByID(id);
 }
 
-Entity ScriptableEntity::FindEntityByTag(std::string_view tag) {
+Entity EntityBehavior::FindEntityByTag(std::string_view tag) {
     return m_Entity.m_EntityManager->FindEntityByTag(tag);
 }
 

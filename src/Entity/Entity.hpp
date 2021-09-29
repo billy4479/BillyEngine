@@ -55,6 +55,6 @@ class Entity {
     entt::entity m_Handle{entt::null};
     EntityManager* m_EntityManager = nullptr;
 
-    friend class ScriptableEntity;
+    friend class EntityBehavior;
 };
 }  // namespace BillyEngine

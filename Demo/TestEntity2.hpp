@@ -2,7 +2,7 @@
 
 #include <BillyEngine.hpp>
 
-class TestEntity2 : public BillyEngine::ScriptableEntity {
+class TestEntity2 : public BillyEngine::EntityBehavior {
    public:
     SCRIPTABLE_ENTITY(TestEntity2)
 

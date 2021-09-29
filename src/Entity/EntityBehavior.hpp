@@ -12,12 +12,12 @@ class Transform;
 class Tag;
 }  // namespace Components
 
-class ScriptableEntity {
+class EntityBehavior {
    public:
-    ScriptableEntity(entt::entity handle, EntityManager*);
-    ScriptableEntity(Entity e);
+    EntityBehavior(entt::entity handle, EntityManager*);
+    EntityBehavior(Entity e);
 
-    virtual ~ScriptableEntity() = default;
+    virtual ~EntityBehavior() = default;
 
     void Destroy();
     void Destroy(Entity);
@@ -52,9 +52,9 @@ class ScriptableEntity {
     Entity FindEntityByID(UUID);
     Entity FindEntityByTag(std::string_view);
 
-    void OnCreate() {}
-    void OnUpdate(f32) {}
-    void OnDestroy() {}
+    virtual void OnCreate() {}
+    virtual void OnUpdate(f32) {}
+    virtual void OnDestroy() {}
 
    protected:
     struct EntityLog {
@@ -81,6 +81,6 @@ class ScriptableEntity {
 
 }  // namespace BillyEngine
 
-#define SCRIPTABLE_ENTITY(className)                                       \
-    className(BillyEngine::Entity e) : BillyEngine::ScriptableEntity(e) {} \
+#define SCRIPTABLE_ENTITY(className)                                     \
+    className(BillyEngine::Entity e) : BillyEngine::EntityBehavior(e) {} \
     BE_NON_COPY_CONSTRUCTIBLE(className)

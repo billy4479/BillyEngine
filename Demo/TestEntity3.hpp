@@ -2,7 +2,7 @@
 
 #include <BillyEngine.hpp>
 
-class TestEntity3 : public BillyEngine::ScriptableEntity {
+class TestEntity3 : public BillyEngine::EntityBehavior {
    public:
     SCRIPTABLE_ENTITY(TestEntity3)
     BillyEngine::Color color = BillyEngine::Color::white;
