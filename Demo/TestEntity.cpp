@@ -1,7 +1,7 @@
 #include "TestEntity.hpp"
 
 void TestEntity::OnCreate() {
-    texture = App.CreateDrawableTexture({100, 100});
+    texture = App().CreateDrawableTexture({100, 100});
     texture->Clear(BillyEngine::Color::white);
     texture->Finalize();
 

@@ -6,10 +6,10 @@ class Spawner : public BillyEngine::EntityBehavior {
    public:
     SCRIPTABLE_ENTITY(Spawner)
 
-    void OnCreate() {
-        auto &e1 = App.CreateScriptableEntity<TestEntity3>("Quad 1");
-        auto &e2 = App.CreateScriptableEntity<TestEntity3>("Quad 2");
-        auto &e3 = App.CreateScriptableEntity<TestEntity3>("Quad 3");
+    void OnCreate() override {
+        auto &e1 = App().CreateEntityAndAddBehavior<TestEntity3>("Quad 1");
+        auto &e2 = App().CreateEntityAndAddBehavior<TestEntity3>("Quad 2");
+        auto &e3 = App().CreateEntityAndAddBehavior<TestEntity3>("Quad 3");
         e1.color = BillyEngine::Color::red;
         e2.color = BillyEngine::Color::blue;
         e3.color = BillyEngine::Color::green;

@@ -15,10 +15,10 @@ int main() {
     app.LoadFont("JetBrains Mono Regular Nerd Font Complete Mono.ttf",
                  "JetBrainsMono", 34);
 
-    app.CreateScriptableEntity<TestEntity>();
-    app.CreateScriptableEntity<TestEntity2>();
-    app.CreateScriptableEntity<TestEntity4>();
-    app.CreateScriptableEntity<Spawner>();
+    app.CreateEntityAndAddBehavior<TestEntity>();
+    app.CreateEntityAndAddBehavior<TestEntity2>();
+    app.CreateEntityAndAddBehavior<TestEntity4>();
+    app.CreateEntityAndAddBehavior<Spawner>();
 
     auto e = app.CreateEntity();
     e.AddComponent<BillyEngine::Components::Text>("BillyEngine!",

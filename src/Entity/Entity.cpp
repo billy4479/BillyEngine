@@ -6,6 +6,6 @@
 namespace BillyEngine {
 
 Entity::Entity(entt::entity handle, EntityManager* em)
-    : m_Handle(handle), m_EntityManager(em) {}
+    : m_Handle(handle), m_Registry(&em->m_Registry), m_EntityManager(em) {}
 
 }  // namespace BillyEngine

@@ -15,12 +15,12 @@ void EntityManager::Update(f32 delta) {
 
     {
         BE_PROFILE_SCOPE("Scripts");
-        m_Registry.view<Components::Script>().each(
-            [&](Components::Script &script) {
-                if (!script.WasOnCreateCalled) script.OnCreate(&script);
+        m_Registry.view<Components::ScriptManager>().each(
+            [&](Components::ScriptManager &sm) {
+                sm.CreateAll();
                 HandleDestruction();
 
-                script.OnUpdate(&script, delta);
+                sm.UpdateAll(delta);
                 HandleDestruction();
             });
     }

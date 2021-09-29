@@ -5,12 +5,12 @@ class TestEntity4 : public BillyEngine::EntityBehavior {
     SCRIPTABLE_ENTITY(TestEntity4)
 
     void OnCreate() {
-        auto t = App.CreateDrawableTexture({50, 50});
+        auto t = App().CreateDrawableTexture({50, 50});
         t->Clear(BillyEngine::Color::white);
         AddComponent<BillyEngine::Components::Sprite>(
             t->FinalizeAndGetTexture());
 
-        App.RegisterEventListenerFor<BillyEngine::MouseButtonPressedEvent>(
+        App().RegisterEventListenerFor<BillyEngine::MouseButtonPressedEvent>(
             [this](auto& e) -> bool {
                 switch (e.Button) {
                     case BillyEngine::MouseButton::Left:
@@ -30,7 +30,7 @@ class TestEntity4 : public BillyEngine::EntityBehavior {
                 }
                 return true;
             });
-        App.RegisterEventListenerFor<BillyEngine::MouseButtonReleasedEvent>(
+        App().RegisterEventListenerFor<BillyEngine::MouseButtonReleasedEvent>(
             [this](auto&) -> bool {
                 GetComponent<BillyEngine::Components::Sprite>().Tint =
                     BillyEngine::Color::white;

@@ -7,9 +7,9 @@ class TestEntity3 : public BillyEngine::EntityBehavior {
     SCRIPTABLE_ENTITY(TestEntity3)
     BillyEngine::Color color = BillyEngine::Color::white;
 
-    void OnCreate() {
+    void OnCreate() override {
         Log.Debug("Created {} with color {}", Tag().Name, color);
-        auto dt = App.CreateDrawableTexture({100, 100});
+        auto dt = App().CreateDrawableTexture({100, 100});
         dt->Clear(BillyEngine::Color::white);
         dt->Finalize();
         AddComponent<BillyEngine::Components::Sprite>(dt, color);

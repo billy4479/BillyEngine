@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../Components/ScriptComponent.hpp"
+#include "../Components/ScriptManagerComponent.hpp"
 #include "../Core/Common.hpp"
 #include "../Core/Logger.hpp"
+#include "../Core/UUID.hpp"
 #include "Entity.hpp"
 
 namespace BillyEngine {
@@ -11,6 +12,7 @@ namespace Components {
 class Transform;
 class Tag;
 }  // namespace Components
+class Application;
 
 class EntityBehavior {
    public:
@@ -45,18 +47,31 @@ class EntityBehavior {
         return m_Entity.GetComponent<T>();
     }
 
+    template <typename T>
+    const inline T& GetComponent() const {
+        return m_Entity.GetComponent<T>();
+    }
+
     Components::Transform& Transform();
     Components::Tag& Tag();
-    const UUID ID();
+    const UUID ID() const;
 
     Entity FindEntityByID(UUID);
     Entity FindEntityByTag(std::string_view);
 
     virtual void OnCreate() {}
     virtual void OnUpdate(f32) {}
-    virtual void OnDestroy() {}
 
    protected:
+    template <typename T>
+    void Bind() {
+        if (!HasComponent<Components::ScriptManager>())
+            AddComponent<Components::ScriptManager>(m_Entity)
+                .RegisterScript<T>();
+        else
+            GetComponent<Components::ScriptManager>().RegisterScript<T>();
+    }
+
     struct EntityLog {
 #define LOG_FN(name, scope)                      \
     template <typename... Args>                  \
@@ -73,7 +88,7 @@ class EntityBehavior {
 #undef LOG_FN
     };
     EntityLog Log;
-    Application& App;
+    Application& App() const noexcept;
 
    private:
     Entity m_Entity;
@@ -81,6 +96,7 @@ class EntityBehavior {
 
 }  // namespace BillyEngine
 
-#define SCRIPTABLE_ENTITY(className)                                     \
-    className(BillyEngine::Entity e) : BillyEngine::EntityBehavior(e) {} \
-    BE_NON_COPY_CONSTRUCTIBLE(className)
+#define SCRIPTABLE_ENTITY(className)                                    \
+    className(BillyEngine::Entity e) : BillyEngine::EntityBehavior(e) { \
+        Bind<className>();                                              \
+    }

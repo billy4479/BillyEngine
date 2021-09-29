@@ -8,10 +8,10 @@ class TestEntity : public BillyEngine::EntityBehavior {
     Ref<BillyEngine::DrawableTexture> texture;
     f32 hue = 0;
     f32 speed = 10;
-    const f32 maxSpeed = 300;
+    static constexpr f32 maxSpeed = 300;
     bool down = false;
     bool paused = false;
 
-    void OnCreate();
-    void OnUpdate(f32 delta);
+    void OnCreate() override;
+    void OnUpdate(f32 delta) override;
 };

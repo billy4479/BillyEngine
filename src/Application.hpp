@@ -2,7 +2,6 @@
 
 #define SDL_MAIN_HANDLED
 
-#include "Components/ScriptComponent.hpp"
 #include "Core/Common.hpp"
 #include "Entity/Entity.hpp"
 #include "Event/EventManager.hpp"
@@ -59,33 +58,18 @@ class Application {
     /*** EntityManager proxy ***/
 
     /**
-     * @brief Create a Scriptable Entity
-     *
-     * @note
-     * T must implement `void OnCreate()`, `void OnUpdate(f32)` and
-     * `void OnDestroy()`
-     *
-     * @tparam T The type of the Scriptable Entity
-     * @tparam Args The types of parameters for the constructor of T, deduced
-     * @param name The name of the new entity (tag component)
-     * @param args Other parameters for the constructor of T
-     * @return The created Entity
-     */
-    template <typename T, typename... Args>
-    T &CreateScriptableEntity(const std::string &name = "", Args &&...args) {
-        auto e = CreateEntity(name);
-        auto &sc = e.AddComponent<Components::Script>();
-        sc.Bind<T, Args...>(e, std::forward<Args>(args)...);
-        return *sc.GetInstanceOrFail<T>();
-    }
-
-    /**
      * @brief Create a new Entity
      *
      * @param name The name of the new Entity (tag component)
      * @return The created entity
      */
     Entity CreateEntity(const std::string &name = "");
+
+    template <typename T>
+    inline T &CreateEntityAndAddBehavior(const std::string &name = "") {
+        auto e = CreateEntity(name);
+        return e.AddComponent<T>(e);
+    }
 
     /**
      * @brief Destroy an Entity
