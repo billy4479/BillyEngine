@@ -55,9 +55,14 @@ class Entity {
         return m_Registry->get<T>(m_Handle);
     }
 
+    bool IsNull() const {
+        return m_Handle == entt::null || m_Registry == nullptr ||
+               m_EntityManager == nullptr;
+    }
+
    private:
     entt::entity m_Handle{entt::null};
-    entt::registry* m_Registry;
+    entt::registry* m_Registry = nullptr;
     EntityManager* m_EntityManager = nullptr;
 
     friend class EntityBehavior;

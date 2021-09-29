@@ -5,4 +5,5 @@ class Spawner : public BillyEngine::EntityBehavior {
     SCRIPTABLE_ENTITY(Spawner)
 
     void OnCreate() override;
+    void OnUpdate(f32) override {}
 };

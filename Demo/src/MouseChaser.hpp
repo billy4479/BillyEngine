@@ -5,6 +5,5 @@ class MouseChaser : public BillyEngine::EntityBehavior {
     SCRIPTABLE_ENTITY(MouseChaser)
 
     void OnCreate() override;
-
     void OnUpdate(f32) override;
 };

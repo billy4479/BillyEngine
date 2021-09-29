@@ -9,4 +9,6 @@ class PrintName : public BillyEngine::EntityBehavior {
     void OnCreate() override {
         Log.Debug("Heyy I'm new! My name is {}", Tag().Name);
     }
+
+    void OnUpdate(f32) override {}
 };

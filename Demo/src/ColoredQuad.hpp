@@ -8,4 +8,5 @@ class ColoredQuad : public BillyEngine::EntityBehavior {
     BillyEngine::Color color = BillyEngine::Color::white;
 
     void OnCreate() override;
+    void OnUpdate(f32) override {}
 };

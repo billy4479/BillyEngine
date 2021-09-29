@@ -65,6 +65,13 @@ class Application {
      */
     Entity CreateEntity(const std::string &name = "");
 
+    /**
+     * @brief Create a Entity and adds a EntityBehavior
+     *
+     * @tparam T the type of the EntityBehavior
+     * @param name The name of the new Entity (tag component)
+     * @return T& The created EntityBehavior instance
+     */
     template <typename T>
     inline T &CreateEntityAndAddBehavior(const std::string &name = "") {
         auto e = CreateEntity(name);
