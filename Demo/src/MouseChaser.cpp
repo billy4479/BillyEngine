@@ -9,15 +9,15 @@ void MouseChaser::OnCreate() {
         [this](auto& e) -> bool {
             switch (e.Button) {
                 case BillyEngine::MouseButton::Left:
-                    GetComponent<BillyEngine::Components::Sprite>().Tint =
+                    GetComponentM<BillyEngine::Components::Sprite>().Tint =
                         BillyEngine::Color::green;
                     break;
                 case BillyEngine::MouseButton::Right:
-                    GetComponent<BillyEngine::Components::Sprite>().Tint =
+                    GetComponentM<BillyEngine::Components::Sprite>().Tint =
                         BillyEngine::Color::red;
                     break;
                 case BillyEngine::MouseButton::Middle:
-                    GetComponent<BillyEngine::Components::Sprite>().Tint =
+                    GetComponentM<BillyEngine::Components::Sprite>().Tint =
                         BillyEngine::Color::blue;
                     break;
                 default:
@@ -27,14 +27,14 @@ void MouseChaser::OnCreate() {
         });
     App().RegisterEventListenerFor<BillyEngine::MouseButtonReleasedEvent>(
         [this](auto&) -> bool {
-            GetComponent<BillyEngine::Components::Sprite>().Tint =
+            GetComponentM<BillyEngine::Components::Sprite>().Tint =
                 BillyEngine::Color::white;
             return true;
         });
 
-    Transform().Anchor = BillyEngine::CenterPoint::CENTER_CENTER;
-    Transform().zIndex = 1;
+    TransformM().Anchor = BillyEngine::CenterPoint::CENTER_CENTER;
+    TransformM().zIndex = 1;
 }
 void MouseChaser::OnUpdate(f32) {
-    Transform().Position = BillyEngine::Input::GetMousePosition();
+    TransformM().Position = BillyEngine::Input::GetMousePosition();
 }

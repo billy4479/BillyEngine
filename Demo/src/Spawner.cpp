@@ -16,9 +16,9 @@ void Spawner::OnCreate() {
     e2.color = BillyEngine::Color::blue;
     e3.color = BillyEngine::Color::green;
 
-    e1.Transform().Position = {100, 500};
-    e2.Transform().Position = {210, 500};
-    e3.Transform().Position = {320, 500};
+    e1.TransformM().Position = {100, 500};
+    e2.TransformM().Position = {210, 500};
+    e3.TransformM().Position = {320, 500};
 
     Destroy();
 }

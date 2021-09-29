@@ -23,11 +23,11 @@ int main() {
         auto e = app.CreateEntity();
         e.AddComponent<BillyEngine::Components::Text>(
             "BillyEngine!", app.GetFont("JetBrainsMono"));
-        auto& t = e.GetComponent<BillyEngine::Components::Transform>();
+        auto& t = e.GetComponentM<BillyEngine::Components::Transform>();
         t.Position = app.GetSize() / 2;
         app.RegisterEventListenerFor<BillyEngine::WindowResizeEvent>(
             [&e, &app](BillyEngine::WindowResizeEvent&) -> bool {
-                auto& t = e.GetComponent<BillyEngine::Components::Transform>();
+                auto& t = e.GetComponentM<BillyEngine::Components::Transform>();
                 t.Position = app.GetSize() / 2;
                 return false;
             });

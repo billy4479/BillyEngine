@@ -80,8 +80,8 @@ class EntityBehavior {
      * @return T& The corresponding component
      */
     template <typename T>
-    inline T& GetComponent() {
-        return m_Entity.GetComponent<T>();
+    inline T& GetComponentM() {
+        return m_Entity.GetComponentM<T>();
     }
     /**
      * @copydoc GetComponent
@@ -96,7 +96,7 @@ class EntityBehavior {
      *
      * @return Components::Transform& The Transform component
      */
-    Components::Transform& Transform();
+    Components::Transform& TransformM();
     /**
      * @copydoc Transform
      */
@@ -107,7 +107,7 @@ class EntityBehavior {
      *
      * @return Components::Tag& The Tag component
      */
-    Components::Tag& Tag();
+    Components::Tag& TagM();
     /**
      * @copydoc Tag
      */
@@ -151,7 +151,7 @@ class EntityBehavior {
             AddComponent<Components::ScriptManager>(m_Entity)
                 .RegisterScript<T>();
         else
-            GetComponent<Components::ScriptManager>().RegisterScript<T>();
+            GetComponentM<Components::ScriptManager>().RegisterScript<T>();
     }
 
     struct EntityLog {

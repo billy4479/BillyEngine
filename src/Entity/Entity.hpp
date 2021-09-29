@@ -44,7 +44,7 @@ class Entity {
     }
 
     template <typename T>
-    T& GetComponent() {
+    T& GetComponentM() {
         BE_ASSERT(HasComponent<T>());
         return m_Registry->get<T>(m_Handle);
     }
@@ -52,7 +52,7 @@ class Entity {
     template <typename T>
     const T& GetComponent() const {
         BE_ASSERT(HasComponent<T>());
-        return m_Registry->get<T>(m_Handle);
+        return std::as_const(m_Registry)->get<T>(m_Handle);
     }
 
     bool IsNull() const {

@@ -6,7 +6,7 @@ void SpinningQuad::OnCreate() {
     texture->Finalize();
 
     AddComponent<BillyEngine::Components::Sprite>(texture);
-    auto &t = GetComponent<BillyEngine::Components::Transform>();
+    auto &t = TransformM();
     t.Position = {100, 100};
     t.Rotation = 0;
 }
@@ -16,9 +16,8 @@ void SpinningQuad::OnUpdate(f32 delta) {
 
     if (paused) return;
 
-    auto &t = GetComponent<BillyEngine::Components::Transform>();
-    t.Rotation += speed * delta;
-    GetComponent<BillyEngine::Components::Sprite>().Tint =
+    TransformM().Rotation += speed * delta;
+    GetComponentM<BillyEngine::Components::Sprite>().Tint =
         BillyEngine::Color::hsl((u16)hue, 1, 0.5);
 
     hue += u16(speed * delta);

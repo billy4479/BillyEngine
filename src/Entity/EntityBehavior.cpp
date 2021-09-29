@@ -23,19 +23,19 @@ void EntityBehavior::Destroy(Entity e) {
 }
 
 const Components::Transform& EntityBehavior::Transform() const {
-    return GetComponent<Components::Transform>();
+    return std::as_const(*this).GetComponent<Components::Transform>();
 }
 
-Components::Transform& EntityBehavior::Transform() {
-    return GetComponent<Components::Transform>();
+Components::Transform& EntityBehavior::TransformM() {
+    return GetComponentM<Components::Transform>();
 }
 
-Components::Tag& EntityBehavior::Tag() {
-    return GetComponent<Components::Tag>();
+Components::Tag& EntityBehavior::TagM() {
+    return GetComponentM<Components::Tag>();
 }
 
 const Components::Tag& EntityBehavior::Tag() const {
-    return GetComponent<Components::Tag>();
+    return std::as_const(*this).GetComponent<Components::Tag>();
 }
 
 const UUID EntityBehavior::ID() const {
