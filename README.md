@@ -1,5 +1,7 @@
 # Billy Engine
 
+[![Build Status](https://github.com/billy4479/BillyEngine/actions/workflows/build.yml/badge.svg)](https://github.com/billy4479/BillyEngine/actions/workflows/build.yml)
+
 Some kind of 2D game engine, written in C++17 using SDL2 and EnTT to be used in future projects.
 I wanted a simple entity framework to display some graphics in my C++ applications and here it is.
 It is not meant to be like Unreal / Unity / Godot,
