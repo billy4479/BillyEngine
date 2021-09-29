@@ -79,9 +79,8 @@ Entity EntityManager::FindEntityByID(UUID uuid) {
     auto view = m_Registry.view<Components::ID>();
 
     for (auto it = view.begin(); it != view.end(); it++) {
-        if (static_cast<UUID>(m_Registry.get<Components::ID>(*it)) == uuid) {
+        if (static_cast<UUID>(m_Registry.get<Components::ID>(*it)) == uuid)
             return Entity(*it, this);
-        }
     }
     return Entity(entt::null, this);
 }
@@ -90,18 +89,17 @@ Entity EntityManager::FindEntityByTag(std::string_view tag) {
     auto view = m_Registry.view<Components::Tag>();
 
     for (auto it = view.begin(); it != view.end(); it++) {
-        if (m_Registry.get<Components::Tag>(*it).Name == tag) {
+        if (m_Registry.get<Components::Tag>(*it).Name == tag)
             return Entity(*it, this);
-        }
     }
     return Entity(entt::null, this);
 }
 
 void EntityManager::HandleDestruction() noexcept {
-    for (auto e : m_DestructionQueue) {
-        m_Registry.destroy(e);
+    if (!m_DestructionQueue.empty()) {
+        for (auto e : m_DestructionQueue) m_Registry.destroy(e);
+        m_DestructionQueue.clear();
     }
-    m_DestructionQueue.clear();
 }
 
 }  // namespace BillyEngine

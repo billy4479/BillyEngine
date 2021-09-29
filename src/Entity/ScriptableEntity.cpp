@@ -18,6 +18,10 @@ void ScriptableEntity::Destroy() {
     m_Entity.m_EntityManager->DestroyEntity(m_Entity);
 }
 
+void ScriptableEntity::Destroy(Entity e) {
+    m_Entity.m_EntityManager->DestroyEntity(e);
+}
+
 Components::Transform& ScriptableEntity::Transform() {
     return GetComponent<Components::Transform>();
 }

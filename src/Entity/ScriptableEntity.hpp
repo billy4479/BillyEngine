@@ -20,8 +20,10 @@ class ScriptableEntity {
     virtual ~ScriptableEntity() = default;
 
     void Destroy();
+    void Destroy(Entity);
 
     inline operator u32() const { return (u32)m_Entity; }
+    inline operator Entity() const { return m_Entity; }
 
     template <typename T, typename... Args>
     inline T& AddComponent(Args&&... args) {
