@@ -50,14 +50,6 @@ class ScriptableEntity {
     Entity FindEntityByID(UUID);
     Entity FindEntityByTag(std::string_view);
 
-    template <typename T, typename... Args>
-    T& CreateScriptableEntity(const std::string& name = "", Args&&... args) {
-        auto e = m_Entity.m_EntityManager->CreateEntity(name);
-        auto& sc = e.AddComponent<Components::Script>();
-        sc.Bind<T, Args...>(e, std::forward<Args>(args)...);
-        return *sc.GetInstanceOrFail<T>();
-    }
-
     void OnCreate() {}
     void OnUpdate(f32) {}
     void OnDestroy() {}

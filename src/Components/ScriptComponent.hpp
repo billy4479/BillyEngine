@@ -2,6 +2,7 @@
 
 #include "../Core/Common.hpp"
 #include "../Entity/Entity.hpp"
+#include "IDComponent.hpp"
 
 namespace BillyEngine {
 
@@ -44,31 +45,31 @@ class Script {
         instance = new T(e, std::forward<Args>(args)...);
         BE_ASSERT(instance != nullptr);
 
-        DestroyInstance = [&, instance]() {
+        DestroyInstance = [instance](Script* f_This) {
             BE_ASSERT(instance != nullptr);
 
-            OnDestroy();
+            f_This->OnDestroy(f_This);
             delete instance;
         };
 
-        OnCreate = [&, instance]() {
+        OnCreate = [instance](Script* f_This) {
             BE_ASSERT(instance != nullptr);
 
             instance->OnCreate();
-            WasOnCreateCalled = true;
+            f_This->WasOnCreateCalled = true;
         };
-        OnUpdate = [&, instance](f32 delta) {
+        OnUpdate = [instance](Script*, f32 delta) {
             BE_ASSERT(instance != nullptr);
 
             instance->OnUpdate(delta);
         };
-        OnDestroy = [&, instance]() {
+        OnDestroy = [instance](Script*) {
             BE_ASSERT(instance != nullptr);
 
             instance->OnDestroy();
         };
 
-        GetInstanceAsVoidPtr = [&, instance]() { return instance; };
+        GetInstanceAsVoidPtr = [instance] { return instance; };
     }
 
     Script();
@@ -80,17 +81,18 @@ class Script {
     Script& operator=(Script&& other) noexcept;
 
    private:
-    std::function<void()> DestroyInstance;
+    std::function<void(Script*)> DestroyInstance;
 
-    std::function<void()> OnCreate;
-    std::function<void(f32)> OnUpdate;
-    std::function<void()> OnDestroy;
+    std::function<void(Script*)> OnCreate;
+    std::function<void(Script*, f32)> OnUpdate;
+    std::function<void(Script*)> OnDestroy;
 
     std::function<void*()> GetInstanceAsVoidPtr = []() { return nullptr; };
 
     bool WasOnCreateCalled = false;
 
     friend class ::BillyEngine::EntityManager;
+    friend class ::BillyEngine::Application;
 };
 }  // namespace Components
 }  // namespace BillyEngine

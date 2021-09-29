@@ -35,12 +35,18 @@ class Entity {
     }
 
     template <typename T>
-    bool HasComponent() {
+    bool HasComponent() const {
         return m_EntityManager->m_Registry.try_get<T>(m_Handle) != nullptr;
     }
 
     template <typename T>
     T& GetComponent() {
+        BE_ASSERT(HasComponent<T>());
+        return m_EntityManager->m_Registry.get<T>(m_Handle);
+    }
+
+    template <typename T>
+    const T& GetComponent() const {
         BE_ASSERT(HasComponent<T>());
         return m_EntityManager->m_Registry.get<T>(m_Handle);
     }

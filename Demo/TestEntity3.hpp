@@ -8,6 +8,7 @@ class TestEntity3 : public BillyEngine::ScriptableEntity {
     BillyEngine::Color color = BillyEngine::Color::white;
 
     void OnCreate() {
+        Log.Debug("Created {}", Tag().Name);
         auto dt = App.CreateDrawableTexture({100, 100});
         dt->Clear(BillyEngine::Color::white);
         dt->Finalize();

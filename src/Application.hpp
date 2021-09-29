@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/Aliases.hpp"
 #define SDL_MAIN_HANDLED
 
 #include "Components/ScriptComponent.hpp"
@@ -74,8 +73,6 @@ class Application {
      */
     template <typename T, typename... Args>
     T &CreateScriptableEntity(const std::string &name = "", Args &&...args) {
-        // static_assert(std::is_base_of<ScriptableEntity, T>(),
-        //               "T must be derived from ScriptableEntity");
         auto e = CreateEntity(name);
         auto &sc = e.AddComponent<Components::Script>();
         sc.Bind<T, Args...>(e, std::forward<Args>(args)...);

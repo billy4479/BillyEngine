@@ -17,9 +17,13 @@ class FPSManager {
     void StartFrame();
     void EndFrameAndWait();
 
+    u64 GetFrameCount() const;
+
    private:
     f32 m_TargetFPS;
     u64 m_MinFrameTime;
+
+    u64 m_FrameCount = 0;
 
     u64 m_StartFrame;
     u64 m_Elapsed = 1;

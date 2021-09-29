@@ -26,6 +26,7 @@ void FPSManager::StartFrame() {
                        std::chrono::high_resolution_clock::now())
                        .time_since_epoch()
                        .count();
+    m_FrameCount++;
 }
 
 void FPSManager::EndFrameAndWait() {
@@ -42,5 +43,7 @@ void FPSManager::EndFrameAndWait() {
         m_Elapsed = m_MinFrameTime;
     }
 }
+
+u64 FPSManager::GetFrameCount() const { return m_FrameCount; }
 
 }  // namespace BillyEngine
