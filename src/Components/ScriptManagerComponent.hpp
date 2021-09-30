@@ -24,35 +24,37 @@ class ScriptManager {
         static_assert(std::is_base_of_v<EntityBehavior, T>,
                       "T must derive from EntityBehavior");
         // BE_ASSERT(m_Entity.HasComponent<T>());
-
-        auto create = [](Entity e, std::function<void(Entity)> next) {
-            if (e.HasComponent<T>()) e.GetComponentM<T>().OnCreate();
-            next(e);
-        };
-
-        auto update = [](Entity e, std::function<void(Entity, f32)> next,
-                         f32 delta) {
-            if (e.HasComponent<T>()) e.GetComponentM<T>().OnUpdate(delta);
-            next(e, delta);
-        };
-
-        auto oldOnCreate = AllOnCreate;
-        AllOnCreate = [create, oldOnCreate](Entity e) {
-            create(e, oldOnCreate);
-        };
-
-        auto oldOnUpdate = AllOnUpdate;
-        AllOnUpdate = [update, oldOnUpdate](Entity e, f32 delta) {
-            update(e, oldOnUpdate, delta);
-        };
+        m_Components.emplace_back<AnonymousComponent>({
+            [](Entity e) { e.GetComponentM<T>().OnCreate(); },
+            [](Entity e, f32 delta) { e.GetComponentM<T>().OnUpdate(delta); },
+            [](Entity dest) { dest.AddComponent<T>(dest); },
+            [](Entity e, Entity dest) {
+                // This should call the copy constructor
+                dest.AddComponent<T>(e.GetComponent<T>());
+            },
+            [](Entity e) -> void* { return &e.GetComponentM<T>(); },
+            [](Entity e) { return e.HasComponent<T>(); },
+            true,
+        });
     }
+
+    void UnregisterScript(void* currentPtr);
 
     void CreateAll();
     void UpdateAll(f32 delta);
 
    private:
-    std::function<void(Entity)> AllOnCreate = [](Entity) {};
-    std::function<void(Entity, f32)> AllOnUpdate = [](Entity, f32) {};
+    struct AnonymousComponent {
+        std::function<void(Entity)> OnCreate;
+        std::function<void(Entity, f32)> OnUpdate;
+        std::function<void(Entity)> AddToEntity;
+        std::function<void(Entity, Entity)> CopyToEntity;
+        std::function<void*(Entity)> GetCurrentVoidPtr;
+        std::function<bool(Entity)> IsStillThere;
+        bool HasToBeCreated;
+    };
+
+    std::vector<AnonymousComponent> m_Components;
 
     Entity m_Entity;
 };

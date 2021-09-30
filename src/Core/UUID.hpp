@@ -17,3 +17,17 @@ class UUID {
 };
 
 }  // namespace BillyEngine
+
+namespace std {
+
+template <typename T>
+struct hash;
+
+template <>
+struct hash<BillyEngine::UUID> {
+    std::size_t operator()(const BillyEngine::UUID& uuid) const {
+        return (uint64_t)uuid;
+    }
+};
+
+}  // namespace std

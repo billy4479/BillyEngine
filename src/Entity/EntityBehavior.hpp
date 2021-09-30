@@ -19,7 +19,12 @@ class EntityBehavior {
     EntityBehavior(entt::entity handle, EntityManager*);
     EntityBehavior(Entity e);
 
-    virtual ~EntityBehavior() = default;
+    virtual ~EntityBehavior() {
+        // If we are destroying the whole entity ScriptManager may be destroyed
+        // before this
+        if (HasComponent<Components::ScriptManager>())
+            GetComponentM<Components::ScriptManager>().UnregisterScript(this);
+    };
 
     /**
      * @brief Destroy this entity

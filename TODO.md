@@ -51,7 +51,9 @@
 ## Entity
 
 - [ ] Parent-children entities
-- [ ] UUIDs
+- [x] UUIDs
+- [ ] Entity duplication
+  - [ ] Allow copy constructor in all components
 
 ## Audio
 
