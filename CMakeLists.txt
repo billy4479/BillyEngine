@@ -27,6 +27,12 @@ else()
     find_package(SDL2_image REQUIRED)
 endif()
 
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message(STATUS "Found ccache")
+    set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+endif()
+
 message(STATUS "Getting EnTT ready...")
 FetchContent_Declare(EnTT
     GIT_REPOSITORY "https://github.com/skypjack/entt"

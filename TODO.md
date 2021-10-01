@@ -6,7 +6,7 @@
 - [x] Use the Application class more as a proxy to other classes which implement the actual functionality
 - [x] Create a Window class to manage all the window related stuff abstracted away from SDL
 - [x] Use a proper logger (maybe [spdlog](https://github.com/gabime/spdlog)?)
-- [ ] Use `ccache` if available
+- [x] Use `ccache` if available
 - [ ] Move away from SDL libraries
   - [ ] Remove SDL_img
   - [ ] Remove SDL_ttf
