@@ -105,7 +105,7 @@ class DrawableTexture {
      *
      * @param surface The base texture
      */
-    DrawableTexture(Ref<Surface> surface, Renderer* renderer)
+    DrawableTexture(Renderer* renderer, Ref<Surface> surface)
         : m_Renderer(renderer), m_Surface(surface) {}
 
     ~DrawableTexture() = default;

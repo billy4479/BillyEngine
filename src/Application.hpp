@@ -55,6 +55,14 @@ class Application {
      */
     Ref<DrawableTexture> CreateDrawableTexture(glm::ivec2 size);
 
+    /**
+     * @brief Create a Drawable Texture
+     *
+     * @param surface The original surface
+     * @return Ref<DrawableTexture> The created DrawableTexture
+     */
+    Ref<DrawableTexture> CreateDrawableTexture(Ref<Surface> surface);
+
    public:
     /*** EntityManager proxy ***/
 

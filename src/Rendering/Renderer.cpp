@@ -91,12 +91,6 @@ void Renderer::UnregisterDestructionCallback(Texture* texture) {
     m_DestructionCallbacks.erase(texture);
 }
 
-DrawableTexture Renderer::CreateDrawableTexture(glm::ivec2 size) {
-    BE_ASSERT(m_Renderer != nullptr);
-
-    return DrawableTexture(this, size);
-}
-
 void Renderer::RenderToScreen() {
     BE_PROFILE_FUNCTION();
 

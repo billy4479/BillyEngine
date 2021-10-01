@@ -36,7 +36,6 @@ class Renderer {
     void Clear();
     void RenderToScreen();
 
-    DrawableTexture CreateDrawableTexture(glm::ivec2 size);
     Ref<Texture> RenderTextToTexture(const std::string &text, Ref<Font> font,
                                      const Color &fgColor /* TODO: config? */);
 

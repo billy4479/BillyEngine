@@ -76,7 +76,11 @@ void Application::Frame(f32 delta) {
 // Proxies
 
 Ref<DrawableTexture> Application::CreateDrawableTexture(glm::ivec2 size) {
-    return CreateRef<DrawableTexture>(m_Renderer->CreateDrawableTexture(size));
+    return CreateRef<DrawableTexture>(m_Renderer.get(), size);
+}
+
+Ref<DrawableTexture> Application::CreateDrawableTexture(Ref<Surface> surface) {
+    return CreateRef<DrawableTexture>(m_Renderer.get(), surface);
 }
 
 Entity Application::CreateEntity(const std::string& name) {
