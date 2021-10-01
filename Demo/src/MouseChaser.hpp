@@ -6,4 +6,5 @@ class MouseChaser : public BillyEngine::EntityBehavior {
 
     void OnCreate() override;
     void OnUpdate(f32) override;
+    void RegisterComponents() override;
 };

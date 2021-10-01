@@ -5,7 +5,6 @@
 class SpinningQuad : public BillyEngine::EntityBehavior {
    public:
     SCRIPTABLE_ENTITY(SpinningQuad)
-    Ref<BillyEngine::DrawableTexture> texture;
     f32 hue = 0;
     f32 speed = 10;
     static constexpr f32 maxSpeed = 300;
@@ -14,4 +13,5 @@ class SpinningQuad : public BillyEngine::EntityBehavior {
 
     void OnCreate() override;
     void OnUpdate(f32 delta) override;
+    void RegisterComponents() override;
 };

@@ -15,9 +15,19 @@ Sprite::Sprite(Ref<DrawableTexture> dt, const Color& tint)
 }
 Ref<Texture> Sprite::GetTexture() {
     if (m_DrawableTexture != nullptr)
-        m_Texture = m_DrawableTexture->GetTextureOrNull();
+        return m_DrawableTexture->GetTextureOrNull();
 
     return m_Texture;
+}
+
+void Sprite::SetTexture(Ref<Texture> texture) {
+    m_Texture = texture;
+    m_DrawableTexture = nullptr;
+}
+
+void Sprite::SetTexture(Ref<DrawableTexture> dt) {
+    m_DrawableTexture = dt;
+    m_Texture = nullptr;
 }
 }  // namespace Components
 }  // namespace BillyEngine

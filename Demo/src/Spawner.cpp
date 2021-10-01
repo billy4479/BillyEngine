@@ -5,13 +5,12 @@
 
 void Spawner::OnCreate() {
     auto &e1 = App().CreateEntityAndAddBehavior<ColoredQuad>("Quad 1");
-    auto &e2 = App().CreateEntityAndAddBehavior<ColoredQuad>("Quad 2");
-    auto &e3 = App().CreateEntityAndAddBehavior<ColoredQuad>("Quad 3");
-
     e1.AddComponent<PrintName>(e1);
-    e2.AddComponent<PrintName>(e2);
-    e3.AddComponent<PrintName>(e3);
 
+    auto &e2 = App().DuplicateEntity(e1, "Quad 2").GetComponentM<ColoredQuad>();
+    auto &e3 = App().DuplicateEntity(e1, "Quad 3").GetComponentM<ColoredQuad>();
+
+    Log.Debug("Setting colors");
     e1.color = BillyEngine::Color::red;
     e2.color = BillyEngine::Color::blue;
     e3.color = BillyEngine::Color::green;

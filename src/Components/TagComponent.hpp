@@ -8,10 +8,12 @@ class Tag {
    public:
     std::string Name;
 
-    Tag(const std::string& tag);
+    Tag(const std::string& tag) : Name(tag) {}
 
-    Tag(Tag&& other) noexcept;
-    Tag& operator=(Tag&& other) noexcept;
+    Tag(const Tag& other) noexcept = default;
+    Tag& operator=(const Tag& other) noexcept = default;
+    Tag(Tag&& other) noexcept = default;
+    Tag& operator=(Tag&& other) noexcept = default;
 };
 }  // namespace Components
 }  // namespace BillyEngine

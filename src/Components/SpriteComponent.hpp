@@ -17,6 +17,8 @@ class Sprite {
 
     Color Tint = Color::white;
     Ref<Texture> GetTexture();
+    void SetTexture(Ref<Texture>);
+    void SetTexture(Ref<DrawableTexture>);
 
    private:
     Ref<Texture> m_Texture = nullptr;

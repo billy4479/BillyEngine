@@ -9,6 +9,7 @@ namespace Components {
 class ID {
    public:
     ID() = default;
+    ID(UUID id) : m_UUID(id) {}
     inline operator UUID() const { return m_UUID; }
 
    private:

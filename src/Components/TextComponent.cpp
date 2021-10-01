@@ -14,6 +14,11 @@ void Text::SetText(const std::string& text) {
     m_Texture = nullptr;
 }
 
+void Text::SetFont(Ref<Font> font) {
+    m_Font = font;
+    m_Texture = nullptr;
+}
+
 void Text::SetColor(const Color& color) {
     m_Color = color;
     m_Texture = nullptr;

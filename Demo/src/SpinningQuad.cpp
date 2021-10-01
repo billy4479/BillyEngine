@@ -1,11 +1,11 @@
 #include "SpinningQuad.hpp"
 
 void SpinningQuad::OnCreate() {
-    texture = App().CreateDrawableTexture({100, 100});
+    auto texture = App().CreateDrawableTexture({100, 100});
     texture->Clear(BillyEngine::Color::white);
-    texture->Finalize();
 
-    AddComponent<BillyEngine::Components::Sprite>(texture);
+    GetComponentM<BillyEngine::Components::Sprite>().SetTexture(
+        texture->FinalizeAndGetTexture());
     auto &t = TransformM();
     t.Position = {100, 100};
     t.Rotation = 0;
@@ -29,4 +29,8 @@ void SpinningQuad::OnUpdate(f32 delta) {
     if (speed <= -maxSpeed) down = false;
 
     // Log.Debug("{}", t.Position);
+}
+
+void SpinningQuad::RegisterComponents() {
+    AddComponent<BillyEngine::Components::Sprite>();
 }

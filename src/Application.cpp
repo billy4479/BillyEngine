@@ -28,12 +28,16 @@ Application::Application(const AppConfig& appConfig) {
 
     Logger::Init();
 
+#ifdef DEBUG
+    BE_CORE_INFO("Running in debug mode");
+#endif
+
     m_EventManager = Scope<EventManager>(new EventManager(this));
     m_Window = CreateScope<Window>(appConfig, this);
     m_AssetManager = CreateScope<AssetManager>(appConfig.AssetsPath);
     m_EntityManager = CreateScope<EntityManager>(this);
     m_Renderer = CreateScope<Renderer>(m_Window->m_Window);
-    m_FPSManager = CreateScope<FPSManager>();
+    m_FPSManager = CreateScope<FPSManager>(appConfig.TargetFPS);
 
     Input::Bind(this);
 }
@@ -81,6 +85,14 @@ Entity Application::CreateEntity(const std::string& name) {
 
 void Application::DestroyEntity(Entity entity) {
     m_EntityManager->DestroyEntity(entity);
+}
+
+Entity Application::DuplicateEntity(Entity entity, std::string_view name) {
+    auto e = m_EntityManager->Duplicate(entity);
+    if (!name.empty()) {
+        e.GetComponentM<Components::Tag>().Name = name;
+    }
+    return e;
 }
 
 void Application::SetAssetFolder(const std::filesystem::path& path) {
@@ -142,6 +154,8 @@ f32 Application::GetFPS() const { return m_FPSManager->GetActualFPS(); }
 f32 Application::GetTargetFPS() const { return m_FPSManager->GetTargetFPS(); }
 
 void Application::SetTargetFPS(f32 fps) { m_FPSManager->SetTargetFPS(fps); }
+
+u64 Application::GetFrameCount() const { return m_FPSManager->GetFrameCount(); }
 
 bool Application::FireEvent(Event&& event) {
     return m_EventManager->FireEvent(std::move(event));

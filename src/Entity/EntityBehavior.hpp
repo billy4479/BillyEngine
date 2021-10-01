@@ -141,6 +141,7 @@ class EntityBehavior {
      */
     Entity FindEntityByTag(std::string_view tag);
 
+    virtual void RegisterComponents() = 0;
     virtual void OnCreate() = 0;
     virtual void OnUpdate(f32) = 0;
 

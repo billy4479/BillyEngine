@@ -11,4 +11,5 @@ class PrintName : public BillyEngine::EntityBehavior {
     }
 
     void OnUpdate(f32) override {}
+    void RegisterComponents() override {}
 };

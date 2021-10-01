@@ -66,5 +66,14 @@ void ScriptManager::UnregisterScript(void* currentPtr) {
         }
     }
 }
+
+void ScriptManager::RegisterAllComponents() {
+    for (auto& ac : m_Components) {
+        if (ac.HasToRegisterComponents) {
+            ac.RegisterComponents(m_Entity);
+            ac.HasToRegisterComponents = false;
+        }
+    }
+}
 }  // namespace Components
 }  // namespace BillyEngine

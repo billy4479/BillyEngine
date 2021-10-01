@@ -3,6 +3,7 @@
 #include "../Application.hpp"
 #include "../Components/Components.hpp"
 #include "../Rendering/Renderer.hpp"
+#include "Entity.hpp"
 
 namespace BillyEngine {
 EntityManager::EntityManager(Application *application)
@@ -17,6 +18,8 @@ void EntityManager::Update(f32 delta) {
         BE_PROFILE_SCOPE("Scripts");
         m_Registry.view<Components::ScriptManager>().each(
             [&](Components::ScriptManager &sm) {
+                sm.RegisterAllComponents();
+
                 sm.CreateAll();
                 HandleDestruction();
 
@@ -93,6 +96,36 @@ Entity EntityManager::FindEntityByTag(std::string_view tag) {
             return Entity(*it, this);
     }
     return Entity(entt::null, this);
+}
+
+template <typename Component>
+void EntityManager::DuplicateComponentIfPresent(Entity dst, Entity src) {
+    if constexpr (std::is_same_v<Component, Components::ScriptManager>) {
+        if (src.HasComponent<Components::ScriptManager>()) {
+            auto &srcSm = src.GetComponent<Components::ScriptManager>();
+            dst.AddComponent<Components::ScriptManager>(dst);
+            for (auto &ac : srcSm.m_Components) {
+                ac.AddToEntity(dst);
+            }
+        }
+    } else {
+        if (src.HasComponent<Component>())
+            dst.AddComponent<Component>(src.GetComponent<Component>());
+    }
+}
+
+Entity EntityManager::Duplicate(Entity src) {
+    Entity dst = {m_Registry.create(), this};
+
+    dst.AddComponent<Components::ID>();
+
+    DuplicateComponentIfPresent<Components::Transform>(dst, src);
+    DuplicateComponentIfPresent<Components::Sprite>(dst, src);
+    DuplicateComponentIfPresent<Components::Tag>(dst, src);
+    DuplicateComponentIfPresent<Components::Text>(dst, src);
+    DuplicateComponentIfPresent<Components::ScriptManager>(dst, src);
+
+    return dst;
 }
 
 void EntityManager::HandleDestruction() noexcept {

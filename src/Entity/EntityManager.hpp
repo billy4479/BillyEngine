@@ -20,12 +20,17 @@ class EntityManager {
     Entity FindEntityByID(UUID);
     Entity FindEntityByTag(std::string_view);
 
+    Entity Duplicate(Entity);
+
    private:
     entt::registry m_Registry;
     Application *m_Application = nullptr;
     std::vector<entt::entity> m_DestructionQueue;
 
     void HandleDestruction() noexcept;
+
+    template <typename Component>
+    static void DuplicateComponentIfPresent(Entity, Entity);
 
     friend class Application;
     friend class Entity;

@@ -3,7 +3,8 @@
 void MouseChaser::OnCreate() {
     auto t = App().CreateDrawableTexture({50, 50});
     t->Clear(BillyEngine::Color::white);
-    AddComponent<BillyEngine::Components::Sprite>(t->FinalizeAndGetTexture());
+    GetComponentM<BillyEngine::Components::Sprite>().SetTexture(
+        t->FinalizeAndGetTexture());
 
     App().RegisterEventListenerFor<BillyEngine::MouseButtonPressedEvent>(
         [this](auto& e) -> bool {
@@ -37,4 +38,8 @@ void MouseChaser::OnCreate() {
 }
 void MouseChaser::OnUpdate(f32) {
     TransformM().Position = BillyEngine::Input::GetMousePosition();
+}
+
+void MouseChaser::RegisterComponents() {
+    AddComponent<BillyEngine::Components::Sprite>();
 }

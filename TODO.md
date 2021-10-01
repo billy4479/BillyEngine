@@ -13,6 +13,8 @@
 
 ## Platform
 
+Linux is the main platform, the other I will try to maintain build but that's it.
+
 - [x] Linux
 - [x] Windows
 - [ ] OSX
@@ -36,24 +38,22 @@
   - [ ] Line
 - [ ] (OpenGL ?)
 
-## Physics
+## World
 
-- [ ] Box2D (?)
-- [ ] Add physics class
-  - [ ] Ray cast (?)
-  - ... (?)
-- [ ] Add physics components
-  - [ ] BoxCollider
-  - [ ] CircleCollider
-  - [ ] PolygonCollider (?)
-  - [ ] RigidBody
+- [ ] Differentiate screen space from world space
+- [ ] Physics
+  - [ ] Box2D (?)
+  - [ ] Raycasting
+  - [ ] Colliders
+  - [ ] Rigidbody
 
 ## Entity
 
 - [ ] Parent-children entities
 - [x] UUIDs
-- [ ] Entity duplication
-  - [ ] Allow copy constructor in all components
+- [x] Entity duplication
+  - [x] ~~Allow copy constructor in all components~~ Not every component can/should have one
+- [ ] Create some kind of EntityBlueprint/Prefab
 
 ## Audio
 

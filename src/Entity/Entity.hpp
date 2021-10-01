@@ -25,9 +25,9 @@ class Entity {
 
     template <typename T, typename... Args>
     T& AddComponent(Args&&... args) {
-        BE_ASSERT(!HasComponent<T>());
-        T& component =
-            m_Registry->emplace<T>(m_Handle, std::forward<Args>(args)...);
+        // BE_ASSERT(!HasComponent<T>());
+        T& component = m_Registry->emplace_or_replace<T>(
+            m_Handle, std::forward<Args>(args)...);
         return component;
     }
 

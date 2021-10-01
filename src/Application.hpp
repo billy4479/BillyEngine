@@ -23,6 +23,7 @@ struct AppConfig {
     bool Maximized = false;
     bool Borderless = false;
     std::filesystem::path AssetsPath = "";
+    f32 TargetFPS = 60;
 };
 
 class Application {
@@ -84,6 +85,17 @@ class Application {
      * @param entity The Entity to destroy
      */
     void DestroyEntity(Entity entity);
+
+    /**
+     * @brief Duplicates an Entity and all its components
+     *
+     * @note The entities will have different IDs
+     *
+     * @param entity The source entity
+     * @param name The name of the new entity (optional)
+     * @return Entity The resulting entity
+     */
+    Entity DuplicateEntity(Entity entity, std::string_view name = "");
 
    public:
     /*** AssetManager proxy ***/
@@ -249,6 +261,13 @@ class Application {
      * @param fps Target FPS
      */
     void SetTargetFPS(f32 fps);
+
+    /**
+     * @brief Get the number of frames since the engine start
+     *
+     * @return u64 The number of frames
+     */
+    u64 GetFrameCount() const;
 
    public:
     /*** EventManager proxy ***/

@@ -1,7 +1,9 @@
 #include "FPSCounter.hpp"
 
 void FPSCounter::OnCreate() {
-    AddComponent<BillyEngine::Components::Text>("", App().GetFont("OpenSans"));
+    GetComponentM<BillyEngine::Components::Text>().SetFont(
+        App().GetFont("OpenSans"));
+
     auto &t = TransformM();
     t.Position = {App().GetSize().x - 10, 5};
 
@@ -19,4 +21,8 @@ void FPSCounter::OnUpdate(f32) {
     ss << "FPS: " << App().GetFPS();
 
     GetComponentM<BillyEngine::Components::Text>().SetText(ss.str());
+}
+
+void FPSCounter::RegisterComponents() {
+    AddComponent<BillyEngine::Components::Text>();
 }
