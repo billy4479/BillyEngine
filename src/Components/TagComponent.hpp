@@ -10,8 +10,8 @@ class Tag {
 
     Tag(const std::string& tag) : Name(tag) {}
 
-    Tag(const Tag& other) noexcept = default;
-    Tag& operator=(const Tag& other) noexcept = default;
+    Tag(const Tag& other) = default;
+    Tag& operator=(const Tag& other) = default;
     Tag(Tag&& other) noexcept = default;
     Tag& operator=(Tag&& other) noexcept = default;
 };
