@@ -6,7 +6,8 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 
-#include <iostream>
+#include "Core/Logger.hpp"
+#include "Core/Types.hpp"
 
 namespace BillyEngine {
 
@@ -18,21 +19,21 @@ void Application::Run() {
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
     if (window == NULL) {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        BE_CRITICAL("Failed to create GLFW window");
         glfwTerminate();
         return;
     }
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        BE_CRITICAL("Failed to initialize GLAD");
         return;
     }
 
     glViewport(0, 0, 800, 600);
 
     glfwSetFramebufferSizeCallback(window,
-                                   [](GLFWwindow*, int width, int height) {
+                                   [](GLFWwindow*, i32 width, i32 height) {
                                        glViewport(0, 0, width, height);
                                    });
 
@@ -42,6 +43,23 @@ void Application::Run() {
     }
 }
 
-Application::~Application() { glfwTerminate(); }
+Application::~Application() {
+    BE_INFO("Quitting...");
+    glfwTerminate();
+}
 
 }  // namespace BillyEngine
+
+#include <BillyEngine/Application.h>
+
+Application* CreateApplication() {
+    return (Application*)new BillyEngine::Application();
+}
+
+void DestroyApplication(Application* app) {
+    delete (BillyEngine::Application*)app;
+}
+
+void RunApplication(Application* app) {
+    ((BillyEngine::Application*)app)->Run();
+}

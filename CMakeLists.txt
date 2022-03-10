@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(BUILD_SHARED_LIBS ON)
+
 include(FetchContent)
 
 option(COMPILE_DEMO "Compile the demo program" ON)
@@ -44,6 +46,7 @@ FetchContent_Declare(EnTT
 )
 FetchContent_MakeAvailable(EnTT)
 
+set(SPDLOG_NO_EXCEPTIONS ON)
 message(STATUS "Getting spdlog ready...")
 FetchContent_Declare(spdlog
     GIT_REPOSITORY "https://github.com/gabime/spdlog"
@@ -53,13 +56,13 @@ FetchContent_MakeAvailable(spdlog)
 
 file(GLOB_RECURSE SRC src/*.cpp)
 
-add_library(${PROJECT_NAME} STATIC ${SRC})
+add_library(${PROJECT_NAME} SHARED ${SRC})
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC GLAD glfw EnTT glm spdlog::spdlog
+    PRIVATE GLAD glfw EnTT glm spdlog::spdlog
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC src/include)
+target_include_directories(${PROJECT_NAME} PUBLIC include)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>

@@ -1,6 +1,6 @@
-#include <BillyEngine/BillyEngine.hpp>
+#include <BillyEngine/BillyEngine.h>
 
 int main() {
-    BillyEngine::Application app;
-    app.Run();
+    auto app = CreateApplication();
+    RunApplication(app);
 }
