@@ -4,15 +4,13 @@
 
 #if defined _WIN32 || defined __CYGWIN__
     #ifdef __GNUC__
-        #define BE_PUBLIC __attribute__((dllexport))
+        #define BE_PUBLIC extern __attribute__((dllexport))
     #else
     // Note: actually gcc seems to also supports this syntax.
-        #define BE_PUBLIC __declspec(dllexport)
+        #define BE_PUBLIC extern __declspec(dllexport)
     #endif
-    #define BE_LOCAL
 #else
-    #define BE_PUBLIC __attribute__((visibility("default")))
-    #define BE_LOCAL __attribute__((visibility("hidden")))
+    #define BE_PUBLIC extern __attribute__((visibility("default")))
 #endif
 
 #ifdef __cplusplus

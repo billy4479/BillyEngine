@@ -9,9 +9,8 @@ namespace BillyEngine {
 
 Logger* Logger::s_Instance{nullptr};
 
-Logger& Logger::The() {
+void Logger::Init() {
     if (!s_Instance) s_Instance = new Logger();
-    return *s_Instance;
 }
 
 Logger::Logger() {
@@ -22,11 +21,11 @@ Logger::Logger() {
     m_Sinks[0]->set_pattern("%^[%T] %n: %v%$");
     m_Sinks[1]->set_pattern("[%T] [%l] %n: %v");
 
-    m_EngineLogger = std::make_shared<spdlog::logger>("ENGINE", begin(m_Sinks),
-                                                      end(m_Sinks));
-    spdlog::register_logger(m_EngineLogger);
-    m_EngineLogger->set_level(spdlog::level::trace);
-    m_EngineLogger->flush_on(spdlog::level::trace);
+    m_CoreLogger =
+        std::make_shared<spdlog::logger>("CORE", begin(m_Sinks), end(m_Sinks));
+    spdlog::register_logger(m_CoreLogger);
+    m_CoreLogger->set_level(spdlog::level::trace);
+    m_CoreLogger->flush_on(spdlog::level::trace);
 
     m_ClientLogger =
         std::make_shared<spdlog::logger>("APP", begin(m_Sinks), end(m_Sinks));
