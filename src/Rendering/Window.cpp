@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 
-#include "../Core/Logger.hpp"
+#include "Core/Logger.hpp"
 
 namespace BillyEngine {
 Window::Window(std::string_view title, glm::ivec2 size) {
@@ -41,5 +41,9 @@ Window::~Window() { glfwTerminate(); }
 void Window::SwapBuffers() { glfwSwapBuffers(m_Window); }
 
 bool Window::ShouldClose() { return glfwWindowShouldClose(m_Window); }
+
+void Window::SetShouldClose(bool shouldClose) {
+    glfwSetWindowShouldClose(m_Window, shouldClose);
+}
 
 }  // namespace BillyEngine

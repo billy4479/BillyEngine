@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "../Core/Color.hpp"
+#include "Core/Color.hpp"
 
 namespace BillyEngine {
 

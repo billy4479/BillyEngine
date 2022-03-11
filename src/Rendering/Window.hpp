@@ -13,10 +13,15 @@ class Window {
     ~Window();
 
     void SwapBuffers();
+
     bool ShouldClose();
+    void SetShouldClose(bool);
 
    private:
     GLFWwindow* m_Window;
+
+    friend class EventManager;
+    friend class Input;
 };
 
 }  // namespace BillyEngine

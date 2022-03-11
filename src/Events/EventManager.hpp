@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Rendering/Window.hpp"
-
 namespace BillyEngine {
+
+class Window;
 
 class EventManager {
    public:
