@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Events/EventManager.hpp"
-#include "Rendering/Renderer.hpp"
-#include "Rendering/Window.hpp"
+#include "Core/Types.hpp"
 
 namespace BillyEngine {
+
+class Window;
+class Renderer;
+class EventManager;
 
 class Application {
    public:
@@ -18,9 +20,9 @@ class Application {
     bool m_Running{false};
 
    private:
-    Window m_Window;
-    Renderer m_Renderer;
-    EventManager m_EventManager;
+    Scope<Window> m_Window;
+    Scope<Renderer> m_Renderer;
+    Scope<EventManager> m_EventManager;
 };
 
 }  // namespace BillyEngine

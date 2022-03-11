@@ -56,7 +56,7 @@ FetchContent_MakeAvailable(spdlog)
 
 file(GLOB_RECURSE SRC src/*.cpp)
 
-add_library(${PROJECT_NAME} SHARED ${SRC})
+add_library(${PROJECT_NAME} ${SRC})
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE GLAD glfw EnTT glm spdlog::spdlog
