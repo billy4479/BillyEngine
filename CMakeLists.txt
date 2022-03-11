@@ -54,7 +54,7 @@ FetchContent_Declare(spdlog
 )
 FetchContent_MakeAvailable(spdlog)
 
-file(GLOB_RECURSE SRC src/*.cpp)
+file(GLOB_RECURSE SRC src/*.cpp src/*.hpp include/*.h include/*.hpp)
 
 add_library(${PROJECT_NAME} ${SRC})
 
@@ -62,7 +62,10 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE GLAD glfw EnTT glm spdlog::spdlog
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME} 
+    PUBLIC include
+    PRIVATE src
+)
 
 target_compile_options(${PROJECT_NAME} PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
