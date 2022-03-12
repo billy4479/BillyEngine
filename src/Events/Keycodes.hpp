@@ -1,6 +1,7 @@
 #pragma once
 
-#include "./EnumerateKeys.h"
+#include <BillyEngine/EnumerateKeys.h>
+
 #include "Core/Types.hpp"
 
 namespace BillyEngine {
