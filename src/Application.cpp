@@ -1,24 +1,30 @@
 #include "Application.hpp"
 
+#include "Assets/AssetManager.hpp"
 #include "Core/Logger.hpp"
 #include "Core/Types.hpp"
 #include "Events/EventManager.hpp"
 #include "Events/Input.hpp"
 #include "Rendering/Renderer.hpp"
+#include "Rendering/Shader.hpp"
 #include "Rendering/Window.hpp"
 
 namespace BillyEngine {
 
 Application::Application()
     : m_Window(CreateScope<Window>("BillyEngine", glm::ivec2{800, 600})),
-      m_Renderer(),
+      m_Renderer(CreateScope<Renderer>()),
       m_EventManager(CreateScope<EventManager>(*m_Window)),
-      m_Input(CreateScope<Input>(*m_Window)) {
+      m_Input(CreateScope<Input>(*m_Window)),
+      m_AssetManager(CreateScope<AssetManager>()) {
     Logger::Init();
 }
 
 void Application::Run() {
     Logger::Core()->info("Started!");
+
+    auto shader = m_AssetManager->Load<Shader>("vertex.glsl", "vert",
+                                               Shader::ShaderType::Vertex);
 
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();

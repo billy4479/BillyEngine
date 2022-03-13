@@ -8,6 +8,7 @@ class Window;
 class Renderer;
 class EventManager;
 class Input;
+class AssetManager;
 
 class Application {
    public:
@@ -22,6 +23,7 @@ class Application {
     Scope<Renderer> m_Renderer;
     Scope<EventManager> m_EventManager;
     Scope<Input> m_Input;
+    Scope<AssetManager> m_AssetManager;
 };
 
 }  // namespace BillyEngine
