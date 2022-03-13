@@ -4,12 +4,13 @@
 
 #include "Application.hpp"
 
-Application* CreateApplication() {
-    return (Application*)new BillyEngine::Application();
+Application* TheApplication() {
+    return (Application*)&BillyEngine::Application::The();
 }
 
-void DestroyApplication(Application* app) {
-    delete (BillyEngine::Application*)app;
+void ResetApplication(Application*) {
+    // delete (BillyEngine::Application*)app;
+    BillyEngine::Application::Reset();
 }
 
 void RunApplication(Application* app) {

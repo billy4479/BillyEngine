@@ -11,20 +11,17 @@
 
 namespace BillyEngine {
 
+Scope<Application> Application::s_Instance{nullptr};
+
 Application::Application()
-    : m_Window(CreateScope<Window>("BillyEngine", glm::ivec2{800, 600})),
-      m_Renderer(CreateScope<Renderer>()),
+    : m_AssetManager(CreateScope<AssetManager>()),
+      m_Window(CreateScope<Window>("BillyEngine", glm::ivec2{800, 600})),
+      m_Renderer(CreateScope<Renderer>(*m_AssetManager)),
       m_EventManager(CreateScope<EventManager>(*m_Window)),
-      m_Input(CreateScope<Input>(*m_Window)),
-      m_AssetManager(CreateScope<AssetManager>()) {
-    Logger::Init();
-}
+      m_Input(CreateScope<Input>(*m_Window)) {}
 
 void Application::Run() {
     Logger::Core()->info("Started!");
-
-    auto shader = m_AssetManager->Load<Shader>("vertex.glsl", "vert",
-                                               Shader::ShaderType::Vertex);
 
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();
@@ -39,6 +36,21 @@ void Application::Run() {
 
 void Application::Quit() { m_Window->SetShouldClose(true); }
 
-Application::~Application() { Logger::Core()->info("Quitting..."); }
+Application& Application::The() {
+    if (!s_Instance) {
+        Logger::Init();
+        s_Instance = Scope<Application>(new Application());
+    }
+
+    return *s_Instance;
+}
+
+void Application::Reset() {
+    if (!s_Instance) return;
+
+    s_Instance = nullptr;
+}
+
+Application::~Application() { Logger::Core()->info("Cleaning up."); }
 
 }  // namespace BillyEngine

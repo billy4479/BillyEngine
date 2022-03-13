@@ -19,9 +19,11 @@ class Shader : public Asset {
     static AssetType GetAssetTypeStatic();
     static Ref<Shader> Load(std::filesystem::path, ShaderType);
     static Ref<Shader> Load(std::string_view src, ShaderType);
-    ~Shader();
+
+    u32 GetID();
 
     Shader(std::string_view source, ShaderType);
+    ~Shader();
 
    private:
     u32 m_Shader{0};

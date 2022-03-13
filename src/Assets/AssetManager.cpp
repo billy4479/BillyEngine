@@ -26,7 +26,9 @@ static std::filesystem::path GetExecutableDir() {
 }
 
 AssetManager::AssetManager() : m_BaseDir(GetExecutableDir() / "assets") {}
-AssetManager::~AssetManager() {}
+AssetManager::~AssetManager() { m_Assets.clear(); }
+
+void AssetManager::Unload(const std::string& name) { m_Assets.erase(name); }
 
 std::filesystem::path AssetManager::GetBaseDir() { return m_BaseDir; }
 void AssetManager::SetBaseDir(std::filesystem::path path) { m_BaseDir = path; }

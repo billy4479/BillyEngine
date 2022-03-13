@@ -2,9 +2,11 @@
 
 namespace BillyEngine {
 
+class AssetManager;
+
 class Renderer {
    public:
-    Renderer();
+    Renderer(AssetManager&);
     ~Renderer();
 
     void Render();

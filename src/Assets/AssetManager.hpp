@@ -52,6 +52,8 @@ class AssetManager {
         return std::static_pointer_cast<T>(asset);
     }
 
+    void Unload(const std::string& name);
+
    private:
     std::filesystem::path m_BaseDir;
     std::unordered_map<std::string, Ref<Asset>> m_Assets;
