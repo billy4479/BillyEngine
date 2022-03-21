@@ -1,6 +1,6 @@
 #include "Renderer.hpp"
 
-#include <glad/glad.h>
+#include <glad/gl.h>
 
 #include "Assets/AssetManager.hpp"
 #include "Core/Color.hpp"

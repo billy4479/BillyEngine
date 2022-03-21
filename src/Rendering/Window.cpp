@@ -1,7 +1,7 @@
 #include "Window.hpp"
 
 // clang-format off
-#include <glad/glad.h>
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
 // clang-format on
 
@@ -22,7 +22,7 @@ Window::Window(std::string_view title, glm::ivec2 size) {
     }
     glfwMakeContextCurrent(m_Window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGL(glfwGetProcAddress)) {
         Logger::Core()->critical("Failed to initialize GLAD");
         return;
     }

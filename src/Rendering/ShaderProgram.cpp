@@ -1,6 +1,6 @@
 #include "ShaderProgram.hpp"
 
-#include <glad/glad.h>
+#include <glad/gl.h>
 
 #include "Core/Logger.hpp"
 #include "Rendering/Shader.hpp"

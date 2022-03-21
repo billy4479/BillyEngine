@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.18)
 
-project(BillyEngine LANGUAGES CXX VERSION 0.0.1)
+project(BillyEngine LANGUAGES CXX C VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -19,11 +19,18 @@ if(CCACHE_FOUND)
 endif()
 
 message(STATUS "Getting GLAD ready...")
-FetchContent_Declare(GLAD
-    GIT_REPOSITORY "https://github.com/billy4479/glad-cmake"
-    GIT_TAG "master"
+FetchContent_Declare(glad
+    GIT_REPOSITORY "https://github.com/Dav1dde/glad"
+    GIT_TAG "glad2"
 )
-FetchContent_MakeAvailable(GLAD)
+FetchContent_GetProperties(glad)
+if(NOT glad_POPULATED)
+  FetchContent_Populate(glad)
+
+  add_subdirectory(${glad_SOURCE_DIR}/cmake ${glad_BINARY_DIR})
+  glad_add_library(glad API gl:core=4.6)
+endif()
+# FetchContent_MakeAvailable(glad)
 
 message(STATUS "Getting GLFW ready...")
 FetchContent_Declare(glfw
@@ -59,7 +66,7 @@ file(GLOB_RECURSE SRC src/*.cpp src/*.hpp include/*.h include/*.hpp)
 add_library(${PROJECT_NAME} ${SRC})
 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE GLAD glfw EnTT glm spdlog::spdlog
+    PRIVATE glad glfw EnTT glm spdlog::spdlog
 )
 
 target_include_directories(${PROJECT_NAME} 
