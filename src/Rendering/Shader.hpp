@@ -22,10 +22,11 @@ class Shader : public Asset {
 
     u32 GetID();
 
-    Shader(std::string_view source, ShaderType);
     ~Shader();
 
    private:
+    Shader(std::string_view source, ShaderType);
+
     u32 m_Shader{0};
     ShaderType m_Type;
 };

@@ -42,20 +42,7 @@ Ref<Shader> Shader::Load(std::filesystem::path path, ShaderType type) {
 }
 
 Ref<Shader> Shader::Load(std::string_view src, ShaderType type) {
-    auto shader = CreateRef<Shader>(src, type);
-    Logger::Core()->debug("{} shader created successfully",
-                          GetShaderName(type));
-#if 0
-    {
-        std::string buffer;
-        std::stringstream ss(src.data());
-
-        while (std::getline(ss, buffer, '\n'))
-            Logger::Core()->debug("\t{}", buffer);
-    }
-#endif
-
-    return shader;
+    return Ref<Shader>(new Shader(src, type));
 }
 
 u32 Shader::GetID() { return m_Shader; }
@@ -87,7 +74,23 @@ Shader::Shader(std::string_view source, ShaderType type) : m_Type(type) {
         glGetShaderInfoLog(m_Shader, sizeof(buffer), nullptr, buffer);
         Logger::Core()->error("Error compiling {} shader: {}",
                               GetShaderName(m_Type), buffer);
+
+        glDeleteShader(m_Shader);
+        m_Shader = 0;
+        return;
     }
+
+    Logger::Core()->debug("{} shader created successfully",
+                          GetShaderName(type));
+#if 0
+    {
+        std::string buffer;
+        std::stringstream ss(src.data());
+
+        while (std::getline(ss, buffer, '\n'))
+            Logger::Core()->debug("\t{}", buffer);
+    }
+#endif
 }
 
 }  // namespace BillyEngine

@@ -5,32 +5,15 @@
 #include "Assets/AssetManager.hpp"
 #include "Core/Color.hpp"
 #include "Rendering/Shader.hpp"
+#include "Rendering/ShaderProgram.hpp"
 
 namespace BillyEngine {
 
-static u32 shaderProgram;
+static Ref<ShaderProgram> shaderProgram;
 
 static f32 vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f,
                          0.0f,  0.0f,  0.5f, 0.0f};
 static u32 VertexArrayObject;
-
-static u32 CreateShaderProgram(Ref<Shader> vertex, Ref<Shader> fragment) {
-    u32 program = glCreateProgram();
-    glAttachShader(program, vertex->GetID());
-    glAttachShader(program, fragment->GetID());
-    glLinkProgram(program);
-
-    i32 success;
-    glGetProgramiv(program, GL_LINK_STATUS, &success);
-    if (!success) {
-        char buffer[512];
-        glGetProgramInfoLog(program, sizeof(buffer), nullptr, buffer);
-        Logger::Core()->error("Error while linking shaders: {}", buffer);
-        return -1;
-    }
-
-    return program;
-}
 
 Renderer::Renderer(AssetManager& am) {
     glGenVertexArrays(1, &VertexArrayObject);
@@ -46,7 +29,7 @@ Renderer::Renderer(AssetManager& am) {
     auto fragment =
         am.Load<Shader>("fragment.glsl", "frag", Shader::ShaderType::Fragment);
 
-    shaderProgram = CreateShaderProgram(vertex, fragment);
+    shaderProgram = ShaderProgram::Create(vertex, fragment);
     // glUseProgram(shaderProgram);
 
     am.Unload("vert");
@@ -65,7 +48,7 @@ void Renderer::Render() {
     glClearColor(c.r, c.g, c.b, c.a);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
+    glUseProgram(shaderProgram->GetID());
     glBindVertexArray(VertexArrayObject);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
