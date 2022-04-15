@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cstdint>
 #include <memory>
 
@@ -48,6 +49,15 @@ constexpr Ref<T> CreateRef(Args&&... args) {
     #define BE_FUNC_SIG __FUNCSIG__
 #else
     #define BE_FUNC_SIG __PRETTY_FUNCTION__
+#endif
+
+[[noreturn]] inline void VERIFY_NOT_REACHED() {
+    assert(false || "Unreachable");
+    abort();
+}
+
+#ifdef DEBUG
+    #define BE_GL_DEBUG 0
 #endif
 
 }  // namespace BillyEngine

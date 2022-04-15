@@ -4,7 +4,7 @@
 
 #include <array>
 
-#include "Types.hpp"
+#include "Core/Types.hpp"
 
 namespace BillyEngine {
 
@@ -25,6 +25,12 @@ class Logger {
 
     std::array<spdlog::sink_ptr, 2> m_Sinks;
 };
+
+#if BE_GL_DEBUG
+    #define BE_GL_LOG(...) Logger::Core()->debug(__VA_ARGS__)
+#else
+    #define BE_GL_LOG(...)
+#endif
 
 // // clang-format off
 // #define BE_CORE_TRACE(...)    Logger::Engine()->trace(__VA_ARGS__)

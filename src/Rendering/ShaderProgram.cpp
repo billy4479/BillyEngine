@@ -6,13 +6,13 @@
 #include "Rendering/Shader.hpp"
 
 namespace BillyEngine {
-Ref<ShaderProgram> ShaderProgram::Create(Ref<Shader> vertexShader,
-                                         Ref<Shader> fragmentShader) {
+Ref<ShaderProgram> ShaderProgram::Create(const Ref<Shader> vertexShader,
+                                         const Ref<Shader> fragmentShader) {
     return Ref<ShaderProgram>(new ShaderProgram(vertexShader, fragmentShader));
 }
 
-ShaderProgram::ShaderProgram(Ref<Shader> vertexShader,
-                             Ref<Shader> fragmentShader) {
+ShaderProgram::ShaderProgram(const Ref<Shader> vertexShader,
+                             const Ref<Shader> fragmentShader) {
     m_Program = glCreateProgram();
     glAttachShader(m_Program, vertexShader->GetID());
     glAttachShader(m_Program, fragmentShader->GetID());
@@ -34,6 +34,8 @@ ShaderProgram::ShaderProgram(Ref<Shader> vertexShader,
 
 ShaderProgram::~ShaderProgram() { glDeleteProgram(m_Program); }
 
-u32 ShaderProgram::GetID() { return m_Program; }
+u32 ShaderProgram::GetID() const { return m_Program; }
+
+void ShaderProgram::Use() const { glUseProgram(m_Program); }
 
 }  // namespace BillyEngine

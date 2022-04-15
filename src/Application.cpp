@@ -23,6 +23,9 @@ Application::Application()
 void Application::Run() {
     Logger::Core()->info("Started!");
 
+    auto c = Color::FromU32(0x333333ff);
+    m_Renderer->SetClearColor(c);
+
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();
         m_Renderer->Render();

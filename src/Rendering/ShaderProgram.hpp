@@ -10,14 +10,16 @@ class Shader;
 
 class ShaderProgram {
    public:
-    static Ref<ShaderProgram> Create(Ref<Shader> vertexShader,
-                                     Ref<Shader> fragmentShader);
+    static Ref<ShaderProgram> Create(const Ref<Shader> vertexShader,
+                                     const Ref<Shader> fragmentShader);
     ~ShaderProgram();
 
-    u32 GetID();
+    u32 GetID() const;
+    void Use() const;
 
    private:
-    ShaderProgram(Ref<Shader> vertexShader, Ref<Shader> fragmentShader);
+    ShaderProgram(const Ref<Shader> vertexShader,
+                  const Ref<Shader> fragmentShader);
     u32 m_Program{0};
 };
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core/Color.hpp"
+
 namespace BillyEngine {
 
 class AssetManager;
@@ -10,6 +12,8 @@ class Renderer {
     ~Renderer();
 
     void Render();
+
+    void SetClearColor(const Color&);
 
    private:
 };

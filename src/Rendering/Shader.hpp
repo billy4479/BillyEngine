@@ -15,12 +15,12 @@ class Shader : public Asset {
         Vertex,
     };
 
-    AssetType GetAssetType() override;
+    AssetType GetAssetType() const override;
     static AssetType GetAssetTypeStatic();
     static Ref<Shader> Load(std::filesystem::path, ShaderType);
     static Ref<Shader> Load(std::string_view src, ShaderType);
 
-    u32 GetID();
+    u32 GetID() const;
 
     ~Shader();
 

@@ -11,7 +11,7 @@
 namespace BillyEngine {
 
 AssetType Shader::GetAssetTypeStatic() { return AssetType::Shader; }
-AssetType Shader::GetAssetType() { return GetAssetTypeStatic(); }
+AssetType Shader::GetAssetType() const { return GetAssetTypeStatic(); }
 
 static std::string_view GetShaderName(Shader::ShaderType type) {
     switch (type) {
@@ -45,11 +45,11 @@ Ref<Shader> Shader::Load(std::string_view src, ShaderType type) {
     return Ref<Shader>(new Shader(src, type));
 }
 
-u32 Shader::GetID() { return m_Shader; }
+u32 Shader::GetID() const { return m_Shader; }
 
 Shader::~Shader() {
     glDeleteShader(m_Shader);
-    Logger::Core()->debug("Deleted {} shader", GetShaderName(m_Type));
+    // Logger::Core()->debug("Deleted {} shader", GetShaderName(m_Type));
 }
 
 Shader::Shader(std::string_view source, ShaderType type) : m_Type(type) {
@@ -80,9 +80,9 @@ Shader::Shader(std::string_view source, ShaderType type) : m_Type(type) {
         return;
     }
 
+#if 0
     Logger::Core()->debug("{} shader created successfully",
                           GetShaderName(type));
-#if 0
     {
         std::string buffer;
         std::stringstream ss(src.data());

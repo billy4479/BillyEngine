@@ -6,7 +6,7 @@ namespace BillyEngine {
 
 class Asset {
    public:
-    virtual AssetType GetAssetType() = 0;
+    virtual AssetType GetAssetType() const = 0;
 };
 
 }  // namespace BillyEngine
