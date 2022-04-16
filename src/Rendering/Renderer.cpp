@@ -1,6 +1,9 @@
 #include "Renderer.hpp"
 
+// clang-format off
 #include <glad/gl.h>
+#include <GLFW/glfw3.h>
+// clang-format on
 
 #include "Assets/AssetManager.hpp"
 #include "Core/Color.hpp"
@@ -31,6 +34,7 @@ static constexpr u32 indices[] = {
 // static Ref<VertexBuffer> vertexBuffer;
 // static Ref<IndexBuffer> indexBuffer;
 static Ref<VertexArray> vertexArray;
+static Scope<Uniform<glm::vec4>> colorUniform;
 
 Renderer::Renderer(AssetManager& am) {
     // TODO: These are the base shaders, maybe inline them?
@@ -40,6 +44,8 @@ Renderer::Renderer(AssetManager& am) {
         am.Load<Shader>("fragment.glsl", "frag", Shader::ShaderType::Fragment);
 
     shaderProgram = ShaderProgram::Create(vertex, fragment);
+    colorUniform = CreateScope<Uniform<glm::vec4>>(
+        shaderProgram->GetUniform<glm::vec4>("color"));
 
     am.Unload("vert");
     am.Unload("frag");
@@ -63,7 +69,12 @@ void Renderer::Render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderProgram->Use();
-    // vertexArray->Bind();
+
+    auto timeValue = glfwGetTime();
+    f32 greenValue = sin(timeValue) / 2.0f + 0.5f;
+    colorUniform->Set({0.0f, greenValue, 0.0f, 1.0f});
+
+    vertexArray->Bind();
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 

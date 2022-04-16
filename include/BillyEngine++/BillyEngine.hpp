@@ -1,3 +1,4 @@
 #pragma once
 
-#include "../src/Application.hpp"
+#include "Application.hpp"
+#include "Rendering/Renderer.hpp"

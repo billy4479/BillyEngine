@@ -2,6 +2,8 @@
 
 #include <glad/gl.h>
 
+#include <glm/vec4.hpp>
+
 #include "Core/Logger.hpp"
 #include "Rendering/Shader.hpp"
 
@@ -37,5 +39,13 @@ ShaderProgram::~ShaderProgram() { glDeleteProgram(m_Program); }
 u32 ShaderProgram::GetID() const { return m_Program; }
 
 void ShaderProgram::Use() const { glUseProgram(m_Program); }
+
+i32 ShaderProgram::GetUniformAndCheck(std::string_view name) {
+    auto location = glGetUniformLocation(m_Program, name.data());
+    if (location == -1) {
+        Logger::Core()->error("Uniform \"{}\" not found", name);
+    }
+    return location;
+}
 
 }  // namespace BillyEngine

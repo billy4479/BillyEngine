@@ -4,7 +4,6 @@
 #include <glm/ext/vector_int4.hpp>
 #include <glm/vec4.hpp>
 
-#include "Core/Logger.hpp"
 #include "Core/Types.hpp"
 
 namespace BillyEngine {
