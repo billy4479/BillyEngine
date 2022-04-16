@@ -14,6 +14,7 @@ class Renderer {
     void Render();
 
     void SetClearColor(const Color&);
+    void SetWireframeView(bool);
 
    private:
 };

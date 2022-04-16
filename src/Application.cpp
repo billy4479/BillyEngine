@@ -25,6 +25,7 @@ void Application::Run() {
 
     auto c = Color::FromU32(0x333333ff);
     m_Renderer->SetClearColor(c);
+    // m_Renderer->SetWireframeView(true);
 
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();

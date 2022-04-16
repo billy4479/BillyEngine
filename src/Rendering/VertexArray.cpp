@@ -1,9 +1,11 @@
 #include "VertexArray.hpp"
 
+#include <glad/gl.h>
+
 #include "Core/Logger.hpp"
 #include "Rendering/BufferType.hpp"
+#include "Rendering/IndexBuffer.hpp"
 #include "Rendering/VertexBuffer.hpp"
-#include "glad/gl.h"
 
 namespace BillyEngine {
 
@@ -112,6 +114,15 @@ void VertexArray::AddVertexBuffer(const Ref<VertexBuffer> vertexBuffer) {
                 VERIFY_NOT_REACHED();
         }
     }
+
+    m_VertexBuffers.push_back(vertexBuffer);
+}
+
+void VertexArray::SetIndexBuffer(const Ref<IndexBuffer> indexBuffer) {
+    Bind();
+    indexBuffer->Bind();
+
+    m_IndexBuffer = indexBuffer;
 }
 
 }  // namespace BillyEngine

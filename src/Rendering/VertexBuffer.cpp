@@ -10,20 +10,16 @@ namespace BillyEngine {
 
 Ref<VertexBuffer> VertexBuffer::CreateStatic(const void* data, u32 size,
                                              const BufferType& type) {
-    return Ref<VertexBuffer>(new VertexBuffer(data, size, false, type));
+    return Ref<VertexBuffer>(new VertexBuffer(data, size, type));
 }
 
 Ref<VertexBuffer> VertexBuffer::CreateDynamic(u32 size,
                                               const BufferType& type) {
-    return Ref<VertexBuffer>(new VertexBuffer(nullptr, size, true, type));
+    return Ref<VertexBuffer>(new VertexBuffer(nullptr, size, type));
 }
 
-VertexBuffer::VertexBuffer(const void* data, u32 size, bool dynamic,
-                           const BufferType& type)
+VertexBuffer::VertexBuffer(const void* data, u32 size, const BufferType& type)
     : m_Size(size), m_Type(type) {
-    BE_GL_LOG("GL: VertexBuffer({}, {}, {}, [stride]{})", data, size, dynamic,
-              type.GetStride());
-
     glGenBuffers(1, &m_VertexBuffer);
     BE_GL_LOG("GL: glGenBuffers(1, {})", m_VertexBuffer);
     Bind();
@@ -35,13 +31,13 @@ VertexBuffer::VertexBuffer(const void* data, u32 size, bool dynamic,
         ss << v[i] << ",";
     }
 
-    BE_GL_LOG("BufferData: [{}]", ss.str());
+    BE_GL_LOG("GL: VectorBufferData: [{}]", ss.str());
 #endif
 
     BE_GL_LOG("GL: glBufferData(GL_ARRAY_BUFFER, {}, {}, {})", size, data,
-              dynamic ? "GL_DYNAMIC_DRAW" : "GL_STATIC_DRAW");
+              data == nullptr ? "GL_DYNAMIC_DRAW" : "GL_STATIC_DRAW");
     glBufferData(GL_ARRAY_BUFFER, size, data,
-                 dynamic ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
+                 data == nullptr ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 }
 
 VertexBuffer::~VertexBuffer() {

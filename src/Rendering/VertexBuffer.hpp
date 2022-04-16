@@ -22,7 +22,7 @@ class VertexBuffer {
     const BufferType& GetBufferType() const;
 
    private:
-    VertexBuffer(const void* data, u32 size, bool dynamic, const BufferType&);
+    VertexBuffer(const void* data, u32 size, const BufferType&);
 
     u32 m_VertexBuffer{0};
     u32 m_Size{0};

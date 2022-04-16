@@ -57,7 +57,7 @@ constexpr Ref<T> CreateRef(Args&&... args) {
 }
 
 #ifdef DEBUG
-    #define BE_GL_DEBUG 0
+    #define BE_GL_DEBUG 1
 #endif
 
 }  // namespace BillyEngine
