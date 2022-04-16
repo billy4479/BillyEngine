@@ -53,6 +53,8 @@ Renderer::Renderer(AssetManager& am) {
 
     vertexArray->SetIndexBuffer(indexBuffer);
     vertexArray->AddVertexBuffer(vertexBuffer);
+
+    SetClearColor(Color::FromRGBA32(0x333333ff));
 }
 
 Renderer::~Renderer() {}

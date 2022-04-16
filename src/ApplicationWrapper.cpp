@@ -1,7 +1,5 @@
 #include <BillyEngine/Application.h>
 
-#include <iostream>
-
 #include "Application.hpp"
 
 Application* TheApplication() {
@@ -19,4 +17,8 @@ void RunApplication(Application* app) {
 
 void QuitApplication(Application* app) {
     ((BillyEngine::Application*)app)->Quit();
+}
+
+Renderer* ApplicationGetRenderer(Application* app) {
+    return (Renderer*)&((BillyEngine::Application*)app)->GetRenderer();
 }

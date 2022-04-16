@@ -14,10 +14,10 @@ struct Color {
 
     static Color FromRGBA(glm::ivec4);
     static Color FromRGBA(glm::ivec3);
-    static Color FromU32(u32);
+    static Color FromRGBA32(u32);
 
     glm::ivec4 ToRGBA() const;
-    u32 ToU32() const;
+    u32 ToRGBA32() const;
 
     glm::vec4& Data();
     const glm::vec4& Data() const;

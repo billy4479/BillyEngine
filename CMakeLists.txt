@@ -82,7 +82,8 @@ endif ()
 
 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE glad glfw EnTT glm spdlog::spdlog
+    PUBLIC glm
+    PRIVATE glad glfw EnTT spdlog::spdlog
 )
 
 target_include_directories(${PROJECT_NAME} 

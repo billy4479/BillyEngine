@@ -22,7 +22,7 @@ Color Color::FromRGBA(glm::ivec3 c) {
     };
 }
 
-Color Color::FromU32(u32 c) {
+Color Color::FromRGBA32(u32 c) {
     // UH magic!
     return FromRGBA({
         (c & (0xff << (6 * 4))) >> (6 * 4),
@@ -41,7 +41,7 @@ glm::ivec4 Color::ToRGBA() const {
     };
 }
 
-u32 Color::ToU32() const {
+u32 Color::ToRGBA32() const {
     const auto c = ToRGBA();
     return (c.r << 24) | (c.g << 16) | (c.b << 8) | c.a;
 }

@@ -20,6 +20,12 @@ class Application {
     static Application& The();
     static void Reset();
 
+    inline AssetManager& GetAssetManager() { return *m_AssetManager; }
+    inline Window& GetWindow() { return *m_Window; }
+    inline Renderer& GetRenderer() { return *m_Renderer; }
+    inline EventManager& GetEventManager() { return *m_EventManager; }
+    inline Input& GetInput() { return *m_Input; }
+
    private:
     Scope<AssetManager> m_AssetManager;
     Scope<Window> m_Window;
