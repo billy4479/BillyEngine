@@ -21,20 +21,22 @@ static Ref<ShaderProgram> shaderProgram;
 //                          0.0f,  0.0f,  0.5f, 0.0f};
 
 static constexpr f32 vertices[] = {
-    +0.5f, +0.5f, 0.0f,  // top right
-    +0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f, +0.5f, 0.0f   // top left
+    // positions        // colors
+    0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
+    0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f   // top
 };
 static constexpr u32 indices[] = {
-    0, 1, 3,  // first triangle
-    1, 2, 3   // second triangle
+    0, 1, 2,  // single triangle
+
+    // 0, 1, 3,  // first triangle
+    // 1, 2, 3   // second triangle
 };
 
 // static Ref<VertexBuffer> vertexBuffer;
 // static Ref<IndexBuffer> indexBuffer;
 static Ref<VertexArray> vertexArray;
-static Scope<Uniform<glm::vec4>> colorUniform;
+// static Scope<Uniform<glm::vec4>> colorUniform;
 
 Renderer::Renderer(AssetManager& am) {
     // TODO: These are the base shaders, maybe inline them?
@@ -44,8 +46,8 @@ Renderer::Renderer(AssetManager& am) {
         am.Load<Shader>("fragment.glsl", "frag", Shader::ShaderType::Fragment);
 
     shaderProgram = ShaderProgram::Create(vertex, fragment);
-    colorUniform = CreateScope<Uniform<glm::vec4>>(
-        shaderProgram->GetUniform<glm::vec4>("color"));
+    // colorUniform = CreateScope<Uniform<glm::vec4>>(
+    //     shaderProgram->GetUniform<glm::vec4>("color"));
 
     am.Unload("vert");
     am.Unload("frag");
@@ -53,8 +55,12 @@ Renderer::Renderer(AssetManager& am) {
     vertexArray = VertexArray::Create();
     vertexArray->Bind();
 
-    auto vertexBuffer = VertexBuffer::CreateStatic(
-        vertices, sizeof(vertices), BufferType({ShaderDataType::Float3}));
+    auto vertexBuffer =
+        VertexBuffer::CreateStatic(vertices, sizeof(vertices),
+                                   BufferType({
+                                       ShaderDataType::Float3,  // Vertices
+                                       ShaderDataType::Float3,  // Colors
+                                   }));
     auto indexBuffer = IndexBuffer::CreateStatic(indices, sizeof(indices));
 
     vertexArray->SetIndexBuffer(indexBuffer);
@@ -70,12 +76,13 @@ void Renderer::Render() {
 
     shaderProgram->Use();
 
-    auto timeValue = glfwGetTime();
-    f32 greenValue = sin(timeValue) / 2.0f + 0.5f;
-    colorUniform->Set({0.0f, greenValue, 0.0f, 1.0f});
+    // auto timeValue = glfwGetTime();
+    // f32 greenValue = sin(timeValue) / 2.0f + 0.5f;
+    // colorUniform->Set({0.0f, greenValue, 0.0f, 1.0f});
 
     vertexArray->Bind();
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, vertexArray->GetIndiciesNumber(),
+                   GL_UNSIGNED_INT, 0);
 }
 
 void Renderer::SetClearColor(const Color& c) {

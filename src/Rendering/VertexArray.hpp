@@ -20,6 +20,8 @@ class VertexArray {
     void AddVertexBuffer(const Ref<VertexBuffer>);
     void SetIndexBuffer(const Ref<IndexBuffer>);
 
+    u32 GetIndiciesNumber() const;
+
    private:
     VertexArray();
 
