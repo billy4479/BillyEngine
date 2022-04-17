@@ -17,8 +17,9 @@ class Shader : public Asset {
 
     AssetType GetAssetType() const override;
     static AssetType GetAssetTypeStatic();
-    static Ref<Shader> Load(std::filesystem::path, ShaderType);
-    static Ref<Shader> Load(std::string_view src, ShaderType);
+
+    template <bool FromMemory, typename Source>
+    static Ref<Shader> Load(Source, ShaderType);
 
     u32 GetID() const;
 

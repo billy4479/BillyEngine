@@ -37,12 +37,16 @@ static std::string LoadShaderSource(std::filesystem::path path) {
     return ss.str();
 }
 
-Ref<Shader> Shader::Load(std::filesystem::path path, ShaderType type) {
-    return Load((std::string_view)LoadShaderSource(path), type);
+template <>
+Ref<Shader> Shader::Load<true, std::string_view>(std::string_view src,
+                                                 ShaderType type) {
+    return Ref<Shader>(new Shader(src, type));
 }
 
-Ref<Shader> Shader::Load(std::string_view src, ShaderType type) {
-    return Ref<Shader>(new Shader(src, type));
+template <>
+Ref<Shader> Shader::Load<false, std::filesystem::path>(
+    std::filesystem::path path, ShaderType type) {
+    return Load<true>((std::string_view)LoadShaderSource(path), type);
 }
 
 u32 Shader::GetID() const { return m_Shader; }

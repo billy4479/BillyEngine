@@ -7,6 +7,7 @@
 
 #include "Assets/AssetManager.hpp"
 #include "Core/Color.hpp"
+#include "EngineAssets/Wrapper.hpp"
 #include "Rendering/IndexBuffer.hpp"
 #include "Rendering/Shader.hpp"
 #include "Rendering/ShaderProgram.hpp"
@@ -33,21 +34,19 @@ static constexpr u32 indices[] = {
     // 1, 2, 3   // second triangle
 };
 
-// static Ref<VertexBuffer> vertexBuffer;
-// static Ref<IndexBuffer> indexBuffer;
 static Ref<VertexArray> vertexArray;
-// static Scope<Uniform<glm::vec4>> colorUniform;
+static Scope<Uniform<f32>> xOffsetUniform;
+static f32 offset = -0.5;
 
 Renderer::Renderer(AssetManager& am) {
-    // TODO: These are the base shaders, maybe inline them?
-    auto vertex =
-        am.Load<Shader>("vertex.glsl", "vert", Shader::ShaderType::Vertex);
-    auto fragment =
-        am.Load<Shader>("fragment.glsl", "frag", Shader::ShaderType::Fragment);
+    auto vertex = am.Load<Shader, true>(EngineAssets::vertex, "vert",
+                                        Shader::ShaderType::Vertex);
+    auto fragment = am.Load<Shader, true>(EngineAssets::fragment, "frag",
+                                          Shader::ShaderType::Fragment);
 
     shaderProgram = ShaderProgram::Create(vertex, fragment);
-    // colorUniform = CreateScope<Uniform<glm::vec4>>(
-    //     shaderProgram->GetUniform<glm::vec4>("color"));
+    xOffsetUniform =
+        CreateScope<Uniform<f32>>(shaderProgram->GetUniform<f32>("xOffset"));
 
     am.Unload("vert");
     am.Unload("frag");
@@ -75,6 +74,8 @@ void Renderer::Render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     shaderProgram->Use();
+    xOffsetUniform->Set(offset);
+    offset += 0.001;
 
     // auto timeValue = glfwGetTime();
     // f32 greenValue = sin(timeValue) / 2.0f + 0.5f;

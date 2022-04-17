@@ -20,22 +20,28 @@ class AssetManager {
     std::filesystem::path GetBaseDir();
     void SetBaseDir(std::filesystem::path);
 
-    template <typename T, typename... Args>
-    Ref<T> Load(std::filesystem::path path, const std::string& name,
-                Args... args) {
+    template <typename T, bool FromMemory = false, typename... Args>
+    Ref<T> Load(auto src, const std::string& name, Args... args) {
         static_assert(std::is_base_of_v<Asset, T>, "T must derive from Asset");
-        auto n = std::string(name);
 
-        if (m_Assets.contains(n)) {
+        if (m_Assets.contains(name)) {
             Logger::Core()->error(
                 "An asset named {} is already present. Asset at {} will not be "
                 "loaded",
-                name, path.string());
+                name, src);
             return nullptr;
         }
 
-        Ref<T> asset = T::Load(m_BaseDir / path, std::forward<Args>(args)...);
-        m_Assets[n] = std::static_pointer_cast<Asset>(asset);
+        Ref<T> asset;
+        if constexpr (FromMemory) {
+            asset =
+                T::template Load<FromMemory>(src, std::forward<Args>(args)...);
+        } else {
+            asset = T::template Load<FromMemory>(m_BaseDir / src,
+                                                 std::forward<Args>(args)...);
+        }
+
+        m_Assets[name] = std::static_pointer_cast<Asset>(asset);
         return asset;
     }
 
