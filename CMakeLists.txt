@@ -62,6 +62,8 @@ FetchContent_Declare(spdlog
 )
 FetchContent_MakeAvailable(spdlog)
 
+add_subdirectory(Generator)
+
 file(GLOB_RECURSE SRC src/*.cpp src/*.hpp include/*.h include/*.hpp)
 
 add_library(${PROJECT_NAME} SHARED ${SRC})
@@ -109,4 +111,3 @@ endif ()
 if(COMPILE_DEMO)
     add_subdirectory(Demo)
 endif()
-
