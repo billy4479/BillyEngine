@@ -26,14 +26,6 @@ Window::Window(std::string_view title, glm::ivec2 size) {
         Logger::Core()->critical("Failed to initialize GLAD");
         return;
     }
-
-    glViewport(0, 0, 800, 600);
-
-    glfwSetFramebufferSizeCallback(
-        m_Window, [](GLFWwindow*, i32 width, i32 height) {
-            glViewport(0, 0, width, height);
-            Logger::Core()->debug("Resize to {}:{}", width, height);
-        });
 }
 
 Window::~Window() { glfwTerminate(); }

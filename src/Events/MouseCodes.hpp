@@ -6,14 +6,14 @@
 
 namespace BillyEngine {
 
-using MouseCode = u8;
-namespace Keys {
+using MouseCode = i8;
+namespace Buttons {
 
 #define o(k, n) k = n,
 enum : MouseCode { ENUMERATE_MOUSE_BUTTONS(o) };
 #undef o
 
-}  // namespace Keys
+}  // namespace Buttons
 }  // namespace BillyEngine
 
 #undef ENUMERATE_MOUSE_BUTTONS

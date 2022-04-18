@@ -96,4 +96,8 @@ void Renderer::SetWireframeView(bool enabled) {
     glPolygonMode(GL_FRONT_AND_BACK, enabled ? GL_LINE : GL_FILL);
 }
 
+void Renderer::SetViewportSize(glm::ivec2 size) {
+    glViewport(0, 0, size.x, size.y);
+}
+
 }  // namespace BillyEngine

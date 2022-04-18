@@ -14,10 +14,10 @@ bool Input::IsKeyPressed(KeyCode key) {
     return result == GLFW_PRESS || result == GLFW_REPEAT;
 }
 
-glm::vec2 Input::GetMousePosition() {
+glm::ivec2 Input::GetMousePosition() {
     f64 x, y;
     glfwGetCursorPos(m_Window.m_Window, &x, &y);
-    return {(f32)x, (f32)y};
+    return {x, y};
 }
 
 bool Input::IsMouseButtonPressed(MouseCode button) {
