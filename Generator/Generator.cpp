@@ -19,38 +19,44 @@ static std::string ToHex(T n) {
 };
 
 int main(int argc, char** argv) {
-    if (argc < 4) return 1;
+    std::cout << R"(#include <array>
+#include <string_view>
 
-    std::ofstream outFile;
-    outFile.open(argv[1]);
-    if (!outFile.is_open()) return 1;
+namespace BillyEngine {
+namespace EngineResources {)";
 
-    for (int i = 2; i < argc; i += 2) {
-        std::ifstream current;
+    for (int i = 1; i < argc; i++) {
         auto name = std::filesystem::path(argv[i]);
-        const auto type = std::string_view(argv[i + 1]);
+        std::cerr << "Bundling " << name.filename() << std::endl;
+
+        std::ifstream current;
         current.open(name);
         if (!current.is_open()) return 1;
 
-        outFile << "static constexpr ";
-        name = name.filename().replace_extension();
+        std::cout << "\n\nstatic constexpr ";
+        const auto& n = name.filename().replace_extension().string();
+        const auto& ext = name.extension().string();
 
-        if (type == "text") {
-            outFile << "std::string_view " << name.string() << " = R\"("
-                    << current.rdbuf() << ")\";\n";
-        } else if (type == "binary" || type == "") {
-            outFile << "std::array " << name.string()
-                    << " = {std::to_array<unsigned char>({";
+        if (ext == ".txt" || ext == ".glsl") {
+            std::cout << "std::string_view " << n << " = R\"("
+                      << current.rdbuf() << ")\";";
+        } else {
+            std::cout << "std::array " << n
+                      << " = {std::to_array<unsigned char>({";
 
             char c;
             while (current.get(c))
-                outFile << "0x" << ToHex((unsigned char)c) << ", ";
+                std::cout << "0x" << ToHex((unsigned char)c) << ", ";
 
-            outFile << "})};";
-        } else {
-            return 1;
+            std::cout << "})};";
         }
     }
+
+    std::cout << R"(
+
+}
+}
+    )";
 
     return 0;
 }

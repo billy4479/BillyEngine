@@ -63,10 +63,20 @@ FetchContent_Declare(spdlog
 FetchContent_MakeAvailable(spdlog)
 
 add_subdirectory(Generator)
+file(GLOB RESOURCES Resources/*)
+add_custom_command(
+    OUTPUT Generated.hpp
+    COMMAND Generator ${RESOURCES} > Generated.hpp
+    DEPENDS ${RESOURCES}
+    DEPENDS Generator
+)
 
 file(GLOB_RECURSE SRC src/*.cpp src/*.hpp include/*.h include/*.hpp)
-
 add_library(${PROJECT_NAME} SHARED ${SRC})
+
+add_custom_target(Generated DEPENDS Generated.hpp)
+add_dependencies(${PROJECT_NAME} Generated)
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
 
 if (WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES

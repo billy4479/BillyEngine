@@ -4,4 +4,3 @@ BillyEngine.log
 ProfilerResult.json
 .vs
 CMakeSettings.json
-src/EngineAssets/Generated.hpp

@@ -5,9 +5,10 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 
+#include <Generated.hpp>
+
 #include "Assets/AssetManager.hpp"
 #include "Core/Color.hpp"
-#include "EngineAssets/Wrapper.hpp"
 #include "Rendering/IndexBuffer.hpp"
 #include "Rendering/Shader.hpp"
 #include "Rendering/ShaderProgram.hpp"
@@ -39,9 +40,9 @@ static Scope<Uniform<f32>> xOffsetUniform;
 static f32 offset = -0.5;
 
 Renderer::Renderer(AssetManager& am) {
-    auto vertex = am.Load<Shader, true>(EngineAssets::vertex, "vert",
+    auto vertex = am.Load<Shader, true>(EngineResources::vertex, "vert",
                                         Shader::ShaderType::Vertex);
-    auto fragment = am.Load<Shader, true>(EngineAssets::fragment, "frag",
+    auto fragment = am.Load<Shader, true>(EngineResources::fragment, "frag",
                                           Shader::ShaderType::Fragment);
 
     shaderProgram = ShaderProgram::Create(vertex, fragment);
