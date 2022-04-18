@@ -10,8 +10,7 @@
 
 namespace BillyEngine {
 
-AssetType Shader::GetAssetTypeStatic() { return AssetType::Shader; }
-AssetType Shader::GetAssetType() const { return GetAssetTypeStatic(); }
+AssetType Shader::GetAssetType() const { return AssetType::Shader; }
 
 static std::string_view GetShaderName(Shader::ShaderType type) {
     switch (type) {

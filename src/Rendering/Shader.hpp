@@ -16,7 +16,6 @@ class Shader : public Asset {
     };
 
     AssetType GetAssetType() const override;
-    static AssetType GetAssetTypeStatic();
 
     template <bool FromMemory, typename Source>
     static Ref<Shader> Load(Source, ShaderType);

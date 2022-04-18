@@ -48,7 +48,7 @@ class AssetManager {
     template <typename T>
     Ref<T> Get(const std::string& name) const {
         Ref<Asset> asset = m_Assets.at(name);
-        if (asset->GetAssetType() != T::GetAssetTypeStatic()) {
+        if (asset->GetAssetType() != std::declval<T>().GetAssetType()) {
             Logger::Core()->error("Asset {} is not of type {} but {}", name,
                                   T::GetAssetTypeStatic(),
                                   GetAssetTypeName(asset->GetAssetType()));
