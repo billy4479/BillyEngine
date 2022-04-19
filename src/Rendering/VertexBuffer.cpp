@@ -21,7 +21,7 @@ Ref<VertexBuffer> VertexBuffer::CreateDynamic(u32 size,
 VertexBuffer::VertexBuffer(const void* data, u32 size, const BufferType& type)
     : m_Size(size), m_Type(type) {
     glGenBuffers(1, &m_VertexBuffer);
-    BE_GL_LOG("GL: glGenBuffers(1, {})", m_VertexBuffer);
+    BE_GL_LOG("glGenBuffers(1, {})", m_VertexBuffer);
     Bind();
 
 #if BE_GL_DEBUG
@@ -31,29 +31,29 @@ VertexBuffer::VertexBuffer(const void* data, u32 size, const BufferType& type)
         ss << v[i] << ",";
     }
 
-    BE_GL_LOG("GL: VectorBufferData: [{}]", ss.str());
+    BE_GL_LOG("VectorBufferData: [{}]", ss.str());
 #endif
 
-    BE_GL_LOG("GL: glBufferData(GL_ARRAY_BUFFER, {}, {}, {})", size, data,
+    BE_GL_LOG("glBufferData(GL_ARRAY_BUFFER, {}, {}, {})", size, data,
               data == nullptr ? "GL_DYNAMIC_DRAW" : "GL_STATIC_DRAW");
     glBufferData(GL_ARRAY_BUFFER, size, data,
                  data == nullptr ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
 }
 
 VertexBuffer::~VertexBuffer() {
-    BE_GL_LOG("GL: glDeleteBuffers(1, {})", m_VertexBuffer);
+    BE_GL_LOG("glDeleteBuffers(1, {})", m_VertexBuffer);
     glDeleteBuffers(1, &m_VertexBuffer);
 }
 
 u32 VertexBuffer::GetID() const { return m_VertexBuffer; }
 
 void VertexBuffer::Bind() const {
-    BE_GL_LOG("GL: glBindBuffer(GL_ARRAY_BUFFER, {})", m_VertexBuffer);
+    BE_GL_LOG("glBindBuffer(GL_ARRAY_BUFFER, {})", m_VertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
 }
 
 void VertexBuffer::Unbind() const {
-    BE_GL_LOG("GL: glBindBuffer(GL_ARRAY_BUFFER, 0)", m_VertexBuffer);
+    BE_GL_LOG("glBindBuffer(GL_ARRAY_BUFFER, 0)", m_VertexBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -62,7 +62,7 @@ void VertexBuffer::SetData(const void* data, u32 size) {
 
     // https://docs.gl/gl4/glBufferSubData
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
-    BE_GL_LOG("GL: glBufferSubData(GL_ARRAY_BUFFER, 0, {}, {})", size, data);
+    BE_GL_LOG("glBufferSubData(GL_ARRAY_BUFFER, 0, {}, {})", size, data);
 }
 
 u32 VertexBuffer::GetSize() const { return m_Size; }

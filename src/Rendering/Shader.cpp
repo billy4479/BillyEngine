@@ -51,22 +51,26 @@ Ref<Shader> Shader::Load<false, std::filesystem::path>(
 u32 Shader::GetID() const { return m_Shader; }
 
 Shader::~Shader() {
+    BE_GL_LOG("glDeleteShader({})", m_Shader);
     glDeleteShader(m_Shader);
-    // Logger::Core()->debug("Deleted {} shader", GetShaderName(m_Type));
 }
 
 Shader::Shader(std::string_view source, ShaderType type) : m_Type(type) {
     switch (m_Type) {
         case ShaderType::Vertex:
             m_Shader = glCreateShader(GL_VERTEX_SHADER);
+            BE_GL_LOG("glCompileShader(GL_VERTEX_SHADER) -> {}", m_Shader);
             break;
         case ShaderType::Fragment:
             m_Shader = glCreateShader(GL_FRAGMENT_SHADER);
+            BE_GL_LOG("glCompileShader(GL_FRAGMENT_SHADER) -> {}", m_Shader);
             break;
     }
 
     auto s = source.data();
+    BE_GL_LOG("glShaderSource({}, 1, {}, nullptr)", m_Shader, (void*)&s);
     glShaderSource(m_Shader, 1, &s, nullptr);
+    BE_GL_LOG("glCompileShader({})", m_Shader);
     glCompileShader(m_Shader);
 
     i32 success;

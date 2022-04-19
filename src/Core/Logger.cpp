@@ -9,9 +9,21 @@ namespace BillyEngine {
 
 Logger* Logger::s_Instance{nullptr};
 
-void Logger::Init() {
-    if (!s_Instance) s_Instance = new Logger();
+#if BE_GL_DEBUG
+bool Logger::LogGLEnabled{true};
+#endif
+
+void Logger::CreateOrReset() {
+    if (s_Instance) delete s_Instance;
+
+    s_Instance = new Logger();
+
+#if BE_GL_DEBUG
+    LogGLEnabled = true;
+#endif
 }
+
+Logger::~Logger() { spdlog::drop_all(); }
 
 Logger::Logger() {
     m_Sinks[0] = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();

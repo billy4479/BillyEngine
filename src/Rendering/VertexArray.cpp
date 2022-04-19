@@ -15,21 +15,21 @@ Ref<VertexArray> VertexArray::Create() {
 
 VertexArray::VertexArray() {
     glGenVertexArrays(1, &m_VertexArray);
-    BE_GL_LOG("GL: glGenVertexArrays(1, {})", m_VertexArray);
+    BE_GL_LOG("glGenVertexArrays(1, {})", m_VertexArray);
 }
 
 VertexArray::~VertexArray() {
-    BE_GL_LOG("GL: glDeleteVertexArrays(1, {})", m_VertexArray);
+    BE_GL_LOG("glDeleteVertexArrays(1, {})", m_VertexArray);
     glDeleteVertexArrays(1, &m_VertexArray);
 }
 
 void VertexArray::Bind() const {
     glBindVertexArray(m_VertexArray);
-    BE_GL_LOG("GL: glBindVertexArray({})", m_VertexArray);
+    BE_GL_LOG("glBindVertexArray({})", m_VertexArray);
 }
 
 void VertexArray::Unbind() const {
-    BE_GL_LOG("GL: glBindVertexArray(0)");
+    BE_GL_LOG("glBindVertexArray(0)");
     glBindVertexArray(0);
 }
 
@@ -51,17 +51,16 @@ void VertexArray::AddVertexBuffer(const Ref<VertexBuffer> vertexBuffer) {
             case ShaderDataType::Float2:
             case ShaderDataType::Float3:
             case ShaderDataType::Float4: {
-                BE_GL_LOG(
-                    "GL: glVertexAttribPointer({}, {}, GL_FLOAT, {}, {}, {})",
-                    m_VertexBufferIndex, element.ComponentCount,
-                    element.Normalized, bufType.GetStride(), element.Offset);
+                BE_GL_LOG("glVertexAttribPointer({}, {}, GL_FLOAT, {}, {}, {})",
+                          m_VertexBufferIndex, element.ComponentCount,
+                          element.Normalized, bufType.GetStride(),
+                          element.Offset);
                 glVertexAttribPointer(m_VertexBufferIndex,
                                       element.ComponentCount, type.GLType(),
                                       element.Normalized, bufType.GetStride(),
                                       (const void*)element.Offset);
 
-                BE_GL_LOG("GL: glEnableVertexAttribArray({})",
-                          m_VertexBufferIndex);
+                BE_GL_LOG("glEnableVertexAttribArray({})", m_VertexBufferIndex);
                 glEnableVertexAttribArray(m_VertexBufferIndex);
 
                 m_VertexBufferIndex++;
@@ -72,11 +71,10 @@ void VertexArray::AddVertexBuffer(const Ref<VertexBuffer> vertexBuffer) {
             case ShaderDataType::Int3:
             case ShaderDataType::Int4:
             case ShaderDataType::Bool: {
-                BE_GL_LOG("GL: glEnableVertexAttribArray({})",
-                          m_VertexBufferIndex);
+                BE_GL_LOG("glEnableVertexAttribArray({})", m_VertexBufferIndex);
                 glEnableVertexAttribArray(m_VertexBufferIndex);
 
-                BE_GL_LOG("GL: glVertexAttribIPointer({}, {}, {}, {}, {}, {})",
+                BE_GL_LOG("glVertexAttribIPointer({}, {}, {}, {}, {}, {})",
                           m_VertexBufferIndex, element.ComponentCount,
                           type.Type, element.Normalized, bufType.GetStride(),
                           element.Offset);
@@ -90,15 +88,14 @@ void VertexArray::AddVertexBuffer(const Ref<VertexBuffer> vertexBuffer) {
             case ShaderDataType::Mat4: {
                 auto count = element.ComponentCount;
                 for (u8 i = 0; i < count; i++) {
-                    BE_GL_LOG("GL: glEnableVertexAttribArray({})",
+                    BE_GL_LOG("glEnableVertexAttribArray({})",
                               m_VertexBufferIndex);
                     glEnableVertexAttribArray(m_VertexBufferIndex);
 
-                    BE_GL_LOG(
-                        "GL: glVertexAttribPointer({}, {}, {}, {}, {}, {})",
-                        m_VertexBufferIndex, count, type.Type,
-                        element.Normalized, bufType.GetStride(),
-                        element.Offset + count * i * sizeof(f32));
+                    BE_GL_LOG("glVertexAttribPointer({}, {}, {}, {}, {}, {})",
+                              m_VertexBufferIndex, count, type.Type,
+                              element.Normalized, bufType.GetStride(),
+                              element.Offset + count * i * sizeof(f32));
                     glVertexAttribPointer(
                         m_VertexBufferIndex, count, type.GLType(),
                         element.Normalized, bufType.GetStride(),

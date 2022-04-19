@@ -10,7 +10,10 @@ int main() {
 
     // RunApplication(app);
 
-    auto& app = BillyEngine::Application::The();
+    auto& app = BillyEngine::Application::CreateOrReset();
     // app.GetRenderer().SetWireframeView(true);
     app.Run();
+
+    // auto& app = BillyEngine::Application::CreateOrReset();
+    // app.Run();
 }

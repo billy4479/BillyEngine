@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/ext/vector_int2.hpp>
+
 #include "Core/Types.hpp"
 
 namespace BillyEngine {
@@ -14,11 +16,19 @@ class Application {
    public:
     ~Application();
 
+    struct ApplicationProprieties {
+        glm::ivec2 Size;
+        std::string Title;
+    };
+
     void Run();
     void Quit();
 
     static Application& The();
-    static void Reset();
+    static Application& CreateOrReset(const ApplicationProprieties& props = {
+                                          .Size = {800, 600},
+                                          .Title = "BillyEngine",
+                                      });
 
     inline AssetManager& GetAssetManager() { return *m_AssetManager; }
     inline Window& GetWindow() { return *m_Window; }
@@ -33,7 +43,7 @@ class Application {
     Scope<EventManager> m_EventManager;
     Scope<Input> m_Input;
 
-    Application();
+    Application(const ApplicationProprieties&);
     static Scope<Application> s_Instance;
 };
 

@@ -6,9 +6,9 @@ Application* TheApplication() {
     return (Application*)&BillyEngine::Application::The();
 }
 
-void ResetApplication(Application*) {
+void CreateOrResetApplication(Application*) {
     // delete (BillyEngine::Application*)app;
-    BillyEngine::Application::Reset();
+    BillyEngine::Application::CreateOrReset();
 }
 
 void RunApplication(Application* app) {

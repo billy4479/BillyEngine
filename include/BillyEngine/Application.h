@@ -8,7 +8,7 @@ struct Application;
 struct Renderer;
 
 BE_PUBLIC Application* TheApplication();
-BE_PUBLIC void ResetApplication(Application*);
+BE_PUBLIC Application* CreateOrResetApplication();
 
 BE_PUBLIC void RunApplication(Application*);
 BE_PUBLIC void QuitApplication(Application*);

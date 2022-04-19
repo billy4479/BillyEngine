@@ -14,23 +14,33 @@ Window::Window(std::string_view title, glm::ivec2 size) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    BE_GL_LOG("glfwCreateWindow({}, {}, {}, nullptr, nullptr)", size.x, size.y,
+              title);
     m_Window = glfwCreateWindow(size.x, size.y, title.data(), nullptr, nullptr);
     if (m_Window == nullptr) {
         Logger::Core()->critical("Failed to create GLFW window");
         glfwTerminate();
         return;
     }
+    BE_GL_LOG("glfwMakeContextCurrent({})", (void*)m_Window);
     glfwMakeContextCurrent(m_Window);
 
+    BE_GL_LOG("gladLoadGL({})", (void*)glfwGetProcAddress);
     if (!gladLoadGL(glfwGetProcAddress)) {
         Logger::Core()->critical("Failed to initialize GLAD");
         return;
     }
 }
 
-Window::~Window() { glfwTerminate(); }
+Window::~Window() {
+    BE_GL_LOG("glfwTerminate()");
+    glfwTerminate();
+}
 
-void Window::SwapBuffers() { glfwSwapBuffers(m_Window); }
+void Window::SwapBuffers() {
+    BE_GL_LOG("glfwSwapBuffers({})", (void*)m_Window);
+    glfwSwapBuffers(m_Window);
+}
 
 bool Window::ShouldClose() { return glfwWindowShouldClose(m_Window); }
 

@@ -14,15 +14,14 @@
 namespace BillyEngine {
 
 Scope<Application> Application::s_Instance{nullptr};
-static glm::ivec2 size = {800, 600};
 
-Application::Application()
+Application::Application(const ApplicationProprieties& props)
     : m_AssetManager(CreateScope<AssetManager>()),
-      m_Window(CreateScope<Window>("BillyEngine", size)),
+      m_Window(CreateScope<Window>(props.Title, props.Size)),
       m_Renderer(CreateScope<Renderer>(*m_AssetManager)),
       m_EventManager(CreateScope<EventManager>(*m_Window)),
       m_Input(CreateScope<Input>(*m_Window)) {
-    m_Renderer->SetViewportSize(size);
+    m_Renderer->SetViewportSize(props.Size);
     m_EventManager->AddListener<WindowResizeEvent>(
         [&](const WindowResizeEvent& e) {
             m_Renderer->SetViewportSize(e.Data.Size);
@@ -40,6 +39,10 @@ void Application::Run() {
                              e.Data.Position.y);
     });
 
+#if BE_GL_DEBUG
+    Logger::LogGLEnabled = false;
+#endif
+
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();
         m_Renderer->Render();
@@ -54,20 +57,21 @@ void Application::Run() {
 void Application::Quit() { m_Window->SetShouldClose(true); }
 
 Application& Application::The() {
-    if (!s_Instance) {
-        Logger::Init();
-        s_Instance = Scope<Application>(new Application());
-    }
+    // We just die here since the logger might be uninitialized yet
+    assert(s_Instance);
 
     return *s_Instance;
 }
 
-void Application::Reset() {
-    if (!s_Instance) return;
-
-    s_Instance = nullptr;
+Application& Application::CreateOrReset(const ApplicationProprieties& props) {
+    Logger::CreateOrReset();
+    s_Instance.reset();
+    s_Instance.reset(new Application(props));
+    return *s_Instance;
 }
 
-Application::~Application() { Logger::Core()->info("Cleaning up."); }
+Application::~Application() {
+    // Logger::Core()->info("Cleaning up.");
+}
 
 }  // namespace BillyEngine

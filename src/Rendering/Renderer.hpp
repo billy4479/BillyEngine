@@ -21,6 +21,8 @@ class Renderer {
     void SetViewportSize(glm::ivec2);
 
    private:
+    struct RenderData;
+    Scope<RenderData> m_RenderData;
 };
 
 }  // namespace BillyEngine

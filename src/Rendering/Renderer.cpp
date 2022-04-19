@@ -17,54 +17,57 @@
 
 namespace BillyEngine {
 
-static Ref<ShaderProgram> shaderProgram;
+struct Renderer::RenderData {
+    // static constexpr f32 vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f,
+    //                                    0.0f,  0.0f,  0.5f, 0.0f};
 
-// static f32 vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f,
-//                          0.0f,  0.0f,  0.5f, 0.0f};
+    static constexpr f32 vertices[] = {
+        // positions        // colors
+        0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
+        0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f   // top
+    };
+    static constexpr u32 indices[] = {
+        0, 1, 2,  // single triangle
 
-static constexpr f32 vertices[] = {
-    // positions        // colors
-    0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
-    0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f   // top
+        // 0, 1, 3,  // first triangle
+        // 1, 2, 3   // second triangle
+    };
+
+    Ref<ShaderProgram> shaderProgram;
+    Ref<VertexArray> vertexArray;
+    Scope<Uniform<f32>> xOffsetUniform;
+    f32 offset = -0.5;
 };
-static constexpr u32 indices[] = {
-    0, 1, 2,  // single triangle
 
-    // 0, 1, 3,  // first triangle
-    // 1, 2, 3   // second triangle
-};
-
-static Ref<VertexArray> vertexArray;
-static Scope<Uniform<f32>> xOffsetUniform;
-static f32 offset = -0.5;
-
-Renderer::Renderer(AssetManager& am) {
+Renderer::Renderer(AssetManager& am)
+    : m_RenderData(CreateScope<Renderer::RenderData>()) {
     auto vertex = am.Load<Shader, true>(EngineResources::vertex, "vert",
                                         Shader::ShaderType::Vertex);
     auto fragment = am.Load<Shader, true>(EngineResources::fragment, "frag",
                                           Shader::ShaderType::Fragment);
 
-    shaderProgram = ShaderProgram::Create(vertex, fragment);
-    xOffsetUniform =
-        CreateScope<Uniform<f32>>(shaderProgram->GetUniform<f32>("xOffset"));
+    m_RenderData->shaderProgram = ShaderProgram::Create(vertex, fragment);
+    m_RenderData->xOffsetUniform = CreateScope<Uniform<f32>>(
+        m_RenderData->shaderProgram->GetUniform<f32>("xOffset"));
 
     am.Unload("vert");
     am.Unload("frag");
 
-    vertexArray = VertexArray::Create();
-    vertexArray->Bind();
+    m_RenderData->vertexArray = VertexArray::Create();
+    m_RenderData->vertexArray->Bind();
 
-    auto vertexBuffer =
-        VertexBuffer::CreateStatic(vertices, sizeof(vertices),
-                                   BufferType({
-                                       ShaderDataType::Float3,  // Vertices
-                                       ShaderDataType::Float3,  // Colors
-                                   }));
-    auto indexBuffer = IndexBuffer::CreateStatic(indices, sizeof(indices));
+    auto vertexBuffer = VertexBuffer::CreateStatic(
+        m_RenderData->vertices, sizeof(m_RenderData->vertices),
+        BufferType({
+            ShaderDataType::Float3,  // Vertices
+            ShaderDataType::Float3,  // Colors
+        }));
+    auto indexBuffer = IndexBuffer::CreateStatic(m_RenderData->indices,
+                                                 sizeof(m_RenderData->indices));
 
-    vertexArray->SetIndexBuffer(indexBuffer);
-    vertexArray->AddVertexBuffer(vertexBuffer);
+    m_RenderData->vertexArray->SetIndexBuffer(indexBuffer);
+    m_RenderData->vertexArray->AddVertexBuffer(vertexBuffer);
 
     SetClearColor(Color::FromRGBA32(0x333333ff));
 }
@@ -74,16 +77,16 @@ Renderer::~Renderer() {}
 void Renderer::Render() {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    shaderProgram->Use();
-    xOffsetUniform->Set(offset);
-    offset += 0.001;
+    m_RenderData->shaderProgram->Use();
+    m_RenderData->xOffsetUniform->Set(m_RenderData->offset);
+    m_RenderData->offset += 0.001;
 
     // auto timeValue = glfwGetTime();
     // f32 greenValue = sin(timeValue) / 2.0f + 0.5f;
     // colorUniform->Set({0.0f, greenValue, 0.0f, 1.0f});
 
-    vertexArray->Bind();
-    glDrawElements(GL_TRIANGLES, vertexArray->GetIndiciesNumber(),
+    m_RenderData->vertexArray->Bind();
+    glDrawElements(GL_TRIANGLES, m_RenderData->vertexArray->GetIndiciesNumber(),
                    GL_UNSIGNED_INT, 0);
 }
 

@@ -10,10 +10,21 @@ namespace BillyEngine {
 
 class Logger {
    public:
-    static Ref<spdlog::logger> Core() { return s_Instance->m_CoreLogger; }
-    static Ref<spdlog::logger> Client() { return s_Instance->m_ClientLogger; }
+    static Ref<spdlog::logger> Core() {
+        assert(s_Instance);
+        return s_Instance->m_CoreLogger;
+    }
+    static Ref<spdlog::logger> Client() {
+        assert(s_Instance);
+        return s_Instance->m_ClientLogger;
+    }
 
-    static void Init();
+    static void CreateOrReset();
+
+    ~Logger();
+#if BE_GL_DEBUG
+    static bool LogGLEnabled;
+#endif
 
    private:
     Logger();
@@ -27,7 +38,12 @@ class Logger {
 };
 
 #if BE_GL_DEBUG
-    #define BE_GL_LOG(...) Logger::Core()->debug(__VA_ARGS__)
+    #include <spdlog/fmt/fmt.h>
+    #define BE_GL_LOG(...)                                                   \
+        {                                                                    \
+            if (Logger::LogGLEnabled)                                        \
+                Logger::Core()->debug("[GL]: {}", fmt::format(__VA_ARGS__)); \
+        }
 #else
     #define BE_GL_LOG(...)
 #endif
