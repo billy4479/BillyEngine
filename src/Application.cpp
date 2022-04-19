@@ -13,7 +13,7 @@
 
 namespace BillyEngine {
 
-Scope<Application> Application::s_Instance{nullptr};
+Application* Application::s_Instance{nullptr};
 
 Application::Application(const ApplicationProprieties& props)
     : m_AssetManager(CreateScope<AssetManager>()),
@@ -65,13 +65,12 @@ Application& Application::The() {
 
 Application& Application::CreateOrReset(const ApplicationProprieties& props) {
     Logger::CreateOrReset();
-    s_Instance.reset();
-    s_Instance.reset(new Application(props));
+    if (s_Instance) delete s_Instance;
+
+    s_Instance = new Application(props);
     return *s_Instance;
 }
 
-Application::~Application() {
-    // Logger::Core()->info("Cleaning up.");
-}
+Application::~Application() { Logger::Core()->info("Cleaning up."); }
 
 }  // namespace BillyEngine

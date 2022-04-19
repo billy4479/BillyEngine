@@ -44,7 +44,7 @@ class Application {
     Scope<Input> m_Input;
 
     Application(const ApplicationProprieties&);
-    static Scope<Application> s_Instance;
+    static Application* s_Instance;
 };
 
 }  // namespace BillyEngine
