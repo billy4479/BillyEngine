@@ -26,9 +26,10 @@ Application::Application(const ApplicationProprieties& props)
       m_EventManager(CreateScope<EventManager>(*m_Window)),
       m_Input(CreateScope<Input>(*m_Window)) {
     m_Renderer->SetViewportSize(props.Size);
+
     m_EventManager->AddListener<WindowResizeEvent>(
-        [&](const WindowResizeEvent& e) {
-            m_Renderer->SetViewportSize(e.Data.Size);
+        [](const WindowResizeEvent& e) {
+            Application::The().GetRenderer().SetViewportSize(e.Data.Size);
             Logger::Core()->debug("Resize to {}:{}", e.Data.Size.x,
                                   e.Data.Size.x);
         });

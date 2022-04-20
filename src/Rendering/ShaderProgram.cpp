@@ -37,8 +37,6 @@ ShaderProgram::ShaderProgram(const Ref<Shader> vertexShader,
         m_Program = 0;
         return;
     }
-
-    Logger::Core()->info("link!");
 }
 
 ShaderProgram::~ShaderProgram() {

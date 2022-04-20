@@ -31,6 +31,8 @@ class EventManager {
     }
     void RemoveListener(u32);
 
+    void Dispatch(const Event&) const;
+
    private:
     std::unordered_map<u32, std::function<void(const Event&)>> m_Listeners;
     u32 m_NextID{0};

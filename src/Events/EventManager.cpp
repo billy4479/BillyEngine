@@ -13,32 +13,36 @@
 namespace BillyEngine {
 
 class Callbacks {
+#define DISPATCH(e) \
+    ((EventManager*)glfwGetWindowUserPointer(window))->Dispatch(e)
+
    public:
     static void WindowClose(GLFWwindow* window) {
         auto e = WindowCloseEvent{};
         e.Data = CreateWindowEventData(window);
-        The().Dispatcher(e);
+        DISPATCH(e);
     }
 
     static void WindowMove(GLFWwindow* window, i32, i32) {
         auto e = WindowMoveEvent{};
         e.Data = CreateWindowEventData(window);
-        The().Dispatcher(e);
+        DISPATCH(e);
     }
 
     static void WindowResize(GLFWwindow* window, i32, i32) {
         auto e = WindowResizeEvent{};
         e.Data = CreateWindowEventData(window);
-        The().Dispatcher(e);
+        DISPATCH(e);
     }
 
     static void WindowFocusChanged(GLFWwindow* window, i32) {
         auto e = WindowFocusEvent{};
         e.Data = CreateWindowEventData(window);
-        The().Dispatcher(e);
+        DISPATCH(e);
     }
 
-    static void Key(GLFWwindow*, i32 key, i32 scancode, i32 action, i32 mods) {
+    static void Key(GLFWwindow* window, i32 key, i32 scancode, i32 action,
+                    i32 mods) {
         switch (action) {
             case GLFW_PRESS:
             case GLFW_REPEAT: {
@@ -46,7 +50,7 @@ class Callbacks {
                 e.Data.Keycode = key;
                 e.Data.Scancode = scancode;
                 e.Data.Mods = mods;
-                The().Dispatcher(e);
+                DISPATCH(e);
                 break;
             }
             case GLFW_RELEASE: {
@@ -54,7 +58,7 @@ class Callbacks {
                 e.Data.Keycode = key;
                 e.Data.Scancode = scancode;
                 e.Data.Mods = mods;
-                The().Dispatcher(e);
+                DISPATCH(e);
                 break;
             }
             default:
@@ -62,7 +66,7 @@ class Callbacks {
         }
     }
 
-    static void Char(GLFWwindow*, u32 keycode) {
+    static void Char(GLFWwindow* window, u32 keycode) {
         // TODO: `keycode` is a Unicode point instead.
         //       Should it be handled differently?
 
@@ -70,7 +74,7 @@ class Callbacks {
         e.Data.Keycode = keycode;
         e.Data.Scancode = glfwGetKeyScancode(keycode);
         e.Data.Mods = 0;  // FIXME: Mhh, there should be a way...
-        The().Dispatcher(e);
+        DISPATCH(e);
     }
 
     static void MouseButton(GLFWwindow* window, i32 button, i32 action,
@@ -84,13 +88,13 @@ class Callbacks {
             case GLFW_PRESS: {
                 auto e = MouseButtonPressedEvent{};
                 e.Data = data;
-                The().Dispatcher(e);
+                DISPATCH(e);
                 break;
             }
             case GLFW_RELEASE: {
                 auto e = MouseButtonReleasedEvent{};
                 e.Data = data;
-                The().Dispatcher(e);
+                DISPATCH(e);
                 break;
             }
             default:
@@ -104,24 +108,19 @@ class Callbacks {
         e.Data.Button = Buttons::ButtonNone;
         e.Data.Mods = 0;
         e.Data.Position = GetMousePosition(window);
-        The().Dispatcher(e);
+        DISPATCH(e);
     }
 
-    static void MouseMove(GLFWwindow*, f64 x, f64 y) {
+    static void MouseMove(GLFWwindow* window, f64 x, f64 y) {
         auto e = MouseMovedEvent{};
         e.Data.Button = Buttons::ButtonNone;
         e.Data.Mods = 0;
         e.Data.ScrollOffset = {0, 0};
         e.Data.Position = {x, y};
-        The().Dispatcher(e);
+        DISPATCH(e);
     }
 
-   public:
-    static Callbacks& The() {
-        if (s_Instance == nullptr) s_Instance = new Callbacks;
-        return *s_Instance;
-    }
-    std::function<void(const Event&)> Dispatcher;
+#undef DISPATCH
 
    private:
     static WindowEvent::WindowEventData CreateWindowEventData(
@@ -138,19 +137,15 @@ class Callbacks {
         glfwGetCursorPos(window, &x, &y);
         return {x, y};
     }
-
-    static Callbacks* s_Instance;
-    Callbacks() = default;
 };
 
-Callbacks* Callbacks::s_Instance = nullptr;
+void EventManager::Dispatch(const Event& e) const {
+    for (const auto& [id, f] : m_Listeners) f(e);
+}
 
 EventManager::EventManager(Window& window) {
-    Callbacks::The().Dispatcher = [this](const Event& e) {
-        for (const auto& [id, f] : m_Listeners) f(e);
-    };
-
     auto w = window.m_Window;
+    glfwSetWindowUserPointer(w, this);
 
     glfwSetWindowCloseCallback(w, &Callbacks::WindowClose);
     glfwSetWindowPosCallback(w, &Callbacks::WindowMove);
