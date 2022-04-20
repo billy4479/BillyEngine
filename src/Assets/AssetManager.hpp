@@ -20,16 +20,20 @@ class AssetManager {
     std::filesystem::path GetBaseDir();
     void SetBaseDir(std::filesystem::path);
 
-    template <typename T, bool FromMemory = false, typename... Args>
+    template <typename T, bool FromMemory = false, bool DoNotStore = false,
+              typename... Args>
     Ref<T> Load(auto src, const std::string& name, Args... args) {
         static_assert(std::is_base_of_v<Asset, T>, "T must derive from Asset");
 
-        if (m_Assets.contains(name)) {
-            Logger::Core()->error(
-                "An asset named {} is already present. Asset at {} will not be "
-                "loaded",
-                name, src);
-            return nullptr;
+        if constexpr (!DoNotStore) {
+            if (m_Assets.contains(name)) {
+                Logger::Core()->error(
+                    "An asset named {} is already present. Asset at {} will "
+                    "not be "
+                    "loaded",
+                    name, src);
+                return nullptr;
+            }
         }
 
         Ref<T> asset;
@@ -41,7 +45,8 @@ class AssetManager {
                                                  std::forward<Args>(args)...);
         }
 
-        m_Assets[name] = std::static_pointer_cast<Asset>(asset);
+        if constexpr (!DoNotStore)
+            m_Assets[name] = std::static_pointer_cast<Asset>(asset);
         return asset;
     }
 

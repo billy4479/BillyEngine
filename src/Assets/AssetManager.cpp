@@ -28,7 +28,14 @@ static std::filesystem::path GetExecutableDir() {
 AssetManager::AssetManager() : m_BaseDir(GetExecutableDir() / "assets") {}
 AssetManager::~AssetManager() { m_Assets.clear(); }
 
-void AssetManager::Unload(const std::string& name) { m_Assets.erase(name); }
+void AssetManager::Unload(const std::string& name) {
+#if DEBUG
+    if (!m_Assets.contains(name))
+        Logger::Core()->warn("Asset {} does not exist but is being unloaded",
+                             name);
+#endif
+    m_Assets.erase(name);
+}
 
 std::filesystem::path AssetManager::GetBaseDir() { return m_BaseDir; }
 void AssetManager::SetBaseDir(std::filesystem::path path) { m_BaseDir = path; }
