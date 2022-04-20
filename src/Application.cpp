@@ -39,10 +39,6 @@ void Application::Run() {
                              e.Data.Position.y);
     });
 
-#if BE_GL_DEBUG
-    Logger::LogGLEnabled = false;
-#endif
-
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();
         m_Renderer->Render();

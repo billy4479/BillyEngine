@@ -14,17 +14,17 @@ Ref<IndexBuffer> IndexBuffer::CreateDynamic(u32 size) {
 }
 
 IndexBuffer::~IndexBuffer() {
-    BE_GL_LOG("glDeleteBuffers(1, {})", m_IndexBuffer);
+    BE_LOG_GL_CALL("glDeleteBuffers(1, {})", m_IndexBuffer);
     glDeleteBuffers(1, &m_IndexBuffer);
 }
 
 void IndexBuffer::Bind() const {
-    BE_GL_LOG("glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, {})", m_IndexBuffer);
+    BE_LOG_GL_CALL("glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, {})", m_IndexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
 }
 
 void IndexBuffer::Unbind() const {
-    BE_GL_LOG("glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)");
+    BE_LOG_GL_CALL("glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0)");
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
@@ -35,20 +35,21 @@ u32 IndexBuffer::GetID() const { return m_IndexBuffer; }
 void IndexBuffer::SetData(const void* data, u32 size) {
     Bind();
 
-    BE_GL_LOG("glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, {}, {})", size,
-              data);
+    BE_LOG_GL_CALL("glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, {}, {})", size,
+                   data);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, size, data);
 }
 
 IndexBuffer::IndexBuffer(const void* data, u32 size) : m_Size(size) {
     glGenBuffers(1, &m_IndexBuffer);
-    BE_GL_LOG("glGenBuffers(1, {})", m_IndexBuffer);
+    BE_LOG_GL_CALL("glGenBuffers(1, {})", m_IndexBuffer);
 
     Bind();
 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data,
                  data == nullptr ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW);
-    BE_GL_LOG("glBufferData(GL_ELEMENT_ARRAY_BUFFER, {}, {}, {})", size, data,
-              data == nullptr ? "GL_DYNAMIC_DRAW" : "GL_STATIC_DRAW");
+    BE_LOG_GL_CALL("glBufferData(GL_ELEMENT_ARRAY_BUFFER, {}, {}, {})", size,
+                   data,
+                   data == nullptr ? "GL_DYNAMIC_DRAW" : "GL_STATIC_DRAW");
 }
 }  // namespace BillyEngine

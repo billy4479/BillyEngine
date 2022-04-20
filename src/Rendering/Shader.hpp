@@ -22,7 +22,7 @@ class Shader : public Asset {
 
     u32 GetID() const;
 
-    ~Shader();
+    virtual ~Shader() override;
 
    private:
     Shader(std::string_view source, ShaderType);

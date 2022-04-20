@@ -14,17 +14,22 @@ class Logger {
         assert(s_Instance);
         return s_Instance->m_CoreLogger;
     }
+
     static Ref<spdlog::logger> Client() {
         assert(s_Instance);
         return s_Instance->m_ClientLogger;
     }
 
+#if BE_GL_LOG
+    static Ref<spdlog::logger> GL() {
+        assert(s_Instance);
+        return s_Instance->m_GLLogger;
+    }
+#endif
+
     static void CreateOrReset();
 
     ~Logger();
-#if BE_GL_DEBUG
-    static bool LogGLEnabled;
-#endif
 
    private:
     Logger();
@@ -32,20 +37,20 @@ class Logger {
     static Logger* s_Instance;
 
     Ref<spdlog::logger> m_CoreLogger;
+
+#if BE_GL_LOG
+    Ref<spdlog::logger> m_GLLogger;
+#endif
+
     Ref<spdlog::logger> m_ClientLogger;
 
     std::array<spdlog::sink_ptr, 2> m_Sinks;
 };
 
 #if BE_GL_DEBUG
-    #include <spdlog/fmt/fmt.h>
-    #define BE_GL_LOG(...)                                                   \
-        {                                                                    \
-            if (Logger::LogGLEnabled)                                        \
-                Logger::Core()->debug("[GL]: {}", fmt::format(__VA_ARGS__)); \
-        }
+    #define BE_LOG_GL_CALL(...) Logger::GL()->debug(__VA_ARGS__)
 #else
-    #define BE_GL_LOG(...)
+    #define BE_LOG_GL_CALL(...)
 #endif
 
 // // clang-format off

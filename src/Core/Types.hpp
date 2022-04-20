@@ -56,8 +56,12 @@ constexpr Ref<T> CreateRef(Args&&... args) {
     abort();
 }
 
-#ifdef DEBUG
-    #define BE_GL_DEBUG 1
+#define BE_GL_LOG 1
+
+#if defined(DEBUG) && BE_GL_LOG
+    #define BE_GL_DEBUG 0  // Enable logging of every GL call
+#else
+    #define BE_GL_DEBUG 0
 #endif
 
 }  // namespace BillyEngine
