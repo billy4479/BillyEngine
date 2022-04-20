@@ -62,6 +62,13 @@ FetchContent_Declare(spdlog
 )
 FetchContent_MakeAvailable(spdlog)
 
+message(STATUS "Getting stb_image ready...")
+FetchContent_Declare(stb_image
+    GIT_REPOSITORY "https://github.com/billy4479/stb_image-cmake"
+    GIT_TAG "master"
+)
+FetchContent_MakeAvailable(stb_image)
+
 add_subdirectory(Generator)
 file(GLOB RESOURCES Resources/*)
 add_custom_command(
@@ -95,7 +102,7 @@ endif ()
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC glm
-    PRIVATE glad glfw EnTT spdlog::spdlog
+    PRIVATE glad glfw EnTT spdlog::spdlog stb_image
 )
 
 target_include_directories(${PROJECT_NAME} 
