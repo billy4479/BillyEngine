@@ -17,7 +17,7 @@ class ShaderProgram {
     void Use() const;
 
     template <typename T>
-    Uniform<T> GetUniform(std::string_view name) {
+    Uniform<T> GetUniform(std::string_view name) const {
         return GetUniformAndCheck(name);
     }
 
@@ -25,7 +25,7 @@ class ShaderProgram {
     ShaderProgram(const Ref<Shader> vertexShader,
                   const Ref<Shader> fragmentShader);
 
-    i32 GetUniformAndCheck(std::string_view);
+    i32 GetUniformAndCheck(std::string_view) const;
 
     u32 m_Program{0};
 };

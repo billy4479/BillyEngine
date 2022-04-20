@@ -37,6 +37,8 @@ ShaderProgram::ShaderProgram(const Ref<Shader> vertexShader,
         m_Program = 0;
         return;
     }
+
+    Logger::Core()->info("link!");
 }
 
 ShaderProgram::~ShaderProgram() {
@@ -51,13 +53,12 @@ void ShaderProgram::Use() const {
     glUseProgram(m_Program);
 }
 
-i32 ShaderProgram::GetUniformAndCheck(std::string_view name) {
+i32 ShaderProgram::GetUniformAndCheck(std::string_view name) const {
     auto location = glGetUniformLocation(m_Program, name.data());
     BE_LOG_GL_CALL("glGetUniformLocation({}, {}) -> {}", m_Program, name,
                    location);
-    if (location == -1) {
-        Logger::Core()->error("Uniform \"{}\" not found", name);
-    }
+
+    if (location == -1) Logger::Core()->error("Uniform \"{}\" not found", name);
     return location;
 }
 

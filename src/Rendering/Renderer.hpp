@@ -7,22 +7,28 @@
 namespace BillyEngine {
 
 class AssetManager;
+class VertexArray;
+class ShaderProgram;
 
 class Renderer {
    public:
     Renderer(AssetManager&);
     ~Renderer();
 
-    void Render();
+    void Clear() const;
+    void Draw(Ref<VertexArray>, Ref<ShaderProgram> = nullptr) const;
 
-    void SetClearColor(const Color&);
-    void SetWireframeView(bool);
+    void SetClearColor(const Color&) const;
+    void SetWireframeView(bool) const;
+    void SetViewportSize(glm::ivec2) const;
 
-    void SetViewportSize(glm::ivec2);
+    Ref<ShaderProgram> GetDefaultShader() const;
 
    private:
     struct RenderData;
     Scope<RenderData> m_RenderData;
+
+    void LoadDefaultShader(AssetManager&);
 };
 
 }  // namespace BillyEngine

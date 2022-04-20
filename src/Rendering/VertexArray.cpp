@@ -125,6 +125,6 @@ void VertexArray::SetIndexBuffer(const Ref<IndexBuffer> indexBuffer) {
     m_IndexBuffer = indexBuffer;
 }
 
-u32 VertexArray::GetIndiciesNumber() const { return m_IndexBuffer->GetSize(); }
+u32 VertexArray::GetIndiciesCount() const { return m_IndexBuffer->GetSize(); }
 
 }  // namespace BillyEngine

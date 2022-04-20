@@ -18,26 +18,7 @@
 namespace BillyEngine {
 
 struct Renderer::RenderData {
-    // static constexpr f32 vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f,
-    //                                    0.0f,  0.0f,  0.5f, 0.0f};
-
-    static constexpr f32 vertices[] = {
-        // positions        // colors
-        0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
-        0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f   // top
-    };
-    static constexpr u32 indices[] = {
-        0, 1, 2,  // single triangle
-
-        // 0, 1, 3,  // first triangle
-        // 1, 2, 3   // second triangle
-    };
-
-    Ref<ShaderProgram> shaderProgram;
-    Ref<VertexArray> vertexArray;
-    Scope<Uniform<f32>> xOffsetUniform;
-    f32 offset = -0.5;
+    Ref<ShaderProgram> DefaultShader;
 };
 
 #if BE_GL_LOG
@@ -152,65 +133,57 @@ Renderer::Renderer(AssetManager& am)
     glDebugMessageCallback(GLDebugCallback, nullptr);
 #endif
 
-    auto vertex = am.Load<Shader, true>(EngineResources::vertex, "vert",
-                                        Shader::ShaderType::Vertex);
-    auto fragment = am.Load<Shader, true>(EngineResources::fragment, "frag",
-                                          Shader::ShaderType::Fragment);
-
-    m_RenderData->shaderProgram = ShaderProgram::Create(vertex, fragment);
-    m_RenderData->xOffsetUniform = CreateScope<Uniform<f32>>(
-        m_RenderData->shaderProgram->GetUniform<f32>("xOffset"));
-
-    am.Unload("vert");
-    am.Unload("frag");
-
-    m_RenderData->vertexArray = VertexArray::Create();
-    m_RenderData->vertexArray->Bind();
-
-    auto vertexBuffer = VertexBuffer::CreateStatic(
-        m_RenderData->vertices, sizeof(m_RenderData->vertices),
-        BufferType({
-            ShaderDataType::Float3,  // Vertices
-            ShaderDataType::Float3,  // Colors
-        }));
-    auto indexBuffer = IndexBuffer::CreateStatic(m_RenderData->indices,
-                                                 sizeof(m_RenderData->indices));
-
-    m_RenderData->vertexArray->SetIndexBuffer(indexBuffer);
-    m_RenderData->vertexArray->AddVertexBuffer(vertexBuffer);
+    LoadDefaultShader(am);
 
     SetClearColor(Color::FromRGBA32(0x333333ff));
 }
 
 Renderer::~Renderer() {}
 
-void Renderer::Render() {
-    glClear(GL_COLOR_BUFFER_BIT);
+void Renderer::Clear() const { glClear(GL_COLOR_BUFFER_BIT); }
 
-    m_RenderData->shaderProgram->Use();
-    m_RenderData->xOffsetUniform->Set(m_RenderData->offset);
-    m_RenderData->offset += 0.001;
+void Renderer::Draw(Ref<VertexArray> vertexArray,
+                    Ref<ShaderProgram> maybeShaderProg) const {
+    Ref<ShaderProgram> shaderProg = maybeShaderProg == nullptr
+                                        ? m_RenderData->DefaultShader
+                                        : maybeShaderProg;
+    shaderProg->Use();
+    vertexArray->Bind();
 
-    // auto timeValue = glfwGetTime();
-    // f32 greenValue = sin(timeValue) / 2.0f + 0.5f;
-    // colorUniform->Set({0.0f, greenValue, 0.0f, 1.0f});
-
-    m_RenderData->vertexArray->Bind();
-    glDrawElements(GL_TRIANGLES, m_RenderData->vertexArray->GetIndiciesNumber(),
+    BE_LOG_GL_CALL("glDrawElements(GL_TRIANGLES, {}, GL_UNSIGNED_INT, 0)",
+                   vertexArray->GetIndiciesCount());
+    glDrawElements(GL_TRIANGLES, vertexArray->GetIndiciesCount(),
                    GL_UNSIGNED_INT, 0);
 }
 
-void Renderer::SetClearColor(const Color& c) {
+void Renderer::SetClearColor(const Color& c) const {
     auto data = c.Data();
     glClearColor(data.r, data.g, data.b, data.a);
 }
 
-void Renderer::SetWireframeView(bool enabled) {
+void Renderer::SetWireframeView(bool enabled) const {
     glPolygonMode(GL_FRONT_AND_BACK, enabled ? GL_LINE : GL_FILL);
 }
 
-void Renderer::SetViewportSize(glm::ivec2 size) {
+void Renderer::SetViewportSize(glm::ivec2 size) const {
     glViewport(0, 0, size.x, size.y);
+}
+
+Ref<ShaderProgram> Renderer::GetDefaultShader() const {
+    return m_RenderData->DefaultShader;
+}
+
+void Renderer::LoadDefaultShader(AssetManager& am) {
+    auto vertex = am.Load<Shader, true>(EngineResources::vertex, "vert",
+                                        Shader::ShaderType::Vertex);
+    auto fragment = am.Load<Shader, true>(EngineResources::fragment, "frag",
+                                          Shader::ShaderType::Fragment);
+
+    m_RenderData->DefaultShader = ShaderProgram::Create(vertex, fragment);
+
+    am.Unload("vert");
+    am.Unload("frag");
+    m_RenderData->DefaultShader->Use();
 }
 
 }  // namespace BillyEngine
