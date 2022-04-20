@@ -6,12 +6,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(BUILD_SHARED_LIBS OFF)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
 include(FetchContent)
 
 option(COMPILE_DEMO "Compile the demo program" ON)
+option(BUNLD_DEPENDENCIES "Bundle all the dependencies in the same dll" ON)
+
+if(BUNLD_DEPENDENCIES)
+    set(BUILD_SHARED_LIBS OFF)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+else()
+    set(BUILD_SHARED_LIBS ON)
+endif()
 
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
@@ -85,20 +90,21 @@ add_custom_target(Generated DEPENDS Generated.hpp)
 add_dependencies(${PROJECT_NAME} Generated)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
 
-if (WIN32)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        LINK_FLAGS "/WHOLEARCHIVE"
-    )
-elseif (APPLE)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        LINK_FLAGS "-Wl,-all_load"
-    )
-else ()
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        LINK_FLAGS "-Wl,--whole-archive"
-    )
-endif ()
-
+if(BUNLD_DEPENDENCIES)
+    if(WIN32)
+        set_target_properties(${PROJECT_NAME} PROPERTIES
+            LINK_FLAGS "/WHOLEARCHIVE"
+        )
+    elseif(APPLE)
+        set_target_properties(${PROJECT_NAME} PROPERTIES
+            LINK_FLAGS "-Wl,-all_load"
+        )
+    else()
+        set_target_properties(${PROJECT_NAME} PROPERTIES
+            LINK_FLAGS "-Wl,--whole-archive"
+        )
+    endif()
+endif()
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC glm
@@ -114,16 +120,18 @@ target_compile_options(${PROJECT_NAME} PRIVATE
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>: -Wall -Wextra -pedantic -Werror -fno-exceptions -fno-rtti>
 )
 
-if (WIN32)
-elseif (APPLE)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        LINK_FLAGS "-Wl,-noall_load"
-    )
-else ()
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        LINK_FLAGS "-Wl,--no-whole-archive"
-    )
-endif ()
+if(BUNLD_DEPENDENCIES)
+    if(WIN32)
+    elseif(APPLE)
+        set_target_properties(${PROJECT_NAME} PROPERTIES
+            LINK_FLAGS "-Wl,-noall_load"
+        )
+    else()
+        set_target_properties(${PROJECT_NAME} PROPERTIES
+            LINK_FLAGS "-Wl,--no-whole-archive"
+        )
+    endif()
+endif()
 
 if(COMPILE_DEMO)
     add_subdirectory(Demo)
