@@ -1,11 +1,14 @@
 #include "Application.hpp"
 
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+
 #include "Assets/AssetManager.hpp"
 #include "Core/Logger.hpp"
 #include "Core/Types.hpp"
 #include "Events/EventManager.hpp"
 #include "Events/Input.hpp"
-#include "Events/MouseEvent.hpp"
+#include "Events/KeyboardEvent.hpp"
 #include "Events/WindowEvent.hpp"
 #include "Rendering/IndexBuffer.hpp"
 #include "Rendering/Renderer.hpp"
@@ -39,34 +42,66 @@ void Application::Run() {
     Logger::Core()->info("Started!");
 
     // m_Renderer->SetWireframeView(true);
+    auto wireframe = CreateRef<bool>(false);
 
-    // m_EventManager->AddListener<MouseMovedEvent>([](const MouseEvent& e) {
-    //     Logger::Core()->info("Mouse: {},{}", e.Data.Position.x,
-    //                          e.Data.Position.y);
-    // });
-
-    // static constexpr f32 vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f,
-    //                                    0.0f,  0.0f,  0.5f, 0.0f};
-
-    static constexpr f32 vertices[] = {
-        // positions        // colors
-        0.5f,  -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom left
-        0.0f,  0.5f,  0.0f, 0.0f, 0.0f, 1.0f   // top
-    };
-    static constexpr u32 indices[] = {
-        0, 1, 2,  // single triangle
-
-        // 0, 1, 3,  // first triangle
-        // 1, 2, 3   // second triangle
-    };
+    m_EventManager->AddListener<KeyTypedEvent>(
+        [wireframe](const KeyboardEvent& e) {
+            if (e.Data.Keycode == Keys::Space) {
+                *wireframe = !*wireframe;
+                Application::The().GetRenderer().SetWireframeView(*wireframe);
+            }
+        });
 
     auto vertexArray = VertexArray::Create();
 
     {
+        struct Vertex {
+            glm::vec3 Position;
+            glm::vec4 Color;
+            glm::vec2 TextureCoord;
+        };
+
+        static constexpr Vertex vertices[] = {
+            // bottom left
+            Vertex{
+                .Position = {-0.5f, -0.5f, 0.0f},
+                .Color = {1.0f, 0.0f, 0.0f, 1.0f},
+                .TextureCoord = {0.0f, 0.0f},
+            },
+
+            // bottom right
+            Vertex{
+                .Position = {0.5f, -0.5f, 0.0f},
+                .Color = {0.0f, 1.0f, 0.0f, 1.0f},
+                .TextureCoord = {1.0f, 0.0},
+            },
+
+            // top left
+            Vertex{
+                .Position = {-0.5f, 0.5f, 0.0f},
+                .Color = {0.0f, 0.0f, 1.0f, 1.0f},
+                .TextureCoord = {0.0f, 1.0f},
+            },
+
+            // top right
+            Vertex{
+                .Position = {0.5f, 0.5f, 0.0f},
+                .Color = {1.0f, 1.0f, 0.0f, 1.0f},
+                .TextureCoord = {1.0f, 1.0f},
+            },
+        };
+
+        static constexpr u32 indices[] = {
+            // 0, 1, 2,  // single triangle
+
+            0, 1, 2,  // first triangle
+            2, 3, 1   // second triangle
+        };
+
         auto vertexBuffer = VertexBuffer::CreateStatic(
             vertices, sizeof(vertices),
-            {ShaderDataType::Float3, ShaderDataType::Float3});
+            {ShaderDataType::Float3, ShaderDataType::Float4,
+             ShaderDataType::Float2});
         auto indexBuffer = IndexBuffer::CreateStatic(indices, sizeof(indices));
         vertexArray->AddVertexBuffer(vertexBuffer);
         vertexArray->SetIndexBuffer(indexBuffer);
