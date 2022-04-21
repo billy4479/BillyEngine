@@ -1,6 +1,9 @@
 #include "EventManager.hpp"
 
+// clang-format off
+#include <glad/gl.h>
 #include <GLFW/glfw3.h>
+// clang-format on
 
 #include "Core/Logger.hpp"
 #include "Events/KeyboardEvent.hpp"

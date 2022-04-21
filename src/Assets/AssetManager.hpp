@@ -21,8 +21,8 @@ class AssetManager {
     void SetBaseDir(std::filesystem::path);
 
     template <typename T, bool FromMemory = false, bool DoNotStore = false,
-              typename... Args>
-    Ref<T> Load(auto src, const std::string& name, Args... args) {
+              typename... Args, typename Source>
+    Ref<T> Load(Source src, const std::string& name, Args... args) {
         static_assert(std::is_base_of_v<Asset, T>, "T must derive from Asset");
 
         if constexpr (!DoNotStore) {

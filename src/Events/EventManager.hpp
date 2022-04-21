@@ -17,8 +17,8 @@ class EventManager {
 
     void HandleEvents();
 
-    template <typename T>
-    u32 AddListener(auto listener) {
+    template <typename T, typename F>
+    u32 AddListener(F listener) {
         static_assert(std::is_base_of_v<Event, T>,
                       "EventType must derive from Event");
 

@@ -5,7 +5,9 @@
 #include <string_view>
 
 template <typename T>
+#if __cplusplus >= 202002L
 requires std::integral<T>
+#endif
 static std::string ToHex(T n) {
     // https://stackoverflow.com/a/33447587/13166735
 
@@ -16,7 +18,7 @@ static std::string ToHex(T n) {
          ++i, j -= 4)
         result[i] = digits[(n >> j) & 0x0f];
     return result;
-};
+}
 
 int main(int argc, char** argv) {
     std::cout << R"(#include <array>
@@ -41,14 +43,16 @@ namespace EngineResources {)";
             std::cout << "std::string_view " << n << " = R\"("
                       << current.rdbuf() << ")\";";
         } else {
-            std::cout << "std::array " << n
-                      << " = {std::to_array<unsigned char>({";
+            current.seekg(0, std::ios::end);
+            std::cout << "std::array<unsigned char, " << current.tellg() << "> "
+                      << n << " = {";
+            current.seekg(0, std::ios::beg);
 
             char c;
             while (current.get(c))
                 std::cout << "0x" << ToHex((unsigned char)c) << ", ";
 
-            std::cout << "})};";
+            std::cout << "};";
         }
     }
 
