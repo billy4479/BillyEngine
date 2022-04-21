@@ -15,3 +15,4 @@ target_compile_options(Generator PRIVATE
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>: -Wall -Wextra -pedantic -Werror -fno-exceptions -fno-rtti>
 )
 
+target_link_libraries(Generator PRIVATE stb_image)
