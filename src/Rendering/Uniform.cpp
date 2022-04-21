@@ -18,4 +18,9 @@ void Uniform<f32>::Set(const f32& v) {
     glUniform1f(m_Location, v);
 }
 
+template <>
+void Uniform<i32>::Set(const i32& v) {
+    glUniform1i(m_Location, v);
+}
+
 }  // namespace BillyEngine

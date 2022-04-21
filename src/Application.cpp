@@ -1,5 +1,6 @@
 #include "Application.hpp"
 
+#include <Generated.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
@@ -14,6 +15,7 @@
 #include "Rendering/Renderer.hpp"
 #include "Rendering/Shader.hpp"
 #include "Rendering/ShaderProgram.hpp"
+#include "Rendering/Texture.hpp"
 #include "Rendering/VertexArray.hpp"
 #include "Rendering/VertexBuffer.hpp"
 #include "Rendering/Window.hpp"
@@ -114,6 +116,15 @@ void Application::Run() {
     auto xOffsetUniform =
         m_Renderer->GetDefaultShader()->GetUniform<f32>("xOffset");
     xOffsetUniform.Set(offset);
+
+    auto texture = GetAssetManager().Load<Texture, true, true>(
+        EngineResources::icon.Data.data(), "texture",
+        EngineResources::icon.Size, EngineResources::icon.Channels);
+    texture->Bind(0);
+
+    auto textureUniform =
+        m_Renderer->GetDefaultShader()->GetUniform<i32>("Texture");
+    textureUniform.Set(0);
 
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();

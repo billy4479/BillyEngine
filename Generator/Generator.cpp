@@ -34,7 +34,7 @@ template <std::size_t S>
 struct Image {
     std::array<unsigned char, S> Data;
     glm::ivec2 Size;
-    int BPP;
+    int Channels;
 };
 )";
 
@@ -54,10 +54,10 @@ struct Image {
             std::cout << "std::string_view " << n << " = R\"(" << f.rdbuf()
                       << ")\";";
         } else if (ext == ".png" || ext == ".jpg") {
-            int x, y, BPP;
-            const auto* data = stbi_load(name.c_str(), &x, &y, &BPP, 0);
+            int x, y, channels;
+            const auto* data = stbi_load(name.c_str(), &x, &y, &channels, 0);
             if (data == nullptr) return 1;
-            auto size = x * y * BPP;
+            auto size = x * y * channels;
 
             std::cout << "Image<" << size << ">" << n << R"( = {
     .Data = std::array<unsigned char, )"
@@ -68,7 +68,8 @@ struct Image {
             std::cout << R"(},
     .Size = glm::ivec2{)"
                       << x << ", " << y << R"(},
-    .BPP = )" << BPP << ",\n};\n";
+    .Channels = )" << channels
+                      << ",\n};\n";
 
             stbi_image_free((void*)data);
 

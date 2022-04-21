@@ -22,11 +22,14 @@ class AssetManager {
 
     template <typename T, bool FromMemory = false, bool DoNotStore = false,
               typename... Args, typename Source>
-    Ref<T> Load(Source src, const std::string& name, Args... args) {
+    Ref<T> Load(Source src, std::string_view name, Args... args) {
         static_assert(std::is_base_of_v<Asset, T>, "T must derive from Asset");
 
+        std::string* nameStr;
+
         if constexpr (!DoNotStore) {
-            if (m_Assets.contains(name)) {
+            *nameStr = name;
+            if (m_Assets.contains(*nameStr)) {
                 Logger::Core()->error(
                     "An asset named {} is already present. Asset at {} will "
                     "not be "
@@ -46,7 +49,7 @@ class AssetManager {
         }
 
         if constexpr (!DoNotStore)
-            m_Assets[name] = std::static_pointer_cast<Asset>(asset);
+            m_Assets[*nameStr] = std::static_pointer_cast<Asset>(asset);
         return asset;
     }
 

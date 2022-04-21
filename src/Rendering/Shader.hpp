@@ -8,7 +8,7 @@
 
 namespace BillyEngine {
 
-class Shader : public Asset {
+class Shader final : public Asset {
    public:
     enum class ShaderType {
         Fragment,
