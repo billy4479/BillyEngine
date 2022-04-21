@@ -10,7 +10,9 @@ int main() {
 
     // RunApplication(app);
 
-    auto& app = BillyEngine::Application::CreateOrReset();
+    auto props = BillyEngine::Application::DefaultProps;
+    // props.VSync = false;
+    auto& app = BillyEngine::Application::CreateOrReset(props);
     // app.GetRenderer().SetWireframeView(true);
     app.Run();
 

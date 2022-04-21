@@ -21,6 +21,7 @@ class Renderer {
     void SetClearColor(const Color&) const;
     void SetWireframeView(bool) const;
     void SetViewportSize(glm::ivec2) const;
+    void SetVSync(bool) const;
 
     Ref<ShaderProgram> GetDefaultShader() const;
 

@@ -169,6 +169,8 @@ void Renderer::SetViewportSize(glm::ivec2 size) const {
     glViewport(0, 0, size.x, size.y);
 }
 
+void Renderer::SetVSync(bool enabled) const { glfwSwapInterval(enabled); }
+
 Ref<ShaderProgram> Renderer::GetDefaultShader() const {
     return m_RenderData->DefaultShader;
 }

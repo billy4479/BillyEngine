@@ -36,6 +36,8 @@ Application::Application(const ApplicationProprieties& props)
             Logger::Core()->debug("Resize to {}:{}", e.Data.Size.x,
                                   e.Data.Size.x);
         });
+
+    m_Renderer->SetVSync(props.VSync);
 }
 
 void Application::Run() {

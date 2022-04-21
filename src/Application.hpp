@@ -18,17 +18,22 @@ class Application {
 
     struct ApplicationProprieties {
         glm::ivec2 Size;
-        std::string Title;
+        std::string_view Title;
+        bool VSync;
     };
 
     void Run();
     void Quit();
 
+    static constexpr ApplicationProprieties DefaultProps = {
+        .Size = {800, 600},
+        .Title = "BillyEngine",
+        .VSync = true,
+    };
+
     static Application& The();
-    static Application& CreateOrReset(const ApplicationProprieties& props = {
-                                          .Size = {800, 600},
-                                          .Title = "BillyEngine",
-                                      });
+    static Application& CreateOrReset(
+        const ApplicationProprieties& props = DefaultProps);
 
     inline AssetManager& GetAssetManager() { return *m_AssetManager; }
     inline Window& GetWindow() { return *m_Window; }
