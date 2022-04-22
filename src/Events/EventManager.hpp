@@ -22,7 +22,7 @@ class EventManager {
         static_assert(std::is_base_of_v<Event, T>,
                       "EventType must derive from Event");
 
-        m_Listeners[++m_NextID] = [&](const Event& e) {
+        m_Listeners[++m_NextID] = [listener](const Event& e) {
             if (e.GetEventType() != T::GetEventTypeS()) return;
 
             listener(static_cast<const T&>(e));
