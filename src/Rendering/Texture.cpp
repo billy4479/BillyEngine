@@ -21,33 +21,33 @@ void Texture::Bind(u32 slot) const {
 
 template <typename T>
 static constexpr u32 GetGLValue(T v) {
-    if constexpr (std::is_same_v<T, Texture::Filtering>) {
+    if constexpr (std::is_same_v<T, Texture::Filtering_t>) {
         switch (v) {
-            case Texture::Filtering::Linear:
+            case Texture::Filtering_t::Linear:
                 return GL_LINEAR;
-            case Texture::Filtering::Nearest:
+            case Texture::Filtering_t::Nearest:
                 return GL_NEAREST;
         }
-    } else if constexpr (std::is_same_v<T, Texture::Wrapping>) {
+    } else if constexpr (std::is_same_v<T, Texture::Wrapping_t>) {
         switch (v) {
-            case Texture::Wrapping::Repeat:
+            case Texture::Wrapping_t::Repeat:
                 return GL_REPEAT;
-            case Texture::Wrapping::MirroredRepeat:
+            case Texture::Wrapping_t::MirroredRepeat:
                 return GL_MIRRORED_REPEAT;
-            case Texture::Wrapping::ClampToBorder:
+            case Texture::Wrapping_t::ClampToBorder:
                 return GL_CLAMP_TO_BORDER;
-            case Texture::Wrapping::ClampToEdge:
+            case Texture::Wrapping_t::ClampToEdge:
                 return GL_CLAMP_TO_EDGE;
         }
-    } else if constexpr (std::is_same_v<T, Texture::MipmapFiltering>) {
+    } else if constexpr (std::is_same_v<T, Texture::MipmapFiltering_t>) {
         switch (v) {
-            case Texture::MipmapFiltering::LinearLinear:
+            case Texture::MipmapFiltering_t::LinearLinear:
                 return GL_LINEAR_MIPMAP_LINEAR;
-            case Texture::MipmapFiltering::LinearNearest:
+            case Texture::MipmapFiltering_t::LinearNearest:
                 return GL_LINEAR_MIPMAP_NEAREST;
-            case Texture::MipmapFiltering::NearestLinear:
+            case Texture::MipmapFiltering_t::NearestLinear:
                 return GL_NEAREST_MIPMAP_LINEAR;
-            case Texture::MipmapFiltering::NearestNearest:
+            case Texture::MipmapFiltering_t::NearestNearest:
                 return GL_NEAREST_MIPMAP_NEAREST;
         }
     }
@@ -56,13 +56,13 @@ static constexpr u32 GetGLValue(T v) {
 
 template <>
 Ref<Texture> Texture::Load<false, std::filesystem::path>(
-    std::filesystem::path path, i32 channels, const Proprieties& props) {
+    std::filesystem::path path, const Proprieties& props) {
     glm::ivec2 size;
+    i32 channels;
     Proprieties p = props;
 
     stbi_set_flip_vertically_on_load(1);
-    const auto* data =
-        stbi_load(path.c_str(), &size.x, &size.y, &p.Channels, 0);
+    const auto* data = stbi_load(path.c_str(), &size.x, &size.y, &channels, 0);
     if (data == nullptr) {
         Logger::Core()->error("Error while loading texture at {}",
                               path.string());

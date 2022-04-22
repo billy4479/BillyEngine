@@ -13,19 +13,19 @@ class Texture final : public Asset {
     virtual AssetType GetAssetType() const override;
     virtual ~Texture() override;
 
-    enum class Wrapping {
+    enum class Wrapping_t {
         Repeat,
         MirroredRepeat,
         ClampToEdge,
         ClampToBorder,
     };
 
-    enum class Filtering {
+    enum class Filtering_t {
         Nearest,
         Linear,
     };
 
-    enum class MipmapFiltering {
+    enum class MipmapFiltering_t {
         NearestNearest,
         LinearNearest,
         NearestLinear,
@@ -33,17 +33,16 @@ class Texture final : public Asset {
     };
 
     struct Proprieties {
-        Wrapping Wrapping;
-        Filtering Filtering;
-        MipmapFiltering MipmapFiltering;
+        Wrapping_t Wrapping;
+        Filtering_t Filtering;
+        MipmapFiltering_t MipmapFiltering;
         bool KeepOnCPU;
-        i32 Channels;
     };
 
     static constexpr Proprieties DefaultProprieties = {
-        .Wrapping = Wrapping::Repeat,
-        .Filtering = Filtering::Linear,
-        .MipmapFiltering = MipmapFiltering::LinearLinear,
+        .Wrapping = Wrapping_t::Repeat,
+        .Filtering = Filtering_t::Linear,
+        .MipmapFiltering = MipmapFiltering_t::LinearLinear,
         .KeepOnCPU = false,
     };
 
@@ -54,8 +53,7 @@ class Texture final : public Asset {
 
     template <bool FromMemory, typename Source,
               typename = std::enable_if<!FromMemory>>
-    static Ref<Texture> Load(Source, i32 channels = 4,
-                             const Proprieties& = DefaultProprieties);
+    static Ref<Texture> Load(Source, const Proprieties& = DefaultProprieties);
 
     void Bind(u32 slot = 0) const;
 

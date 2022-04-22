@@ -59,11 +59,11 @@ Shader::Shader(std::string_view source, ShaderType type) : m_Type(type) {
     switch (m_Type) {
         case ShaderType::Vertex:
             m_Shader = glCreateShader(GL_VERTEX_SHADER);
-            BE_LOG_GL_CALL("glCompileShader(GL_VERTEX_SHADER) -> {}", m_Shader);
+            BE_LOG_GL_CALL("glCreateShader(GL_VERTEX_SHADER) -> {}", m_Shader);
             break;
         case ShaderType::Fragment:
             m_Shader = glCreateShader(GL_FRAGMENT_SHADER);
-            BE_LOG_GL_CALL("glCompileShader(GL_FRAGMENT_SHADER) -> {}",
+            BE_LOG_GL_CALL("glCreateShader(GL_FRAGMENT_SHADER) -> {}",
                            m_Shader);
             break;
     }

@@ -11,6 +11,9 @@ include(FetchContent)
 option(COMPILE_DEMO "Compile the demo program" ON)
 option(BUNLD_DEPENDENCIES "Bundle all the dependencies in the same dll" ON)
 
+# set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+# set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+
 if(BUNLD_DEPENDENCIES)
     set(BUILD_SHARED_LIBS OFF)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
