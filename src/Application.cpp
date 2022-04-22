@@ -50,7 +50,7 @@ void Application::Run() {
 
     m_EventManager->AddListener<KeyTypedEvent>(
         [wireframe](const KeyboardEvent& e) {
-            if (e.Data.Keycode == Keys::Space) {
+            if (e.Data.Keycode == Keys::Backslash) {
                 *wireframe = !*wireframe;
                 Application::The().GetRenderer().SetWireframeView(*wireframe);
             }
@@ -117,9 +117,10 @@ void Application::Run() {
         m_Renderer->GetDefaultShader()->GetUniform<f32>("xOffset");
     xOffsetUniform.Set(offset);
 
-    auto texture = GetAssetManager().LoadNoStore<Texture, true>(
-        EngineResources::icon.Data.data(), EngineResources::icon.Size,
-        EngineResources::icon.Channels);
+    // auto texture = GetAssetManager().LoadNoStore<Texture, true>(
+    //     EngineResources::icon.Data.data(), EngineResources::icon.Size,
+    //     EngineResources::icon.Channels);
+    auto texture = GetAssetManager().LoadNoStore<Texture>("stock.png");
     texture->Bind(0);
 
     auto textureUniform =
@@ -132,10 +133,12 @@ void Application::Run() {
         m_Renderer->Draw(vertexArray);
         m_Window->SwapBuffers();
 
-        offset += increment;
-        xOffsetUniform.Set(offset);
-        if (offset >= 0.5) increment = -0.01;
-        if (offset <= -0.5) increment = +0.01;
+        if (!m_Input->IsKeyPressed(Keys::Space)) {
+            offset += increment;
+            xOffsetUniform.Set(offset);
+            if (offset >= 0.5) increment = -0.01;
+            if (offset <= -0.5) increment = +0.01;
+        }
 
         if (m_Input->IsKeyPressed(Keys::Escape)) Quit();
     }

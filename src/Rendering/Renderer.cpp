@@ -133,6 +133,10 @@ Renderer::Renderer(AssetManager& am)
     glDebugMessageCallback(GLDebugCallback, nullptr);
 #endif
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_FUNC_ADD);
+
     LoadDefaultShader(am);
 
     SetClearColor(Color::FromRGBA32(0x333333ff));
