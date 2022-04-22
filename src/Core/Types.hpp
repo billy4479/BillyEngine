@@ -59,7 +59,7 @@ constexpr Ref<T> CreateRef(Args&&... args) {
 #define BE_GL_LOG 1
 
 #if defined(DEBUG) && BE_GL_LOG
-    #define BE_GL_DEBUG 1  // Enable logging of every GL call
+    #define BE_GL_DEBUG 0  // Enable logging of every GL call
 #else
     #define BE_GL_DEBUG 0
 #endif

@@ -1,6 +1,6 @@
 #include "Application.hpp"
 
-#include <Generated.hpp>
+#include <Generated/Bundled/icon_png.hpp>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 
@@ -46,13 +46,13 @@ void Application::Run() {
     Logger::Core()->info("Started!");
 
     // m_Renderer->SetWireframeView(true);
-    auto wireframe = CreateRef<bool>(false);
+    bool wireframe = false;
 
     m_EventManager->AddListener<KeyTypedEvent>(
-        [wireframe](const KeyboardEvent& e) {
+        [&wireframe](const KeyboardEvent& e) {
             if (e.Data.Keycode == Keys::Backslash) {
-                *wireframe = !*wireframe;
-                Application::The().GetRenderer().SetWireframeView(*wireframe);
+                wireframe = !wireframe;
+                Application::The().GetRenderer().SetWireframeView(wireframe);
             }
         });
 
@@ -116,11 +116,16 @@ void Application::Run() {
     auto xOffsetUniform =
         m_Renderer->GetDefaultShader()->GetUniform<f32>("xOffset");
     xOffsetUniform.Set(offset);
+    bool shouldMove = true;
+    GetEventManager().AddListener<KeyTypedEvent>(
+        [&shouldMove](const KeyTypedEvent& e) {
+            if (e.Data.Keycode == Keys::Space) shouldMove = !shouldMove;
+        });
 
-    // auto texture = GetAssetManager().LoadNoStore<Texture, true>(
-    //     EngineResources::icon.Data.data(), EngineResources::icon.Size,
-    //     EngineResources::icon.Channels);
-    auto texture = GetAssetManager().LoadNoStore<Texture>("stock.png");
+    auto texture = GetAssetManager().LoadNoStore<Texture, true>(
+        EngineResources::icon_png.Data.data(), EngineResources::icon_png.Size,
+        EngineResources::icon_png.Channels);
+    // auto texture = GetAssetManager().LoadNoStore<Texture>("stock.png");
     texture->Bind(0);
 
     auto textureUniform =
@@ -133,7 +138,7 @@ void Application::Run() {
         m_Renderer->Draw(vertexArray);
         m_Window->SwapBuffers();
 
-        if (!m_Input->IsKeyPressed(Keys::Space)) {
+        if (shouldMove) {
             offset += increment;
             xOffsetUniform.Set(offset);
             if (offset >= 0.5) increment = -0.01;

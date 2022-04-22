@@ -5,7 +5,8 @@
 #include <GLFW/glfw3.h>
 // clang-format on
 
-#include <Generated.hpp>
+#include <Generated/Bundled/fragment_glsl.hpp>
+#include <Generated/Bundled/vertex_glsl.hpp>
 
 #include "Assets/AssetManager.hpp"
 #include "Core/Color.hpp"
@@ -180,9 +181,9 @@ Ref<ShaderProgram> Renderer::GetDefaultShader() const {
 }
 
 void Renderer::LoadDefaultShader(AssetManager& am) {
-    auto vertex = am.LoadNoStore<Shader, true>(EngineResources::vertex,
+    auto vertex = am.LoadNoStore<Shader, true>(EngineResources::vertex_glsl,
                                                Shader::ShaderType::Vertex);
-    auto fragment = am.LoadNoStore<Shader, true>(EngineResources::fragment,
+    auto fragment = am.LoadNoStore<Shader, true>(EngineResources::fragment_glsl,
                                                  Shader::ShaderType::Fragment);
 
     m_RenderData->DefaultShader = ShaderProgram::Create(vertex, fragment);

@@ -79,18 +79,29 @@ FetchContent_MakeAvailable(stb_image)
 
 add_subdirectory(Generator)
 file(GLOB RESOURCES Resources/*)
-add_custom_command(
-    OUTPUT Generated.hpp
-    COMMAND Generator ${RESOURCES} > Generated.hpp
-    DEPENDS ${RESOURCES}
-    DEPENDS Generator
-)
+
+set(BE_GENERATED_DIR "Generated")
+set(BE_GENERATED_BUNDLE_DIR "${BE_GENERATED_DIR}/Bundled")
+
+foreach(resource ${RESOURCES})
+    get_filename_component(resource_name ${resource} NAME)
+    string(REPLACE "." "_" resource_header_name ${resource_name})
+    set(generated_resource_path "${BE_GENERATED_BUNDLE_DIR}/${resource_header_name}.hpp")
+    list(APPEND BE_GENERATED_FILES ${generated_resource_path})
+    
+    add_custom_command(
+        OUTPUT ${generated_resource_path}
+        COMMAND Generator bundler Generated ${resource}
+        DEPENDS ${resource}
+        DEPENDS Generator
+    )
+endforeach()
 
 file(GLOB_RECURSE SRC src/*.cpp src/*.hpp include/*.h include/*.hpp)
-add_library(${PROJECT_NAME} SHARED ${SRC})
+add_library(${PROJECT_NAME} SHARED ${SRC} ${BE_GENERATED_FILES})
 
-add_custom_target(Generated DEPENDS Generated.hpp)
-add_dependencies(${PROJECT_NAME} Generated)
+add_custom_target(GenerateAll DEPENDS ${BE_GENERATED_FILES})
+# add_dependencies(${PROJECT_NAME} GenerateAll)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
 
 if(BUNLD_DEPENDENCIES)
