@@ -117,9 +117,9 @@ void Application::Run() {
         m_Renderer->GetDefaultShader()->GetUniform<f32>("xOffset");
     xOffsetUniform.Set(offset);
 
-    auto texture = GetAssetManager().Load<Texture, true, true>(
-        EngineResources::icon.Data.data(), "texture",
-        EngineResources::icon.Size, EngineResources::icon.Channels);
+    auto texture = GetAssetManager().LoadNoStore<Texture, true>(
+        EngineResources::icon.Data.data(), EngineResources::icon.Size,
+        EngineResources::icon.Channels);
     texture->Bind(0);
 
     auto textureUniform =

@@ -20,24 +20,30 @@ class AssetManager {
     std::filesystem::path GetBaseDir();
     void SetBaseDir(std::filesystem::path);
 
-    template <typename T, bool FromMemory = false, bool DoNotStore = false,
-              typename... Args, typename Source>
-    Ref<T> Load(Source src, std::string_view name, Args... args) {
+    template <typename T, bool FromMemory = false, typename... Args,
+              typename Source>
+    Ref<T> Load(Source src, const std::string& name, Args... args) {
         static_assert(std::is_base_of_v<Asset, T>, "T must derive from Asset");
 
-        std::string* nameStr;
-
-        if constexpr (!DoNotStore) {
-            *nameStr = name;
-            if (m_Assets.contains(*nameStr)) {
-                Logger::Core()->error(
-                    "An asset named {} is already present. Asset at {} will "
-                    "not be "
-                    "loaded",
-                    name, src);
-                return nullptr;
-            }
+        if (m_Assets.contains(name)) {
+            Logger::Core()->error(
+                "An asset named {} is already present. Asset at {} will "
+                "not be "
+                "loaded",
+                name, src);
+            return nullptr;
         }
+
+        Ref<T> asset = LoadNoStore<T, FromMemory>(std::forward<Source>(src),
+                                                  std::forward<Args>(args)...);
+
+        m_Assets[name] = std::static_pointer_cast<Asset>(asset);
+    }
+
+    template <typename T, bool FromMemory = false, typename... Args,
+              typename Source>
+    Ref<T> LoadNoStore(Source src, Args... args) {
+        static_assert(std::is_base_of_v<Asset, T>, "T must derive from Asset");
 
         Ref<T> asset;
         if constexpr (FromMemory) {
@@ -48,8 +54,6 @@ class AssetManager {
                                                  std::forward<Args>(args)...);
         }
 
-        if constexpr (!DoNotStore)
-            m_Assets[*nameStr] = std::static_pointer_cast<Asset>(asset);
         return asset;
     }
 
@@ -71,6 +75,20 @@ class AssetManager {
    private:
     std::filesystem::path m_BaseDir;
     std::unordered_map<std::string, Ref<Asset>> m_Assets;
+
+    // template <typename T, bool FromMemory, typename... Args, typename Source>
+    // inline Ref<T> LoadFromType(Source src, Args... args) {
+    //     Ref<T> asset;
+    //     if constexpr (FromMemory) {
+    //         asset =
+    //             T::template Load<FromMemory>(src,
+    //             std::forward<Args>(args)...);
+    //     } else {
+    //         asset = T::template Load<FromMemory>(m_BaseDir / src,
+    //                                              std::forward<Args>(args)...);
+    //     }
+    //     return asset;
+    // }
 };
 
 }  // namespace BillyEngine

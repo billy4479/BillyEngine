@@ -176,10 +176,10 @@ Ref<ShaderProgram> Renderer::GetDefaultShader() const {
 }
 
 void Renderer::LoadDefaultShader(AssetManager& am) {
-    auto vertex = am.Load<Shader, true, true>(EngineResources::vertex, "vert",
-                                              Shader::ShaderType::Vertex);
-    auto fragment = am.Load<Shader, true, true>(
-        EngineResources::fragment, "frag", Shader::ShaderType::Fragment);
+    auto vertex = am.LoadNoStore<Shader, true>(EngineResources::vertex,
+                                               Shader::ShaderType::Vertex);
+    auto fragment = am.LoadNoStore<Shader, true>(EngineResources::fragment,
+                                                 Shader::ShaderType::Fragment);
 
     m_RenderData->DefaultShader = ShaderProgram::Create(vertex, fragment);
     m_RenderData->DefaultShader->Use();
