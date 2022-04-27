@@ -96,31 +96,30 @@ static bool EmitImage(fs::path src, fs::path dest, std::string_view name) {
 
     static constexpr std::string_view formatTemplate = R"(#pragma once
 
-#include <array>
-#include <glm/ext/vector_int2.hpp>
+#include "Types.hpp"
+
+namespace {{
+
+static constexpr unsigned char {}_data[] = {{ {} }};
+
+}}
 
 namespace BillyEngine {{
 namespace EngineResources {{
 
-template <std::size_t S>
-struct Image {{
-    std::array<unsigned char, S> Data;
-    glm::ivec2 Size;
-    int Channels;
-}};
-
-static constexpr Image<{}> {} = {{
-    .Data = std::array<unsigned char, {}> {{ {} }},
+static constexpr DecodedImage {} = {{
+    .Data = {}_data,
     .Size = {{ {}, {} }},
     .Channels = {},
+    .SizeInBytes = {},
 }};
 
 }}
 }}
 )";
 
-    out << fmt::format(formatTemplate, size, name, size, ss.str(), x, y,
-                       channels);
+    out << fmt::format(formatTemplate, name, ss.str(), name, name, x, y,
+                       channels, size);
     stbi_image_free((void*)data);
     return true;
 }
@@ -151,5 +150,34 @@ std::array<unsigned char, {}> {} =  {{ {} }},
 }}
 )";
     out << fmt::format(formatTemplate, in.tellg(), name, ss.str());
+    return true;
+}
+
+bool GenerateTypes(fs::path base) {
+    static constexpr std::string_view imageType = R"(#pragma once
+
+#include <array>
+#include <glm/ext/vector_int2.hpp>
+
+namespace BillyEngine {
+namespace EngineResources {
+
+struct DecodedImage {
+    const unsigned char* Data;
+    glm::ivec2 Size;
+    int Channels;
+    std::size_t SizeInBytes;
+};
+
+}
+}
+    )";
+
+    std::ofstream out;
+    out.open(base / "Types.hpp");
+    if (!out.is_open()) return false;
+
+    out << imageType;
+
     return true;
 }

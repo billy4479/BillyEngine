@@ -97,6 +97,13 @@ foreach(resource ${RESOURCES})
     )
 endforeach()
 
+add_custom_command(
+    OUTPUT ${BE_GENERATED_BUNDLE_DIR}/Types.hpp
+    COMMAND Generator bundler-types Generated
+    DEPENDS Generator
+)
+list(APPEND BE_GENERATED_FILES ${BE_GENERATED_BUNDLE_DIR}/Types.hpp)
+
 file(GLOB_RECURSE SRC src/*.cpp src/*.hpp include/*.h include/*.hpp)
 add_library(${PROJECT_NAME} SHARED ${SRC} ${BE_GENERATED_FILES})
 

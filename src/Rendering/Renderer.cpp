@@ -187,7 +187,6 @@ void Renderer::LoadDefaultShader(AssetManager& am) {
                                                  Shader::ShaderType::Fragment);
 
     m_RenderData->DefaultShader = ShaderProgram::Create(vertex, fragment);
-    m_RenderData->DefaultShader->Use();
 }
 
 }  // namespace BillyEngine

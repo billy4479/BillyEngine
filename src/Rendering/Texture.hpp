@@ -8,62 +8,63 @@
 
 namespace BillyEngine {
 
-class Texture final : public Asset {
-   public:
-    virtual AssetType GetAssetType() const override;
-    virtual ~Texture() override;
+class Image;
 
-    enum class Wrapping_t {
+class Texture {
+   public:
+    enum class WrappingMode {
         Repeat,
         MirroredRepeat,
         ClampToEdge,
         ClampToBorder,
     };
 
-    enum class Filtering_t {
+    enum class Filtering {
         Nearest,
         Linear,
+        NearestMipmapNearest,
+        LinearMipmapNearest,
+        NearestMipmapLinear,
+        LinearMipmapLinear,
     };
 
-    enum class MipmapFiltering_t {
-        NearestNearest,
-        LinearNearest,
-        NearestLinear,
-        LinearLinear,
+    enum class TexFormat {
+        RGBA,
+        RGB,
+
+        // TODO: add stuff like depth buffer if needed in the future
     };
 
     struct Proprieties {
-        Wrapping_t Wrapping;
-        Filtering_t Filtering;
-        MipmapFiltering_t MipmapFiltering;
-        bool KeepOnCPU;
+        glm::ivec2 Size{32, 32};
+        TexFormat Format;
+
+        WrappingMode Wrapping = WrappingMode::Repeat;
+        Filtering MagnificationFilter = Filtering::Linear;
+        Filtering MinificationFilter = Filtering::LinearMipmapLinear;
+
+        // TODO: It might be interesting in the future but it creates too many
+        // ownership problems for now
+        // bool KeepOnCPU = false;
+
+        Ref<Image> Data{nullptr};
+
+        static Texture::Proprieties FromImage(Ref<Image>);
     };
 
-    static constexpr Proprieties DefaultProprieties = {
-        .Wrapping = Wrapping_t::Repeat,
-        .Filtering = Filtering_t::Linear,
-        .MipmapFiltering = MipmapFiltering_t::LinearLinear,
-        .KeepOnCPU = false,
-    };
-
-    template <bool FromMemory, typename Source,
-              typename = std::enable_if<FromMemory>>
-    static Ref<Texture> Load(Source, glm::ivec2 size, i32 channels = 4,
-                             const Proprieties& = DefaultProprieties);
-
-    template <bool FromMemory, typename Source,
-              typename = std::enable_if<!FromMemory>>
-    static Ref<Texture> Load(Source, const Proprieties& = DefaultProprieties);
+    static Ref<Texture> Create(const Proprieties&);
 
     void Bind(u32 slot = 0) const;
+    void SetData(const u8*);
+
+    ~Texture();
 
    private:
-    glm::ivec2 m_Size;
-    u32 m_Format{}, m_InternalFormat{};
-    const u8* m_Data{nullptr};
+    const Proprieties m_Proprieties;
+    // const u8* m_Data{nullptr};
     u32 m_Texture{};
 
-    Texture(const u8*, glm::ivec2 size, i32 channels, const Proprieties&);
+    Texture(const Proprieties&);
 };  // namespace BillyEngine
 
 }  // namespace BillyEngine

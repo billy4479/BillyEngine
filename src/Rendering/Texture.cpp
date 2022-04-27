@@ -1,18 +1,29 @@
 #include "Texture.hpp"
 
 #include <glad/gl.h>
-#include <stb_image.h>
 
 #include <filesystem>
+#include <utility>
 
+#include "Assets/Image.hpp"
 #include "Core/Logger.hpp"
 
 namespace BillyEngine {
-AssetType Texture::GetAssetType() const { return AssetType::Texture; }
+Texture::Proprieties Texture::Proprieties::FromImage(Ref<Image> image) {
+    Texture::Proprieties props;
+    props.Size = image->GetSize();
+    props.Format = image->GetChannels() == 4 ? Texture::TexFormat::RGBA
+                                             : Texture::TexFormat::RGB;
+    props.Data = image;
 
-Texture::~Texture() {
-    if (m_Data != nullptr) stbi_image_free((void*)m_Data);
+    return props;
 }
+
+Ref<Texture> Texture::Create(const Proprieties& props) {
+    return Ref<Texture>(new Texture(props));
+}
+
+Texture::~Texture() { glDeleteTextures(1, &m_Texture); }
 
 void Texture::Bind(u32 slot) const {
     glActiveTexture(GL_TEXTURE0 + slot);
@@ -20,101 +31,83 @@ void Texture::Bind(u32 slot) const {
 }
 
 template <typename T>
-static constexpr u32 GetGLValue(T v) {
-    if constexpr (std::is_same_v<T, Texture::Filtering_t>) {
+static constexpr decltype(auto) GetGLValue(T v) {
+    if constexpr (std::is_same_v<T, Texture::Filtering>) {
         switch (v) {
-            case Texture::Filtering_t::Linear:
+            case Texture::Filtering::Linear:
                 return GL_LINEAR;
-            case Texture::Filtering_t::Nearest:
+            case Texture::Filtering::Nearest:
                 return GL_NEAREST;
+
+            case Texture::Filtering::LinearMipmapLinear:
+                return GL_LINEAR_MIPMAP_LINEAR;
+            case Texture::Filtering::LinearMipmapNearest:
+                return GL_LINEAR_MIPMAP_NEAREST;
+            case Texture::Filtering::NearestMipmapLinear:
+                return GL_NEAREST_MIPMAP_LINEAR;
+            case Texture::Filtering::NearestMipmapNearest:
+                return GL_NEAREST_MIPMAP_NEAREST;
         }
-    } else if constexpr (std::is_same_v<T, Texture::Wrapping_t>) {
+    } else if constexpr (std::is_same_v<T, Texture::WrappingMode>) {
         switch (v) {
-            case Texture::Wrapping_t::Repeat:
+            case Texture::WrappingMode::Repeat:
                 return GL_REPEAT;
-            case Texture::Wrapping_t::MirroredRepeat:
+            case Texture::WrappingMode::MirroredRepeat:
                 return GL_MIRRORED_REPEAT;
-            case Texture::Wrapping_t::ClampToBorder:
+            case Texture::WrappingMode::ClampToBorder:
                 return GL_CLAMP_TO_BORDER;
-            case Texture::Wrapping_t::ClampToEdge:
+            case Texture::WrappingMode::ClampToEdge:
                 return GL_CLAMP_TO_EDGE;
         }
-    } else if constexpr (std::is_same_v<T, Texture::MipmapFiltering_t>) {
+    } else if constexpr (std::is_same_v<T, Texture::TexFormat>) {
         switch (v) {
-            case Texture::MipmapFiltering_t::LinearLinear:
-                return GL_LINEAR_MIPMAP_LINEAR;
-            case Texture::MipmapFiltering_t::LinearNearest:
-                return GL_LINEAR_MIPMAP_NEAREST;
-            case Texture::MipmapFiltering_t::NearestLinear:
-                return GL_NEAREST_MIPMAP_LINEAR;
-            case Texture::MipmapFiltering_t::NearestNearest:
-                return GL_NEAREST_MIPMAP_NEAREST;
+            case Texture::TexFormat::RGB:
+                return std::pair<u32, u32>{GL_RGB, GL_RGB8};
+            case Texture::TexFormat::RGBA:
+                return std::pair<u32, u32>{GL_RGBA, GL_RGBA8};
         }
     }
     VERIFY_NOT_REACHED();
 }
 
-template <>
-Ref<Texture> Texture::Load<false, std::filesystem::path>(
-    std::filesystem::path path, const Proprieties& props) {
-    glm::ivec2 size;
-    i32 channels;
-    Proprieties p = props;
+static constexpr bool IsMipmap(Texture::Filtering v) {
+    switch (v) {
+        case Texture::Filtering::Linear:
+        case Texture::Filtering::Nearest:
+            return false;
 
-    stbi_set_flip_vertically_on_load(1);
-    const auto* data = stbi_load(path.c_str(), &size.x, &size.y, &channels, 0);
-    if (data == nullptr) {
-        Logger::Core()->error("Error while loading texture at {}",
-                              path.string());
-        return nullptr;
+        case Texture::Filtering::LinearMipmapLinear:
+        case Texture::Filtering::LinearMipmapNearest:
+        case Texture::Filtering::NearestMipmapLinear:
+        case Texture::Filtering::NearestMipmapNearest:
+            return true;
     }
 
-    auto result = Ref<Texture>(new Texture(data, size, channels, p));
-    if (!props.KeepOnCPU) stbi_image_free((void*)data);
-    return result;
+    VERIFY_NOT_REACHED();
 }
 
-template <>
-Ref<Texture> Texture::Load<true, const u8*>(const u8* data, glm::ivec2 size,
-                                            i32 channels,
-                                            const Proprieties& props) {
-    return Ref<Texture>(new Texture(data, size, channels, props));
-}
-
-Texture::Texture(const u8* data, glm::ivec2 size, i32 channels,
-                 const Proprieties& props)
-    : m_Size(size) {
-    if (props.KeepOnCPU) m_Data = data;
-
-    switch (channels) {
-        case 4:
-            m_Format = GL_RGBA;
-            m_InternalFormat = GL_RGBA8;
-            break;
-        case 3:
-            m_Format = GL_RGB;
-            m_InternalFormat = GL_RGB8;
-            break;
-        default:
-            VERIFY_NOT_REACHED();
-    }
+Texture::Texture(const Proprieties& props) : m_Proprieties(props) {
+    const auto [format, internalFormat] = GetGLValue(props.Format);
 
     glCreateTextures(GL_TEXTURE_2D, 1, &m_Texture);
     BE_LOG_GL_CALL("glGenTextures(1, {})", m_Texture);
 
     BE_LOG_GL_CALL("glTextureStorage2D({}, 1, {}, {}, {})", m_Texture,
-                   m_InternalFormat, m_Size.x, m_Size.y);
-    glTextureStorage2D(m_Texture, 1, m_InternalFormat, m_Size.x, m_Size.y);
+                   internalFormat, props.Size.x, props.Size.y);
+    glTextureStorage2D(m_Texture, 1, internalFormat, props.Size.x,
+                       props.Size.y);
 
+    assert(!IsMipmap(props.MagnificationFilter));  // Make sure that we don't
+                                                   // use mipmaps here
     BE_LOG_GL_CALL("glTextureParameteri({}, GL_TEXTURE_MAG_FILTER, {})",
-                   m_Texture, props.Filtering);
+                   m_Texture, props.MagnificationFilter);
     glTextureParameteri(m_Texture, GL_TEXTURE_MAG_FILTER,
-                        GetGLValue(props.Filtering));
+                        GetGLValue(props.MagnificationFilter));
 
     BE_LOG_GL_CALL("glTextureParameteri({}, GL_TEXTURE_MIN_FILTER, {})",
-                   m_Texture, props.MipmapFiltering);
+                   m_Texture, props.MinificationFilter);
     glTextureParameteri(m_Texture, GL_TEXTURE_MIN_FILTER,
-                        GetGLValue(props.MipmapFiltering));
+                        GetGLValue(props.MinificationFilter));
 
     BE_LOG_GL_CALL("glTextureParameteri({}, GL_TEXTURE_WRAP_T, {})", m_Texture,
                    props.Wrapping);
@@ -126,14 +119,24 @@ Texture::Texture(const u8* data, glm::ivec2 size, i32 channels,
     glTextureParameteri(m_Texture, GL_TEXTURE_WRAP_S,
                         GetGLValue(props.Wrapping));
 
-    BE_LOG_GL_CALL(
-        "glTextureSubImage2D({}, 0, 0, 0, {}, {}, {}, GL_UNSIGNED_BYTE, {})",
-        m_Texture, m_Size.x, m_Size.y, m_Format, (const void*)data);
-    glTextureSubImage2D(m_Texture, 0, 0, 0, m_Size.x, m_Size.y, m_Format,
-                        GL_UNSIGNED_BYTE, data);
+    if (props.Data != nullptr) SetData(props.Data->GetData());
+}
 
-    BE_LOG_GL_CALL("glGenerateTextureMipmap({})", m_Texture);
-    glGenerateTextureMipmap(m_Texture);
+void Texture::SetData(const u8* data) {
+    const auto [format, internalFormat] = GetGLValue(m_Proprieties.Format);
+
+    BE_LOG_GL_CALL(
+        "glTextureSubImage2D({}, 0, 0, 0, {}, {}, {}, GL_UNSIGNED_BYTE, "
+        "{})",
+        m_Texture, m_Proprieties.Size.x, m_Proprieties.Size.y, format,
+        (const void*)m_Proprieties.Data->GetData());
+    glTextureSubImage2D(m_Texture, 0, 0, 0, m_Proprieties.Size.x,
+                        m_Proprieties.Size.y, format, GL_UNSIGNED_BYTE, data);
+
+    if (IsMipmap(m_Proprieties.MinificationFilter)) {
+        BE_LOG_GL_CALL("glGenerateTextureMipmap({})", m_Texture);
+        glGenerateTextureMipmap(m_Texture);
+    }
 }
 
 }  // namespace BillyEngine

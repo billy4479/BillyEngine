@@ -8,19 +8,22 @@
 
 namespace BillyEngine {
 
+#define SET_UNIFORM(type, ...) \
+    glProgramUniform##type(m_Program, m_Location, __VA_ARGS__)
+
 template <>
 void Uniform<glm::vec4>::Set(const glm::vec4& v) {
-    glUniform4f(m_Location, v.x, v.y, v.z, v.w);
+    SET_UNIFORM(4f, v.x, v.y, v.z, v.w);
 }
 
 template <>
 void Uniform<f32>::Set(const f32& v) {
-    glUniform1f(m_Location, v);
+    SET_UNIFORM(1f, v);
 }
 
 template <>
 void Uniform<i32>::Set(const i32& v) {
-    glUniform1i(m_Location, v);
+    SET_UNIFORM(1i, v);
 }
 
 }  // namespace BillyEngine

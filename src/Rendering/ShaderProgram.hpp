@@ -18,7 +18,7 @@ class ShaderProgram {
 
     template <typename T>
     Uniform<T> GetUniform(std::string_view name) const {
-        return GetUniformAndCheck(name);
+        return {m_Program, GetUniformAndCheck(name)};
     }
 
    private:

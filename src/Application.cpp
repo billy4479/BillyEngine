@@ -5,6 +5,7 @@
 #include <glm/vec3.hpp>
 
 #include "Assets/AssetManager.hpp"
+#include "Assets/Image.hpp"
 #include "Core/Logger.hpp"
 #include "Core/Types.hpp"
 #include "Events/EventManager.hpp"
@@ -111,10 +112,11 @@ void Application::Run() {
         vertexArray->SetIndexBuffer(indexBuffer);
     }
 
+    auto shader = m_Renderer->GetDefaultShader();
+
     f32 offset = -0.5;
     f32 increment = 0.01;
-    auto xOffsetUniform =
-        m_Renderer->GetDefaultShader()->GetUniform<f32>("xOffset");
+    auto xOffsetUniform = shader->GetUniform<f32>("xOffset");
     xOffsetUniform.Set(offset);
     bool shouldMove = true;
     GetEventManager().AddListener<KeyTypedEvent>(
@@ -122,19 +124,27 @@ void Application::Run() {
             if (e.Data.Keycode == Keys::Space) shouldMove = !shouldMove;
         });
 
-    auto texture = GetAssetManager().LoadNoStore<Texture, true>(
-        EngineResources::icon_png.Data.data(), EngineResources::icon_png.Size,
-        EngineResources::icon_png.Channels);
-    // auto texture = GetAssetManager().LoadNoStore<Texture>("stock.png");
+    Ref<Texture> texture;
+
+    {
+        auto image = GetAssetManager().LoadNoStore<Image, true>(
+            &EngineResources::icon_png);
+
+        auto props = Texture::Proprieties::FromImage(image);
+        props.MagnificationFilter = Texture::Filtering::Nearest;
+        props.MinificationFilter = Texture::Filtering::Nearest;
+        texture = Texture::Create(props);
+    }
+
     texture->Bind(0);
 
-    auto textureUniform =
-        m_Renderer->GetDefaultShader()->GetUniform<i32>("Texture");
+    auto textureUniform = shader->GetUniform<i32>("Texture");
     textureUniform.Set(0);
 
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();
         m_Renderer->Clear();
+        shader->Use();
         m_Renderer->Draw(vertexArray);
         m_Window->SwapBuffers();
 
