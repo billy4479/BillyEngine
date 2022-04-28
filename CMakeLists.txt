@@ -134,6 +134,7 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME} 
     PUBLIC include src
+    PRIVATE include/BillyEngine++
 )
 
 target_compile_options(${PROJECT_NAME} PRIVATE

@@ -1,4 +1,4 @@
-#include "BufferType.hpp"
+#include "Rendering/BufferType.hpp"
 
 #include <glad/gl.h>
 

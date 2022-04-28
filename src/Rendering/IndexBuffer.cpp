@@ -1,4 +1,4 @@
-#include "IndexBuffer.hpp"
+#include "Rendering/IndexBuffer.hpp"
 
 #include <glad/gl.h>
 

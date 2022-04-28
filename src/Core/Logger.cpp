@@ -1,9 +1,9 @@
-#include "Logger.hpp"
+#include "Core/Logger.hpp"
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
-#include "Types.hpp"
+#include "Core/Types.hpp"
 
 namespace BillyEngine {
 

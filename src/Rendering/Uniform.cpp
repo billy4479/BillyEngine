@@ -1,4 +1,4 @@
-#include "Uniform.hpp"
+#include "Rendering/Uniform.hpp"
 
 #include <glad/gl.h>
 

@@ -1,4 +1,4 @@
-#include "Input.hpp"
+#include "Events/Input.hpp"
 
 // clang-format off
 #include <glad/gl.h>

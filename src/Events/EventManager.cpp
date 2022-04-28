@@ -1,4 +1,4 @@
-#include "EventManager.hpp"
+#include "Events/EventManager.hpp"
 
 // clang-format off
 #include <glad/gl.h>

@@ -1,4 +1,4 @@
-#include "Image.hpp"
+#include "Assets/Image.hpp"
 
 #include <stb_image.h>
 

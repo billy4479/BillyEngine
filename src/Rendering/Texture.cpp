@@ -1,4 +1,4 @@
-#include "Texture.hpp"
+#include "Rendering/Texture.hpp"
 
 #include <glad/gl.h>
 

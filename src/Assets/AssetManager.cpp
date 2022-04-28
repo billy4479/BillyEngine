@@ -1,4 +1,4 @@
-#include "AssetManager.hpp"
+#include "Assets/AssetManager.hpp"
 
 #include "Core/PlatformDetection.hpp"
 

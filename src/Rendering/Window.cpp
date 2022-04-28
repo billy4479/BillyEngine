@@ -1,4 +1,4 @@
-#include "Window.hpp"
+#include "Rendering/Window.hpp"
 
 // clang-format off
 #include <glad/gl.h>
