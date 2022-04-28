@@ -114,16 +114,6 @@ void Application::Run() {
 
     auto shader = m_Renderer->GetDefaultShader();
 
-    f32 offset = -0.5;
-    f32 increment = 0.01;
-    auto xOffsetUniform = shader->GetUniform<f32>("xOffset");
-    xOffsetUniform.Set(offset);
-    bool shouldMove = true;
-    GetEventManager().AddListener<KeyTypedEvent>(
-        [&shouldMove](const KeyTypedEvent& e) {
-            if (e.Data.Keycode == Keys::Space) shouldMove = !shouldMove;
-        });
-
     Ref<Texture> texture;
 
     {
@@ -144,16 +134,8 @@ void Application::Run() {
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();
         m_Renderer->Clear();
-        shader->Use();
         m_Renderer->Draw(vertexArray);
         m_Window->SwapBuffers();
-
-        if (shouldMove) {
-            offset += increment;
-            xOffsetUniform.Set(offset);
-            if (offset >= 0.5) increment = -0.01;
-            if (offset <= -0.5) increment = +0.01;
-        }
 
         if (m_Input->IsKeyPressed(Keys::Escape)) Quit();
     }

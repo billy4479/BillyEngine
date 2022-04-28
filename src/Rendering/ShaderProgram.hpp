@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "Core/Types.hpp"
 #include "Rendering/Uniform.hpp"
 
@@ -17,7 +19,7 @@ class ShaderProgram {
     void Use() const;
 
     template <typename T>
-    Uniform<T> GetUniform(std::string_view name) const {
+    Uniform<T> GetUniform(std::string_view name) {
         return {m_Program, GetUniformAndCheck(name)};
     }
 
@@ -25,7 +27,9 @@ class ShaderProgram {
     ShaderProgram(const Ref<Shader> vertexShader,
                   const Ref<Shader> fragmentShader);
 
-    i32 GetUniformAndCheck(std::string_view) const;
+    i32 GetUniformFromShader(std::string_view) const;
+    i32 GetUniformAndCheck(std::string_view);
+    std::unordered_map<std::string_view, i32> m_UniformCache;
 
     u32 m_Program{0};
 };

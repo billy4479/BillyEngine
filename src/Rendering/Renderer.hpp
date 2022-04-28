@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/ext/vector_int2.hpp>
+#include <glm/mat4x4.hpp>
 
 #include "Core/Color.hpp"
 
@@ -16,7 +17,8 @@ class Renderer {
     ~Renderer();
 
     void Clear() const;
-    void Draw(Ref<VertexArray>, Ref<ShaderProgram> = nullptr) const;
+    void Draw(Ref<VertexArray>, glm::mat4 = glm::mat4(1),
+              Ref<ShaderProgram> = nullptr) const;
 
     void SetClearColor(const Color&) const;
     void SetWireframeView(bool) const;

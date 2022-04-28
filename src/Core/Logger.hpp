@@ -48,7 +48,7 @@ class Logger {
 };
 
 #if BE_GL_DEBUG
-    #define BE_LOG_GL_CALL(...) Logger::GL()->debug(__VA_ARGS__)
+    #define BE_LOG_GL_CALL(...) Logger::GL()->trace(__VA_ARGS__)
 #else
     #define BE_LOG_GL_CALL(...)
 #endif

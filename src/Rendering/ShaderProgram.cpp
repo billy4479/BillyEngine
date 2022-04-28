@@ -51,13 +51,24 @@ void ShaderProgram::Use() const {
     glUseProgram(m_Program);
 }
 
-i32 ShaderProgram::GetUniformAndCheck(std::string_view name) const {
+i32 ShaderProgram::GetUniformFromShader(std::string_view name) const {
     auto location = glGetUniformLocation(m_Program, name.data());
     BE_LOG_GL_CALL("glGetUniformLocation({}, {}) -> {}", m_Program, name,
                    location);
 
     if (location == -1) Logger::Core()->error("Uniform \"{}\" not found", name);
     return location;
+}
+
+i32 ShaderProgram::GetUniformAndCheck(std::string_view name) {
+    auto result = m_UniformCache.find(name);
+    if (result == m_UniformCache.end()) {
+        auto uniform = GetUniformFromShader(name);
+        m_UniformCache[name] = uniform;
+        return uniform;
+    }
+
+    return result->second;
 }
 
 }  // namespace BillyEngine

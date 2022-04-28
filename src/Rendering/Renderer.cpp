@@ -147,13 +147,15 @@ Renderer::~Renderer() {}
 
 void Renderer::Clear() const { glClear(GL_COLOR_BUFFER_BIT); }
 
-void Renderer::Draw(Ref<VertexArray> vertexArray,
+void Renderer::Draw(Ref<VertexArray> vertexArray, glm::mat4 transform,
                     Ref<ShaderProgram> maybeShaderProg) const {
     Ref<ShaderProgram> shaderProg = maybeShaderProg == nullptr
                                         ? m_RenderData->DefaultShader
                                         : maybeShaderProg;
     shaderProg->Use();
     vertexArray->Bind();
+
+    shaderProg->GetUniform<glm::mat4>("Transform").Set(transform);
 
     BE_LOG_GL_CALL("glDrawElements(GL_TRIANGLES, {}, GL_UNSIGNED_INT, 0)",
                    vertexArray->GetIndiciesCount());
