@@ -25,3 +25,5 @@ FetchContent_Declare(fmt
 FetchContent_MakeAvailable(fmt)
 
 target_link_libraries(Generator PRIVATE stb_image fmt)
+
+export(TARGETS Generator FILE "${CMAKE_BINARY_DIR}/GenConfig.cmake")

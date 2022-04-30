@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 include(FetchContent)
 
 option(COMPILE_DEMO "Compile the demo program" ON)
-option(BUNLD_DEPENDENCIES "Bundle all the dependencies in the same dll" ON)
+option(BUNDLE_DEPENDENCIES "Bundle all the dependencies in the same dll" ON)
 
 # set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
 # set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
@@ -77,7 +77,12 @@ FetchContent_Declare(stb_image
 )
 FetchContent_MakeAvailable(stb_image)
 
-add_subdirectory(Generator)
+if(CMAKE_CROSSCOMPILING)
+    find_package(Gen)
+else()
+    add_subdirectory(Generator)
+endif()
+
 file(GLOB RESOURCES Resources/*)
 
 set(BE_GENERATED_DIR "Generated")
@@ -112,7 +117,7 @@ add_custom_target(GenerateAll DEPENDS ${BE_GENERATED_FILES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
 
 if(BUNLD_DEPENDENCIES)
-    if(WIN32)
+    if(MSVC)
         set_target_properties(${PROJECT_NAME} PROPERTIES
             LINK_FLAGS "/WHOLEARCHIVE"
         )
@@ -143,7 +148,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 )
 
 if(BUNLD_DEPENDENCIES)
-    if(WIN32)
+    if(MSVC)
+        # TODO: is there a option for MSVC too?
     elseif(APPLE)
         set_target_properties(${PROJECT_NAME} PROPERTIES
             LINK_FLAGS "-Wl,-noall_load"

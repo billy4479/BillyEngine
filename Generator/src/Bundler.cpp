@@ -41,7 +41,7 @@ static bool EmitImage(fs::path src, fs::path dest, std::string_view name);
 static bool EmitBinary(fs::path src, fs::path dest, std::string_view name);
 
 bool Bundle(fs::path src, fs::path base) {
-    std::string name = src.filename();
+    std::string name = src.filename().string();
     replaceAll(name, ".", "_");
     auto dest = base / (name + ".hpp");
     auto ext = src.extension();
@@ -87,7 +87,7 @@ static bool EmitImage(fs::path src, fs::path dest, std::string_view name) {
     if (!out.is_open()) return false;
 
     int x, y, channels;
-    const auto* data = stbi_load(src.c_str(), &x, &y, &channels, 0);
+    const auto* data = stbi_load(src.string().c_str(), &x, &y, &channels, 0);
     if (data == nullptr) return 1;
     auto size = x * y * channels;
 

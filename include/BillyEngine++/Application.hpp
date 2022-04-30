@@ -12,7 +12,7 @@ class EventManager;
 class Input;
 class AssetManager;
 
-class Application {
+class BE_API Application {
    public:
     ~Application();
 

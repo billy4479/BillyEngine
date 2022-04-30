@@ -7,12 +7,12 @@ BE_HEADER_START
 struct Application;
 struct Renderer;
 
-BE_PUBLIC Application* TheApplication();
-BE_PUBLIC Application* CreateOrResetApplication();
+BE_API Application* TheApplication();
+BE_API Application* CreateOrResetApplication();
 
-BE_PUBLIC void RunApplication(Application*);
-BE_PUBLIC void QuitApplication(Application*);
+BE_API void RunApplication(Application*);
+BE_API void QuitApplication(Application*);
 
-BE_PUBLIC Renderer* ApplicationGetRenderer(Application*);
+BE_API Renderer* ApplicationGetRenderer(Application*);
 
 BE_HEADER_END

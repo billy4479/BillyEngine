@@ -1,8 +1,10 @@
 build
+build-cross
 .cache
 BillyEngine.log
 ProfilerResult.json
 .vs
 CMakeSettings.json
 valgrind.log
+perf.data
 

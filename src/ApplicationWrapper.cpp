@@ -2,23 +2,23 @@
 
 #include "Application.hpp"
 
-Application* TheApplication() {
+BE_API Application* TheApplication() {
     return (Application*)&BillyEngine::Application::The();
 }
 
-void CreateOrResetApplication(Application*) {
+BE_API void CreateOrResetApplication(Application*) {
     // delete (BillyEngine::Application*)app;
     BillyEngine::Application::CreateOrReset();
 }
 
-void RunApplication(Application* app) {
+BE_API void RunApplication(Application* app) {
     ((BillyEngine::Application*)app)->Run();
 }
 
-void QuitApplication(Application* app) {
+BE_API void QuitApplication(Application* app) {
     ((BillyEngine::Application*)app)->Quit();
 }
 
-Renderer* ApplicationGetRenderer(Application* app) {
+BE_API Renderer* ApplicationGetRenderer(Application* app) {
     return (Renderer*)&((BillyEngine::Application*)app)->GetRenderer();
 }

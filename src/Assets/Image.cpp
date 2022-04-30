@@ -21,7 +21,7 @@ Ref<Image> Image::Load<false>(std::filesystem::path path, i32 wantedChannels) {
     i32 channels;
 
     const u8* data =
-        stbi_load(path.c_str(), &size.x, &size.y, &channels, wantedChannels);
+        stbi_load(path.string().c_str(), &size.x, &size.y, &channels, wantedChannels);
 
     return Ref<Image>(new Image(data, size, channels, true));
 }
