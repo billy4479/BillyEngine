@@ -29,9 +29,29 @@ using std::size_t;
 
 #define BE_BIT(x) (1 << x)
 
-#define BE_NON_COPY_CONSTRUCTIBLE(className)    \
-    className(const className& other) = delete; \
+#define BE_NON_COPYABLE(className)        \
+    className(const className&) = delete; \
     className& operator=(const className&) = delete;
+
+#define BE_NON_MOVABLE(className)    \
+    className(className&&) = delete; \
+    className& operator=(className&&) = delete;
+
+#define BE_NON_COPYABLE_NON_MOVABLE(className) \
+    BE_NON_COPYABLE(className)                 \
+    BE_NON_MOVABLE(className)
+
+#define BE_DEFAULT_COPY(className)         \
+    className(const className&) = default; \
+    className& operator=(const className&) = default;
+
+#define BE_DEFAULT_MOVE(className)    \
+    className(className&&) = default; \
+    className& operator=(className&&) = default;
+
+#define BE_DEFAULT_COPY_AND_MOVE(className) \
+    BE_DEFAULT_COPY(className)              \
+    BE_DEFAULT_MOVE(className)
 
 template <typename T>
 using Scope = std::unique_ptr<T>;
