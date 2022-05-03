@@ -1,22 +1,14 @@
 # TODO
 
 - [ ] Documentation :)
-  - [ ] Public API
-  - [ ] Internal
-- [x] Use the Application class more as a proxy to other classes which implement the actual functionality
-- [x] Create a Window class to manage all the window related stuff abstracted away from SDL
-- [x] Use a proper logger (maybe [spdlog](https://github.com/gabime/spdlog)?)
-- [x] Use `ccache` if available
-- [ ] Move away from SDL libraries
-  - [ ] Remove SDL_img
-  - [ ] Remove SDL_ttf
+- [ ] C API
 
 ## Platform
 
 Linux is the main platform, the other I will try to maintain build but that's it.
 
 - [x] Linux
-- [x] Windows
+- [ ] Windows
 - [ ] OSX
 - [ ] WASM (?)
 
@@ -25,22 +17,16 @@ Linux is the main platform, the other I will try to maintain build but that's it
 - [x] Actually create it
 - [x] Mouse events
 - [x] Keyboard events
+  - [ ] KeyTyped != KeyPressed
 
 ## Rendering
 
-- [x] Use `SDL_Surface`s when needed and choose where to use those and where `SDL_Texture`s
-- [x] Resizable window
-- [x] Implement rendering tinted textures
-- [ ] Draw shapes and primitives
-  - [ ] Rectangle
-  - [ ] Triangle
-  - [ ] Circle
-  - [ ] Line
-- [ ] (OpenGL ?)
+ - [ ] Different shapes
+ - [ ] Vertex batching
+ - [ ] Camera
 
 ## World
 
-- [ ] Differentiate screen space from world space
 - [ ] Physics
   - [ ] Box2D (?)
   - [ ] Raycasting
@@ -51,8 +37,8 @@ Linux is the main platform, the other I will try to maintain build but that's it
 
 - [ ] Parent-children entities
 - [x] UUIDs
-- [x] Entity duplication
-  - [x] ~~Allow copy constructor in all components~~ Not every component can/should have one
+- [ ] Entity duplication
+- [ ] Behaviors in a C-friendly way
 - [ ] Create some kind of EntityBlueprint/Prefab
 
 ## Audio

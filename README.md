@@ -2,14 +2,10 @@
 
 [![Build Status](https://github.com/billy4479/BillyEngine/actions/workflows/build.yml/badge.svg)](https://github.com/billy4479/BillyEngine/actions/workflows/build.yml)
 
-Some kind of 2D game engine, written in C++17 using SDL2 and EnTT to be used in future projects.
+Some kind of 2D game engine, written in C++20 using OpenGL and EnTT to be used in future projects.
 I wanted a simple entity framework to display some graphics in my C++ applications and here it is.
 It is not meant to be like Unreal / Unity / Godot,
 the most similar thing I could find is [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine) and [raylib](https://github.com/raysan5/raylib). Thanks also to [TheCherno](https://www.youtube.com/c/TheChernoProject) for [Hazel](https://github.com/TheCherno/Hazel) from which I took a lot of inspiration.
-
-I don't really care about the rendering part so for now it is done by SDL2
-but maybe in the future I'll switch to OpenGL.
-It requires SDL2, SDL2_ttf and SDL2_img to be installed globally. I want to remove those dependencies in the future because on Windows is a pain :)
 
 I've developed it in Linux for Linux ~~but _should_ work on other platforms as well~~. Windows is WIP, OSX will probably not work.
 I'm not targeting mobile.
@@ -17,62 +13,26 @@ WASM may be interesting but definitely not a priority.
 
 There's still a lot of work to do, check out [TODO.md](TODO.md)
 
+It started using SDL2 for rendering but switching to OpenGL gives more customization and advanced features.
+Also, linking SDL2 on windows is a pain. 
+
 ## How to use
 
-Just bring it in using git submodules or CMake's `FetchContent` and `#include <BillyEngine.hpp>`.
-Make sure that CMake can fine SDL2, SDL2_img and SDL_ttf.
-Everything is under the `BillyEngine` namespace so it can became quite verbose.
+You can look at the code in the [demo folder](Demo) for now as there is no documentation
+and the API is really unstable.
 
-`Application` is the base class for everything.
-It is a wrapper around various managers used internally by the engine. If you need anything there is probably a method for that.
-
-The `Entity` class is just an ID and a pointer so it's convenient to copy it around.
-It provide methods to add, get, check and remove components which are just `class`es.
-
-A `ScriptableEntity` is entity with a custom behavior.
-The class is a wrapper around `Entity` and has three methods to be overridden: `OnCreate`, `OnUpdate` and `OnDestroy`.
-The constructor of this class has to be defined using the `SCRIPTABLE_ENTITY(ClassName)` macro.
-Other constructors won't be called but you can use `OnCreate` for that.
-Once you define you own class derived from it you can instantiate it using `CreateScriptableEntity<T>` on the application.
-They provide some convenience function to interact with the `Application` or the `Entity` itself.
+In the future I would like to provide a full C-compatible API
+and some bindings using a easier language (maybe C#).
 
 ## Build
 
-This repository contains the source for the engine itself that gets compiled to a static library and a little demo.
-By default both are built but the demo can be disabled passing `-DCOMPILE_DEMO=OFF` to `cmake`.
-Using `-G Ninja` is recommended for faster build times.
-
-### Linux
-
-Linux is really easy, just install the needed dependencies and you are ready to go.
-On Arch based distros you can
+This repository contains the source for the engine itself that gets compiled to a dynamic library and a little demo.
 
 ```sh
-sudo pacman -S sdl2 sdl2_image sdl2_ttf cmake base-devel
-```
-
-After you've cloned the repo, `cd` into it and run
-
-```sh
-cmake -S . -B build
+cmake -S . -B build # `-G Ninja` is recommended but not required
 cmake --build build
 ```
 
-### Windows
-
-On windows is a bit more complicated, you will need Visual Studio 2019 with C++ support enabled, CMake, vcpkg and Git.
-Follow the instructions on the [Github page](https://github.com/microsoft/vcpkg) and once you are setup run
-
-```sh
-vcpkg install sdl2 sdl2-image sdl2-ttf sdl2-image[libjpeg-turbo] --triplet=x64-windows --recurse
-```
-
-This will download and install SDL2 so that CMake will be able to find it.
-Clone the repo open a command prompt in the folder and run
-
-```sh
-cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=<vcpkg installation path>/scripts/buildsystems/vcpkg.cmake
-cmake --build build
-```
-
-You will have to insert the correct path in order to link correctly all the libs.
+Some options that you can pass to `cmake` include:
+ - `-D COMPILE_DEMO=OFF` to disable the demo
+ - `-D BUNDLE_DEPENDENCIES=OFF` to get multiple DLLs for each dependency. By default they are bundled into a single DLL
