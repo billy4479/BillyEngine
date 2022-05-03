@@ -11,6 +11,7 @@ class Renderer;
 class EventManager;
 class Input;
 class AssetManager;
+class EntityManager;
 
 class BE_API Application {
    public:
@@ -47,6 +48,7 @@ class BE_API Application {
     Scope<Renderer> m_Renderer;
     Scope<EventManager> m_EventManager;
     Scope<Input> m_Input;
+    Scope<EntityManager> m_EntityManager;
 
     Application(const ApplicationProprieties&);
     static Application* s_Instance;

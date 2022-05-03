@@ -8,6 +8,9 @@
 #include "Assets/Image.hpp"
 #include "Core/Logger.hpp"
 #include "Core/Types.hpp"
+#include "Entity/Components.hpp"
+#include "Entity/Entity.hpp"
+#include "Entity/EntityManager.hpp"
 #include "Events/EventManager.hpp"
 #include "Events/Input.hpp"
 #include "Events/KeyboardEvent.hpp"
@@ -30,7 +33,8 @@ Application::Application(const ApplicationProprieties& props)
       m_Window(CreateScope<Window>(props.Title, props.Size)),
       m_Renderer(CreateScope<Renderer>(*m_AssetManager)),
       m_EventManager(CreateScope<EventManager>(*m_Window)),
-      m_Input(CreateScope<Input>(*m_Window)) {
+      m_Input(CreateScope<Input>(*m_Window)),
+      m_EntityManager(CreateScope<EntityManager>()) {
     m_Renderer->SetViewportSize(props.Size);
 
     m_EventManager->AddListener<WindowResizeEvent>(
@@ -130,6 +134,12 @@ void Application::Run() {
 
     auto textureUniform = shader->GetUniform<i32>("Texture");
     textureUniform.Set(0);
+
+    {
+        auto lol = m_EntityManager->NewEntity("lol");
+        Logger::Core()->info(lol.GetComponent<TagComponent>().Tag);
+        assert(m_EntityManager->GetEntityByName("lol") == lol);
+    }
 
     while (!m_Window->ShouldClose()) {
         m_EventManager->HandleEvents();
