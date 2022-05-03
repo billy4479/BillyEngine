@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [OPENGL]
+    branches: [OpenGL]
   pull_request:
-    branches: [OPENGL]
+    branches: [OpenGL]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
