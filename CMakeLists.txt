@@ -6,160 +6,27 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include(FetchContent)
-
 option(COMPILE_DEMO "Compile the demo program" ON)
+option(BUILD_SHARED_LIBS "Build a shaded library" ON)
 option(BUNDLE_DEPENDENCIES "Bundle all the dependencies in the same dll" ON)
+option(SYSTEM_DEPENDENCIES "Use system dependencies instead of downloading and building them" OFF)
 
-# set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
-# set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
-
-if(BUNLD_DEPENDENCIES)
-    set(BUILD_SHARED_LIBS OFF)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-else()
-    set(BUILD_SHARED_LIBS ON)
-endif()
-
-find_program(CCACHE_FOUND ccache)
-if(CCACHE_FOUND)
-    message(STATUS "Found ccache")
-    set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
-endif()
-
-message(STATUS "Getting GLAD ready...")
-FetchContent_Declare(glad
-    GIT_REPOSITORY "https://github.com/Dav1dde/glad"
-    GIT_TAG "glad2"
-)
-FetchContent_GetProperties(glad)
-if(NOT glad_POPULATED)
-  FetchContent_Populate(glad)
-
-  add_subdirectory(${glad_SOURCE_DIR}/cmake ${glad_BINARY_DIR})
-  glad_add_library(glad API gl:core=4.6)
-endif()
-# FetchContent_MakeAvailable(glad)
-
-message(STATUS "Getting GLFW ready...")
-FetchContent_Declare(glfw
-    GIT_REPOSITORY "https://github.com/glfw/glfw"
-    GIT_TAG "3.3.6"
-)
-FetchContent_MakeAvailable(glfw)
-
-message(STATUS "Getting glm ready...")
-FetchContent_Declare(glm
-    GIT_REPOSITORY "https://github.com/g-truc/glm"
-    GIT_TAG "master"
-)
-FetchContent_MakeAvailable(glm)
-
-message(STATUS "Getting EnTT ready...")
-FetchContent_Declare(EnTT
-    GIT_REPOSITORY "https://github.com/skypjack/entt"
-    GIT_TAG "v3.8.1"
-)
-FetchContent_MakeAvailable(EnTT)
-
-set(SPDLOG_NO_EXCEPTIONS ON)
-message(STATUS "Getting spdlog ready...")
-FetchContent_Declare(spdlog
-    GIT_REPOSITORY "https://github.com/gabime/spdlog"
-    GIT_TAG "v1.9.2"
-)
-FetchContent_MakeAvailable(spdlog)
-
-message(STATUS "Getting stb_image ready...")
-FetchContent_Declare(stb_image
-    GIT_REPOSITORY "https://github.com/billy4479/stb_image-cmake"
-    GIT_TAG "master"
-)
-FetchContent_MakeAvailable(stb_image)
-
-if(CMAKE_CROSSCOMPILING)
-    find_package(Gen)
-else()
-    add_subdirectory(Generator)
-endif()
-
-file(GLOB RESOURCES Resources/*)
-
-set(BE_GENERATED_DIR "Generated")
-set(BE_GENERATED_BUNDLE_DIR "${BE_GENERATED_DIR}/Bundled")
-
-foreach(resource ${RESOURCES})
-    get_filename_component(resource_name ${resource} NAME)
-    string(REPLACE "." "_" resource_header_name ${resource_name})
-    set(generated_resource_path "${BE_GENERATED_BUNDLE_DIR}/${resource_header_name}.hpp")
-    list(APPEND BE_GENERATED_FILES ${generated_resource_path})
-    
-    add_custom_command(
-        OUTPUT ${generated_resource_path}
-        COMMAND Generator bundler Generated ${resource}
-        DEPENDS ${resource}
-        DEPENDS Generator
-    )
-endforeach()
-
-add_custom_command(
-    OUTPUT ${BE_GENERATED_BUNDLE_DIR}/Types.hpp
-    COMMAND Generator bundler-types Generated
-    DEPENDS Generator
-)
-list(APPEND BE_GENERATED_FILES ${BE_GENERATED_BUNDLE_DIR}/Types.hpp)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+include(CompilerFlags)
+include(GeneratorSetup)
 
 file(GLOB_RECURSE SRC src/*.cpp src/*.hpp include/*.h include/*.hpp)
-add_library(${PROJECT_NAME} SHARED ${SRC} ${BE_GENERATED_FILES})
+add_library(${PROJECT_NAME} ${SRC} ${BE_GENERATED_FILES})
 
-add_custom_target(GenerateAll DEPENDS ${BE_GENERATED_FILES})
-# add_dependencies(${PROJECT_NAME} GenerateAll)
+set_compiler_flags(${PROJECT_NAME})
+include(Dependencies)
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
-
-if(BUNLD_DEPENDENCIES)
-    if(MSVC)
-        set_target_properties(${PROJECT_NAME} PROPERTIES
-            LINK_FLAGS "/WHOLEARCHIVE"
-        )
-    elseif(APPLE)
-        set_target_properties(${PROJECT_NAME} PROPERTIES
-            LINK_FLAGS "-Wl,-all_load"
-        )
-    else()
-        set_target_properties(${PROJECT_NAME} PROPERTIES
-            LINK_FLAGS "-Wl,--whole-archive"
-        )
-    endif()
-endif()
-
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC glm
-    PRIVATE glad glfw EnTT spdlog::spdlog stb_image
-)
 
 target_include_directories(${PROJECT_NAME} 
     PUBLIC include src
     PRIVATE include/BillyEngine++
 )
-
-target_compile_options(${PROJECT_NAME} PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>: -Wall -Wextra -pedantic -Werror -fno-exceptions -fno-rtti>
-)
-
-if(BUNLD_DEPENDENCIES)
-    if(MSVC)
-        # TODO: is there a option for MSVC too?
-    elseif(APPLE)
-        set_target_properties(${PROJECT_NAME} PROPERTIES
-            LINK_FLAGS "-Wl,-noall_load"
-        )
-    else()
-        set_target_properties(${PROJECT_NAME} PROPERTIES
-            LINK_FLAGS "-Wl,--no-whole-archive"
-        )
-    endif()
-endif()
 
 if(COMPILE_DEMO)
     add_subdirectory(Demo)

@@ -3,6 +3,10 @@
         "entt",
         "glfw",
         "OPENGL",
+        "spdlog",
         "stbi"
+    ],
+    "cmake.configureArgs": [
+        "-DSYSTEM_DEPENDENCIES=ON"
     ]
 }

@@ -13,7 +13,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE BillyEngine)
 file(GLOB ASSETS "assets/*")
 file(COPY ${ASSETS} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/assets)
 
-target_compile_options(${PROJECT_NAME} PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>: -Wall -Wextra -pedantic -Werror -fno-exceptions -fno-rtti>
-)
+set_compiler_flags(${PROJECT_NAME})

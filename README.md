@@ -36,3 +36,4 @@ cmake --build build
 Some options that you can pass to `cmake` include:
  - `-D COMPILE_DEMO=OFF` to disable the demo
  - `-D BUNDLE_DEPENDENCIES=OFF` to get multiple DLLs for each dependency. By default they are bundled into a single DLL
+ - `-D SYSTEM_DEPENDENCIES=ON` to build the engine using packages on the system instead of downloading and compiling them (some dependencies will still be compiled because they are non-standard and usually not packaged). This works well on Linux, in particular, on Arch you would need to `yay -S entt fmt glm glfw-x11 spdlog`. On the other side this option is not recommended on Windows
