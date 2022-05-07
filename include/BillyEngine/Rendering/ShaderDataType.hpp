@@ -1,8 +1,7 @@
 #pragma once
 
-#include <BillyEngine/EnumerateShaderDataTypes.h>
-
 #include "Core/Types.hpp"
+#include "Enumerate/EnumerateShaderDataTypes.h"
 
 namespace BillyEngine {
 

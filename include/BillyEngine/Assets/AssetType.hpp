@@ -1,8 +1,8 @@
 #pragma once
 
-#include <BillyEngine/EnumerateAssetTypes.h>
-
 #include <string_view>
+
+#define ENUMERATE_ASSET_TYPES(o) o(Shader) o(Image) o(Font)
 
 namespace BillyEngine {
 

@@ -1,10 +1,7 @@
-if(BUILD_SHARED_LIBS)
-    if(BUNLD_DEPENDENCIES AND NOT SYSTEM_DEPENDENCIES)
-        set(BUILD_SHARED_LIBS OFF)
-        set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    else()
-        set(BUILD_SHARED_LIBS ON)
-    endif()
+if(BUILD_SHARED_LIBS AND BUNDLE_DEPENDENCIES AND NOT SYSTEM_DEPENDENCIES)
+    set(BUILD_SHARED_LIBS OFF)
+else()
+    set(BUNDLE_DEPENDENCIES OFF)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Dependencies)
@@ -19,7 +16,7 @@ include(glm)
 include(spdlog)
 include(stb_image)
 
-if(BUNLD_DEPENDENCIES)
+if(BUNDLE_DEPENDENCIES)
     if(MSVC)
         set_target_properties(${PROJECT_NAME} PROPERTIES
             LINK_FLAGS "/WHOLEARCHIVE"
@@ -35,12 +32,27 @@ if(BUNLD_DEPENDENCIES)
     endif()
 endif()
 
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC glm fmt
-    PRIVATE EnTT::EnTT glad glfw spdlog::spdlog stb_image
+target_link_libraries(
+    ${PROJECT_NAME}_objs
+    PUBLIC glm
+    PRIVATE EnTT::EnTT glad glfw spdlog::spdlog stb_image fmt
 )
 
-if(BUNLD_DEPENDENCIES)
+target_link_libraries(
+    ${PROJECT_NAME}
+    PUBLIC glm
+    PRIVATE EnTT::EnTT glad glfw spdlog::spdlog stb_image fmt
+)
+
+if(GENERATE_BINDINGS)
+    swig_link_libraries(
+        ${PROJECT_NAME}_swig
+        PUBLIC glm
+        PRIVATE EnTT::EnTT glad glfw spdlog::spdlog stb_image fmt
+    )
+endif()
+
+if(BUNDLE_DEPENDENCIES)
     if(MSVC)
         # TODO: is there a option for MSVC too?
     elseif(APPLE)

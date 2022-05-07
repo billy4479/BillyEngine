@@ -34,6 +34,8 @@
     #error "Android is not supported!"
 #elif defined(__linux__)
     #define BE_PLATFORM_LINUX
+#elif defined(SWIG)
+    #define BE_PLATFORM_SWIG
 #else
     /* Unknown compiler/platform */
     #error "Unknown platform!"
@@ -47,6 +49,7 @@
     #define BE_PLATFORM_GCC
 #elif defined(_MSC_VER)
     #define BE_PLATFORM_MSVC
+#elif defined(SWIG)
 #else
     #error "Unsupported compiler"
 #endif

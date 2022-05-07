@@ -3,6 +3,9 @@ set(SPDLOG_FMT_EXTERNAL ON)
 
 if(SYSTEM_DEPENDENCIES)
     find_package(spdlog)
+
+    target_compile_definitions(spdlog::spdlog INTERFACE SPDLOG_NO_EXCEPTIONS)
+    target_compile_definitions(spdlog::spdlog INTERFACE SPDLOG_FMT_EXTERNAL)
 else()
     message(STATUS "Getting spdlog ready...")
     FetchContent_Declare(spdlog
@@ -11,6 +14,3 @@ else()
     )
     FetchContent_MakeAvailable(spdlog)
 endif()
-
-target_compile_definitions(spdlog::spdlog INTERFACE SPDLOG_NO_EXCEPTIONS)
-target_compile_definitions(spdlog::spdlog INTERFACE SPDLOG_FMT_EXTERNAL)

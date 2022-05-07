@@ -6,6 +6,8 @@
 
 set -e
 
+pushd ..
+
 # Build the generator
 cmake -S . -B build -G Ninja
 cmake --build build -t Generator
@@ -26,3 +28,4 @@ cp -v Demo/Demo.exe _deps/**/*.dll _deps/**/**/*.dll *.dll /usr/x86_64-w64-mingw
 zip -r dist.zip dist
 popd
 
+popd

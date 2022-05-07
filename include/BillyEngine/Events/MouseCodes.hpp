@@ -1,8 +1,7 @@
 #pragma once
 
-#include <BillyEngine/EnumerateMouseButtons.h>
-
-#include "../Core/Types.hpp"
+#include "Core/Types.hpp"
+#include "Enumerate/EnumerateMouseButtons.h"
 
 namespace BillyEngine {
 

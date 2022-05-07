@@ -1,7 +1,5 @@
 #pragma once
 
-#include <BillyEngine/Utils.h>
-
 #include <cassert>
 #include <cstdint>
 #include <memory>

@@ -13,7 +13,7 @@ class Input;
 class AssetManager;
 class EntityManager;
 
-class BE_API Application {
+class Application {
    public:
     ~Application();
 
