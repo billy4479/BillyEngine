@@ -4,7 +4,8 @@
         "glfw",
         "OPENGL",
         "spdlog",
-        "stbi"
+        "stbi",
+        "valgrind"
     ],
     "cmake.configureArgs": [
         "-DSYSTEM_DEPENDENCIES=ON"

@@ -21,8 +21,26 @@ Also, linking SDL2 on windows is a pain.
 You can look at the code in the [demo folder](Demo) for now as there is no documentation
 and the API is really unstable.
 
-In the future I would like to provide a full C-compatible API
-and some bindings using a easier language (maybe C#).
+C# Bindings are also available through SWIG.
+An example is available [here](DemoCS).
+
+In the future I might distribute a precompiled Nuget package,
+but for now everything has to built from scratch.
+
+## Dependencies
+
+- OpenGL
+- GLFW
+- EnTT
+- fmt
+- glm
+- spdlog
+- stb_image
+- Dotnet CLI (optional)
+- CMake (*build*)
+- Ninja (*build*, optional)
+- SWIG (*build*, optional)
+- Nuget CLI (*build*, optional)
 
 ## Build
 
@@ -35,5 +53,17 @@ cmake --build build
 
 Some options that you can pass to `cmake` include:
  - `-D COMPILE_DEMO=OFF` to disable the demo
- - `-D BUNDLE_DEPENDENCIES=OFF` to get multiple DLLs for each dependency. By default they are bundled into a single DLL
- - `-D SYSTEM_DEPENDENCIES=ON` to build the engine using packages on the system instead of downloading and compiling them (some dependencies will still be compiled because they are non-standard and usually not packaged). This works well on Linux, in particular, on Arch you would need to `yay -S entt fmt glm glfw-x11 spdlog`. On the other side this option is not recommended on Windows
+ - `-D BUNDLE_DEPENDENCIES=OFF` to get multiple DLLs for each dependency.
+ By default they are bundled into a single DLL
+ - `-D SYSTEM_DEPENDENCIES=ON` to build the engine using packages on the system instead of downloading and compiling them
+ (some dependencies will still be compiled because they are non-standard and usually not packaged).
+ This works well on Linux, in particular, on Arch you would need to `yay -S entt fmt glm glfw-x11 spdlog`.
+ On the other side this option is not recommended on Windows and when generating C# bindings
+ - `-D GENERATE_BINDINGS=ON` is on by default and generates C# bindings using SWIG. Can be disabled if not needed.
+
+Additionally some convenience scripts are provided in the `script` folder:
+
+ - `valgrind.sh` runs the C++ demo through Valgrind and logs the result to `valgrind.log`
+ - `cross.sh` cross compiles from Linux to Windows with MinGW (experimental)
+ - `bindings.sh` generates C# bindings, projects and packages.
+ It is recommended to run this script before using the C# demo
